@@ -98,6 +98,47 @@
           ]
         }
       }
+    },
+    {
+      "id": "features-1761495662760",
+      "type": "FeatureList",
+      "fields": {
+        "heading": {
+          "type": "text",
+          "value": {
+            "en": "Boom"
+          }
+        },
+        "items": {
+          "type": "list",
+          "value": [
+            {
+              "title": {
+                "en": "Feature One"
+              },
+              "description": {
+                "en": "Description of your first amazing feature."
+              }
+            },
+            {
+              "title": {
+                "en": "Feature Two"
+              },
+              "description": {
+                "en": "Description of your second amazing feature."
+              }
+            },
+            {
+              "title": {
+                "en": "Feature Three"
+              },
+              "description": {
+                "en": "Description of your third amazing feature."
+              }
+            }
+          ]
+        }
+      }
     }
   ]
 }
