@@ -9,3 +9,4 @@ export * from './hooks';
 export * from './ComponentPanel';
 export * from './ComponentControls';
 export * from './InsertButton';
+export * from './VariantSelector';

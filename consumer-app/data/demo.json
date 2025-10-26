@@ -26,7 +26,7 @@
         "subtitle": {
           "type": "text",
           "value": {
-            "en": "This is subtext",
+            "en": "This is the default option",
             "es": "Crea páginas increíbles con facilidad"
           }
         },
@@ -91,7 +91,7 @@
                 "es": "Listo para Personalización"
               },
               "description": {
-                "en": "Deliver tailored experiences based on user segments and preferences with variant support.",
+                "en": "Deliver tailored experiences based on user segments with variant support.",
                 "es": "Ofrece experiencias personalizadas basadas en segmentos de usuarios y preferencias con soporte de variantes."
               }
             }
@@ -106,7 +106,7 @@
         "heading": {
           "type": "text",
           "value": {
-            "en": "Boom"
+            "en": "Base Features"
           }
         },
         "items": {
@@ -114,29 +114,68 @@
           "value": [
             {
               "title": {
-                "en": "Feature One"
+                "en": "Base Feature One"
               },
               "description": {
-                "en": "Description of your first amazing feature."
+                "en": "This is the base version of feature one."
               }
             },
             {
               "title": {
-                "en": "Feature Two"
+                "en": "Base Feature Two"
               },
               "description": {
-                "en": "Description of your second amazing feature."
+                "en": "This is the base version of feature two."
               }
             },
             {
               "title": {
-                "en": "Feature Three"
+                "en": "Base Feature Three"
               },
               "description": {
-                "en": "Description of your third amazing feature."
+                "en": "This is the base version of feature three."
               }
             }
           ]
+        }
+      },
+      "variants": {
+        "finance": {
+          "heading": {
+            "type": "text",
+            "value": {
+              "en": "Finance Features"
+            }
+          },
+          "items": {
+            "type": "list",
+            "value": [
+              {
+                "title": {
+                  "en": "Finance Feature One"
+                },
+                "description": {
+                  "en": "This is the finance version of feature one."
+                }
+              },
+              {
+                "title": {
+                  "en": "Finance Feature Two"
+                },
+                "description": {
+                  "en": "This is the finance version of feature two."
+                }
+              },
+              {
+                "title": {
+                  "en": "Finance Feature Three"
+                },
+                "description": {
+                  "en": "This is the finance version of feature three."
+                }
+              }
+            ]
+          }
         }
       }
     }
