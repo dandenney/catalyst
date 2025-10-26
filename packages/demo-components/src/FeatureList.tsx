@@ -33,6 +33,52 @@ export function FeatureList({ schema, onUpdate }: FeatureListProps) {
     onUpdate(updatedSchema);
   };
 
+  const handleItemTitleUpdate = (index: number, updatedContent: any) => {
+    if (!onUpdate) return;
+
+    const updatedItems = [...fields.items.value];
+    updatedItems[index] = {
+      ...updatedItems[index],
+      title: updatedContent,
+    };
+
+    const updatedSchema: FeatureListSchema = {
+      ...schema,
+      fields: {
+        ...schema.fields,
+        items: {
+          ...schema.fields.items,
+          value: updatedItems,
+        },
+      },
+    };
+
+    onUpdate(updatedSchema);
+  };
+
+  const handleItemDescriptionUpdate = (index: number, updatedContent: any) => {
+    if (!onUpdate) return;
+
+    const updatedItems = [...fields.items.value];
+    updatedItems[index] = {
+      ...updatedItems[index],
+      description: updatedContent,
+    };
+
+    const updatedSchema: FeatureListSchema = {
+      ...schema,
+      fields: {
+        ...schema.fields,
+        items: {
+          ...schema.fields.items,
+          value: updatedItems,
+        },
+      },
+    };
+
+    onUpdate(updatedSchema);
+  };
+
   return (
     <div
       className="feature-list"
@@ -72,24 +118,32 @@ export function FeatureList({ schema, onUpdate }: FeatureListProps) {
               background: 'white',
             }}
           >
-            <h3
+            <EditableText
+              content={item.title}
+              onUpdate={(updatedContent) =>
+                handleItemTitleUpdate(index, updatedContent)
+              }
+              as="h3"
+              className="feature-item-title"
               style={{
                 fontSize: '1.5rem',
                 fontWeight: '600',
                 marginBottom: '0.75rem',
               }}
-            >
-              {getLocalizedValue(item.title, locale)}
-            </h3>
-            <p
+            />
+            <EditableText
+              content={item.description}
+              onUpdate={(updatedContent) =>
+                handleItemDescriptionUpdate(index, updatedContent)
+              }
+              as="p"
+              className="feature-item-description"
               style={{
                 fontSize: '1rem',
                 color: '#6b7280',
                 lineHeight: '1.6',
               }}
-            >
-              {getLocalizedValue(item.description, locale)}
-            </p>
+            />
           </div>
         ))}
       </div>
