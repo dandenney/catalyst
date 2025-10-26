@@ -9,7 +9,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.FeatureList = FeatureList;
 const react_1 = __importDefault(require("react"));
-const core_1 = require("@catalyst/core");
 const react_2 = require("@catalyst/react");
 function FeatureList({ schema, onUpdate }) {
     const { locale } = (0, react_2.useCatalyst)();
@@ -24,6 +23,46 @@ function FeatureList({ schema, onUpdate }) {
                 heading: {
                     ...schema.fields.heading,
                     value: updatedContent,
+                },
+            },
+        };
+        onUpdate(updatedSchema);
+    };
+    const handleItemTitleUpdate = (index, updatedContent) => {
+        if (!onUpdate)
+            return;
+        const updatedItems = [...fields.items.value];
+        updatedItems[index] = {
+            ...updatedItems[index],
+            title: updatedContent,
+        };
+        const updatedSchema = {
+            ...schema,
+            fields: {
+                ...schema.fields,
+                items: {
+                    ...schema.fields.items,
+                    value: updatedItems,
+                },
+            },
+        };
+        onUpdate(updatedSchema);
+    };
+    const handleItemDescriptionUpdate = (index, updatedContent) => {
+        if (!onUpdate)
+            return;
+        const updatedItems = [...fields.items.value];
+        updatedItems[index] = {
+            ...updatedItems[index],
+            description: updatedContent,
+        };
+        const updatedSchema = {
+            ...schema,
+            fields: {
+                ...schema.fields,
+                items: {
+                    ...schema.fields.items,
+                    value: updatedItems,
                 },
             },
         };
@@ -50,14 +89,14 @@ function FeatureList({ schema, onUpdate }) {
                 borderRadius: '8px',
                 background: 'white',
             } },
-            react_1.default.createElement("h3", { style: {
+            react_1.default.createElement(react_2.EditableText, { content: item.title, onUpdate: (updatedContent) => handleItemTitleUpdate(index, updatedContent), as: "h3", className: "feature-item-title", style: {
                     fontSize: '1.5rem',
                     fontWeight: '600',
                     marginBottom: '0.75rem',
-                } }, (0, core_1.getLocalizedValue)(item.title, locale)),
-            react_1.default.createElement("p", { style: {
+                } }),
+            react_1.default.createElement(react_2.EditableText, { content: item.description, onUpdate: (updatedContent) => handleItemDescriptionUpdate(index, updatedContent), as: "p", className: "feature-item-description", style: {
                     fontSize: '1rem',
                     color: '#6b7280',
                     lineHeight: '1.6',
-                } }, (0, core_1.getLocalizedValue)(item.description, locale))))))));
+                } })))))));
 }
