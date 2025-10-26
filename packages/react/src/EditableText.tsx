@@ -3,7 +3,7 @@
  * Renders text that can be edited in-place when in edit mode
  */
 
-import React, { useState, useCallback, KeyboardEvent } from 'react';
+import React, { useState, useCallback, useRef, useEffect, KeyboardEvent } from 'react';
 import { LocalizedContent, getLocalizedValue } from '@catalyst/core';
 import { useCatalyst } from './CatalystContext';
 
@@ -24,60 +24,67 @@ export function EditableText({
 }: EditableTextProps) {
   const { locale, isEditMode } = useCatalyst();
   const [isEditing, setIsEditing] = useState(false);
-  const [editValue, setEditValue] = useState('');
+  const elementRef = useRef<HTMLElement>(null);
+  const originalValueRef = useRef<string>('');
 
   const displayValue = getLocalizedValue(content, locale);
 
   const handleDoubleClick = useCallback(() => {
-    if (isEditMode) {
-      setEditValue(displayValue);
+    if (isEditMode && elementRef.current) {
+      originalValueRef.current = displayValue;
       setIsEditing(true);
+      // Focus the element after it becomes contentEditable
+      setTimeout(() => {
+        if (elementRef.current) {
+          elementRef.current.focus();
+          // Select all text for easy editing
+          const range = document.createRange();
+          const selection = window.getSelection();
+          range.selectNodeContents(elementRef.current);
+          selection?.removeAllRanges();
+          selection?.addRange(range);
+        }
+      }, 0);
     }
   }, [isEditMode, displayValue]);
 
   const handleBlur = useCallback(() => {
-    if (isEditing && editValue !== displayValue && onUpdate) {
-      const updated: LocalizedContent = {
-        ...content,
-        [locale]: editValue,
-      };
-      onUpdate(updated);
+    if (isEditing && elementRef.current && onUpdate) {
+      const newValue = elementRef.current.textContent || '';
+      if (newValue !== originalValueRef.current) {
+        const updated: LocalizedContent = {
+          ...content,
+          [locale]: newValue,
+        };
+        onUpdate(updated);
+      }
     }
     setIsEditing(false);
-  }, [isEditing, editValue, displayValue, content, locale, onUpdate]);
+  }, [isEditing, content, locale, onUpdate]);
 
   const handleKeyDown = useCallback(
-    (e: KeyboardEvent<HTMLInputElement>) => {
+    (e: KeyboardEvent<HTMLElement>) => {
       if (e.key === 'Enter') {
+        e.preventDefault();
         e.currentTarget.blur();
       } else if (e.key === 'Escape') {
+        // Restore original value on escape
+        if (elementRef.current) {
+          elementRef.current.textContent = originalValueRef.current;
+        }
         setIsEditing(false);
+        e.currentTarget.blur();
       }
     },
     []
   );
 
-  if (isEditing) {
-    return (
-      <input
-        type="text"
-        value={editValue}
-        onChange={(e) => setEditValue(e.target.value)}
-        onBlur={handleBlur}
-        onKeyDown={handleKeyDown}
-        autoFocus
-        className={`${className} catalyst-editing`}
-        style={{
-          font: 'inherit',
-          border: '2px solid #3b82f6',
-          background: '#eff6ff',
-          padding: '2px 4px',
-          borderRadius: '2px',
-          outline: 'none',
-        }}
-      />
-    );
-  }
+  // Sync the text content when displayValue changes externally
+  useEffect(() => {
+    if (!isEditing && elementRef.current) {
+      elementRef.current.textContent = displayValue;
+    }
+  }, [displayValue, isEditing]);
 
   const editModeStyle = isEditMode
     ? {
@@ -87,14 +94,26 @@ export function EditableText({
       }
     : {};
 
-  const mergedStyle = { ...customStyle, ...editModeStyle };
+  const editingStyle = isEditing
+    ? {
+        outline: '2px solid #3b82f6',
+        outlineOffset: '2px',
+      }
+    : {};
+
+  const mergedStyle = { ...customStyle, ...editModeStyle, ...editingStyle };
 
   return (
     <Component
+      ref={elementRef as any}
       className={className}
       onDoubleClick={handleDoubleClick}
+      onBlur={handleBlur}
+      onKeyDown={handleKeyDown}
       style={mergedStyle}
       title={isEditMode ? 'Double-click to edit' : undefined}
+      contentEditable={isEditing}
+      suppressContentEditableWarning
     >
       {displayValue}
     </Component>

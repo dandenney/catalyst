@@ -19,14 +19,14 @@
         "title": {
           "type": "text",
           "value": {
-            "en": "Testing this",
+            "en": "This the heading",
             "es": "Bienvenido a Catalyst"
           }
         },
         "subtitle": {
           "type": "text",
           "value": {
-            "en": "Build amazing pages with ease",
+            "en": "Yo, yo",
             "es": "Crea páginas increíbles con facilidad"
           }
         },
@@ -58,7 +58,7 @@
         "heading": {
           "type": "text",
           "value": {
-            "en": "Why Choose Catalyst?",
+            "en": "Catalyst, yo",
             "es": "¿Por qué elegir Catalyst?"
           }
         },
