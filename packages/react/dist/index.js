@@ -24,3 +24,4 @@ __exportStar(require("./hooks"), exports);
 __exportStar(require("./ComponentPanel"), exports);
 __exportStar(require("./ComponentControls"), exports);
 __exportStar(require("./InsertButton"), exports);
+__exportStar(require("./VariantSelector"), exports);
