@@ -11,7 +11,11 @@
   "dependencies": {
     "react": "19.2.0",
     "react-dom": "19.2.0",
-    "next": "16.0.0"
+    "next": "16.0.0",
+    "@catalyst/core": "^0.1.0",
+    "@catalyst/storage": "^0.1.0",
+    "@catalyst/react": "^0.1.0",
+    "@catalyst/demo-components": "^0.1.0"
   },
   "devDependencies": {
     "typescript": "^5",
