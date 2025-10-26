@@ -5,3 +5,6 @@
 export * from './CatalystContext';
 export * from './EditableText';
 export * from './hooks';
+export * from './ComponentPanel';
+export * from './ComponentControls';
+export * from './InsertButton';
