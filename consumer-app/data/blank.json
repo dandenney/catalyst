@@ -1,0 +1,15 @@
+{
+  "id": "blank-page",
+  "slug": "blank",
+  "metadata": {
+    "title": {
+      "en": "Blank Page - Catalyst",
+      "es": "Página en Blanco - Catalyst"
+    },
+    "description": {
+      "en": "An empty page ready for your content",
+      "es": "Una página vacía lista para tu contenido"
+    }
+  },
+  "components": []
+}

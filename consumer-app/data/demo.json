@@ -1,0 +1,103 @@
+{
+  "id": "demo-page",
+  "slug": "demo",
+  "metadata": {
+    "title": {
+      "en": "Demo Page - Catalyst",
+      "es": "Página de Demostración - Catalyst"
+    },
+    "description": {
+      "en": "A demonstration of Catalyst's capabilities",
+      "es": "Una demostración de las capacidades de Catalyst"
+    }
+  },
+  "components": [
+    {
+      "id": "hero-1",
+      "type": "HeroBanner",
+      "fields": {
+        "title": {
+          "type": "text",
+          "value": {
+            "en": "Testing this",
+            "es": "Bienvenido a Catalyst"
+          }
+        },
+        "subtitle": {
+          "type": "text",
+          "value": {
+            "en": "Build amazing pages with ease",
+            "es": "Crea páginas increíbles con facilidad"
+          }
+        },
+        "backgroundImage": {
+          "type": "image",
+          "src": "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=1200&h=600&fit=crop",
+          "alt": {
+            "en": "Technology background with digital network",
+            "es": "Fondo de tecnología con red digital"
+          }
+        }
+      },
+      "variants": {
+        "finance": {
+          "subtitle": {
+            "type": "text",
+            "value": {
+              "en": "Financial solutions tailored for you",
+              "es": "Soluciones financieras diseñadas para ti"
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "features-1",
+      "type": "FeatureList",
+      "fields": {
+        "heading": {
+          "type": "text",
+          "value": {
+            "en": "Why Choose Catalyst?",
+            "es": "¿Por qué elegir Catalyst?"
+          }
+        },
+        "items": {
+          "type": "list",
+          "value": [
+            {
+              "title": {
+                "en": "Schema-Driven",
+                "es": "Basado en Esquemas"
+              },
+              "description": {
+                "en": "Define your content structure with flexible, type-safe schemas that adapt to your needs.",
+                "es": "Define la estructura de tu contenido con esquemas flexibles y seguros que se adaptan a tus necesidades."
+              }
+            },
+            {
+              "title": {
+                "en": "Localization Built-In",
+                "es": "Localización Integrada"
+              },
+              "description": {
+                "en": "Support multiple languages out of the box with automatic fallback to your default locale.",
+                "es": "Soporte para múltiples idiomas desde el principio con respaldo automático a tu idioma predeterminado."
+              }
+            },
+            {
+              "title": {
+                "en": "Personalization Ready",
+                "es": "Listo para Personalización"
+              },
+              "description": {
+                "en": "Deliver tailored experiences based on user segments and preferences with variant support.",
+                "es": "Ofrece experiencias personalizadas basadas en segmentos de usuarios y preferencias con soporte de variantes."
+              }
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

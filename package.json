@@ -1,0 +1,17 @@
+{
+  "name": "catalyst-monorepo",
+  "version": "0.1.0",
+  "private": true,
+  "workspaces": [
+    "packages/*",
+    "consumer-app"
+  ],
+  "scripts": {
+    "dev": "npm run dev --workspace=consumer-app",
+    "build": "npm run build --workspaces --if-present",
+    "clean": "rm -rf node_modules packages/*/node_modules packages/*/dist consumer-app/node_modules consumer-app/.next"
+  },
+  "devDependencies": {
+    "typescript": "^5.6.3"
+  }
+}
