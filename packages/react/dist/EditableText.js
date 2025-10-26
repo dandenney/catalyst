@@ -44,42 +44,60 @@ const CatalystContext_1 = require("./CatalystContext");
 function EditableText({ content, onUpdate, as: Component = 'span', className = '', style: customStyle = {}, }) {
     const { locale, isEditMode } = (0, CatalystContext_1.useCatalyst)();
     const [isEditing, setIsEditing] = (0, react_1.useState)(false);
-    const [editValue, setEditValue] = (0, react_1.useState)('');
+    const elementRef = (0, react_1.useRef)(null);
+    const originalValueRef = (0, react_1.useRef)('');
     const displayValue = (0, core_1.getLocalizedValue)(content, locale);
     const handleDoubleClick = (0, react_1.useCallback)(() => {
-        if (isEditMode) {
-            setEditValue(displayValue);
+        if (isEditMode && elementRef.current) {
+            originalValueRef.current = displayValue;
             setIsEditing(true);
+            // Focus the element after it becomes contentEditable
+            setTimeout(() => {
+                if (elementRef.current) {
+                    elementRef.current.focus();
+                    // Select all text for easy editing
+                    const range = document.createRange();
+                    const selection = window.getSelection();
+                    range.selectNodeContents(elementRef.current);
+                    selection?.removeAllRanges();
+                    selection?.addRange(range);
+                }
+            }, 0);
         }
     }, [isEditMode, displayValue]);
     const handleBlur = (0, react_1.useCallback)(() => {
-        if (isEditing && editValue !== displayValue && onUpdate) {
-            const updated = {
-                ...content,
-                [locale]: editValue,
-            };
-            onUpdate(updated);
+        if (isEditing && elementRef.current && onUpdate) {
+            const newValue = elementRef.current.textContent || '';
+            if (newValue !== originalValueRef.current) {
+                const updated = {
+                    ...content,
+                    [locale]: newValue,
+                };
+                onUpdate(updated);
+            }
         }
         setIsEditing(false);
-    }, [isEditing, editValue, displayValue, content, locale, onUpdate]);
+    }, [isEditing, content, locale, onUpdate]);
     const handleKeyDown = (0, react_1.useCallback)((e) => {
         if (e.key === 'Enter') {
+            e.preventDefault();
             e.currentTarget.blur();
         }
         else if (e.key === 'Escape') {
+            // Restore original value on escape
+            if (elementRef.current) {
+                elementRef.current.textContent = originalValueRef.current;
+            }
             setIsEditing(false);
+            e.currentTarget.blur();
         }
     }, []);
-    if (isEditing) {
-        return (react_1.default.createElement("input", { type: "text", value: editValue, onChange: (e) => setEditValue(e.target.value), onBlur: handleBlur, onKeyDown: handleKeyDown, autoFocus: true, className: `${className} catalyst-editing`, style: {
-                font: 'inherit',
-                border: '2px solid #3b82f6',
-                background: '#eff6ff',
-                padding: '2px 4px',
-                borderRadius: '2px',
-                outline: 'none',
-            } }));
-    }
+    // Sync the text content when displayValue changes externally
+    (0, react_1.useEffect)(() => {
+        if (!isEditing && elementRef.current) {
+            elementRef.current.textContent = displayValue;
+        }
+    }, [displayValue, isEditing]);
     const editModeStyle = isEditMode
         ? {
             cursor: 'pointer',
@@ -87,6 +105,12 @@ function EditableText({ content, onUpdate, as: Component = 'span', className = '
             outlineOffset: '2px',
         }
         : {};
-    const mergedStyle = { ...customStyle, ...editModeStyle };
-    return (react_1.default.createElement(Component, { className: className, onDoubleClick: handleDoubleClick, style: mergedStyle, title: isEditMode ? 'Double-click to edit' : undefined }, displayValue));
+    const editingStyle = isEditing
+        ? {
+            outline: '2px solid #3b82f6',
+            outlineOffset: '2px',
+        }
+        : {};
+    const mergedStyle = { ...customStyle, ...editModeStyle, ...editingStyle };
+    return (react_1.default.createElement(Component, { ref: elementRef, className: className, onDoubleClick: handleDoubleClick, onBlur: handleBlur, onKeyDown: handleKeyDown, style: mergedStyle, title: isEditMode ? 'Double-click to edit' : undefined, contentEditable: isEditing, suppressContentEditableWarning: true }, displayValue));
 }
