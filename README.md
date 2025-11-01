@@ -29,6 +29,7 @@ catalyst/
   - `/demo`: Prefilled page with HeroBanner and FeatureList
   - `/blank`: Empty page ready for content
 - **Edit-in-Place**: Double-click text fields to edit when in edit mode
+- **Component Previews**: Visual thumbnails of components in the component picker (Playwright-generated screenshots)
 - **Localization**: Support for English (`en`) and Spanish (`es`) with automatic fallback
 - **Personalization**: URL-based segment targeting (e.g., `?segment=finance` changes hero subtitle)
 - **Local Storage**: JSON file-based storage (no external database)
@@ -38,6 +39,7 @@ catalyst/
 ### Prerequisites
 
 - Node.js 20+ and npm
+- Playwright browsers (auto-installed when generating previews)
 
 ### Installation
 
@@ -93,6 +95,30 @@ This will show the "finance" variant subtitle in the hero banner.
 You can combine multiple parameters:
 - `http://localhost:3000/demo?lang=es&edit=true&segment=finance`
 
+### Component Previews
+
+When adding components in edit mode, you'll see visual preview thumbnails in the component picker panel. These previews are pixel-perfect screenshots generated using Playwright.
+
+**To generate/update component previews:**
+
+1. Ensure the dev server is running:
+```bash
+npm run dev
+```
+
+2. In another terminal, run the preview generation script:
+```bash
+npm run generate-previews --workspace=consumer-app
+```
+
+This will:
+- Launch a headless browser
+- Navigate to each component's preview route (`/preview/[component]`)
+- Capture 800x600px screenshots
+- Save images to `consumer-app/public/component-previews/`
+
+Preview images are committed to the repository and served statically.
+
 ## Architecture & Data Flow
 
 The application uses a clean client-server separation:
@@ -147,6 +173,8 @@ The Next.js consumer app includes:
 - **API Routes** (`/api/pages/[slug]`): Server-side data handling
 - **Custom Hook** (`usePage`): Client-side data fetching via fetch API
 - **Pages**: `/demo` and `/blank` routes
+- **Preview Route** (`/preview/[component]`): Isolated component rendering for screenshot generation
+- **Scripts** (`scripts/generate-previews.ts`): Playwright script for generating component thumbnails
 
 ## Data Format
 
@@ -203,6 +231,15 @@ Build specific package:
 ```bash
 npm run build --workspace=@catalyst/core
 ```
+
+### Generating Component Previews
+
+Generate component preview images:
+```bash
+npm run generate-previews --workspace=consumer-app
+```
+
+Note: Dev server must be running for preview generation to work.
 
 ### Clean Build Artifacts
 
