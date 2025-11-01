@@ -126,16 +126,42 @@ export function ComponentPanel({ isOpen, onClose, onSelectComponent }: Component
                   }
                 }}
               >
-                <div style={{ display: 'flex', alignItems: 'start', gap: '0.75rem' }}>
-                  <span style={{ fontSize: '2rem', lineHeight: 1 }}>
-                    {component.icon}
-                  </span>
-                  <div style={{ flex: 1 }}>
-                    <div style={{ fontWeight: '600', marginBottom: '0.25rem' }}>
-                      {component.label}
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                  {/* Thumbnail Preview */}
+                  {component.thumbnail && (
+                    <div
+                      style={{
+                        width: '100%',
+                        height: '150px',
+                        borderRadius: '4px',
+                        overflow: 'hidden',
+                        background: '#f3f4f6',
+                      }}
+                    >
+                      <img
+                        src={component.thumbnail}
+                        alt={`${component.label} preview`}
+                        style={{
+                          width: '100%',
+                          height: '100%',
+                          objectFit: 'cover',
+                        }}
+                      />
                     </div>
-                    <div style={{ fontSize: '0.875rem', color: '#6b7280' }}>
-                      {component.description}
+                  )}
+
+                  {/* Component Info */}
+                  <div style={{ display: 'flex', alignItems: 'start', gap: '0.75rem' }}>
+                    <span style={{ fontSize: '2rem', lineHeight: 1 }}>
+                      {component.icon}
+                    </span>
+                    <div style={{ flex: 1 }}>
+                      <div style={{ fontWeight: '600', marginBottom: '0.25rem' }}>
+                        {component.label}
+                      </div>
+                      <div style={{ fontSize: '0.875rem', color: '#6b7280' }}>
+                        {component.description}
+                      </div>
                     </div>
                   </div>
                 </div>

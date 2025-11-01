@@ -83,6 +83,7 @@ export const COMPONENT_REGISTRY: Record<string, ComponentMetadata> = {
     description: 'Large banner with background image, title, and subtitle',
     category: 'layout',
     icon: '🎯',
+    thumbnail: '/component-previews/HeroBanner.png',
     createDefault: createDefaultHeroBanner,
   },
   FeatureList: {
@@ -91,6 +92,7 @@ export const COMPONENT_REGISTRY: Record<string, ComponentMetadata> = {
     description: 'Grid of features with titles and descriptions',
     category: 'content',
     icon: '📋',
+    thumbnail: '/component-previews/FeatureList.png',
     createDefault: createDefaultFeatureList,
   },
 };

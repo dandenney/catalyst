@@ -74,6 +74,7 @@ exports.COMPONENT_REGISTRY = {
         description: 'Large banner with background image, title, and subtitle',
         category: 'layout',
         icon: '🎯',
+        thumbnail: '/component-previews/HeroBanner.png',
         createDefault: createDefaultHeroBanner,
     },
     FeatureList: {
@@ -82,6 +83,7 @@ exports.COMPONENT_REGISTRY = {
         description: 'Grid of features with titles and descriptions',
         category: 'content',
         icon: '📋',
+        thumbnail: '/component-previews/FeatureList.png',
         createDefault: createDefaultFeatureList,
     },
 };

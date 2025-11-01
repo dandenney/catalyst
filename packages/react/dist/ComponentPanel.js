@@ -118,11 +118,24 @@ function ComponentPanel({ isOpen, onClose, onSelectComponent }) {
                             e.currentTarget.style.borderColor = '#e5e7eb';
                         }
                     } },
-                    react_1.default.createElement("div", { style: { display: 'flex', alignItems: 'start', gap: '0.75rem' } },
-                        react_1.default.createElement("span", { style: { fontSize: '2rem', lineHeight: 1 } }, component.icon),
-                        react_1.default.createElement("div", { style: { flex: 1 } },
-                            react_1.default.createElement("div", { style: { fontWeight: '600', marginBottom: '0.25rem' } }, component.label),
-                            react_1.default.createElement("div", { style: { fontSize: '0.875rem', color: '#6b7280' } }, component.description)))))))),
+                    react_1.default.createElement("div", { style: { display: 'flex', flexDirection: 'column', gap: '0.75rem' } },
+                        component.thumbnail && (react_1.default.createElement("div", { style: {
+                                width: '100%',
+                                height: '150px',
+                                borderRadius: '4px',
+                                overflow: 'hidden',
+                                background: '#f3f4f6',
+                            } },
+                            react_1.default.createElement("img", { src: component.thumbnail, alt: `${component.label} preview`, style: {
+                                    width: '100%',
+                                    height: '100%',
+                                    objectFit: 'cover',
+                                } }))),
+                        react_1.default.createElement("div", { style: { display: 'flex', alignItems: 'start', gap: '0.75rem' } },
+                            react_1.default.createElement("span", { style: { fontSize: '2rem', lineHeight: 1 } }, component.icon),
+                            react_1.default.createElement("div", { style: { flex: 1 } },
+                                react_1.default.createElement("div", { style: { fontWeight: '600', marginBottom: '0.25rem' } }, component.label),
+                                react_1.default.createElement("div", { style: { fontSize: '0.875rem', color: '#6b7280' } }, component.description))))))))),
             selectedComponent && (react_1.default.createElement("div", { style: {
                     padding: '1rem',
                     borderTop: '1px solid #e5e7eb',
