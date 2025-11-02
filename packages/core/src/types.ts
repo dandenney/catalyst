@@ -70,6 +70,16 @@ export interface FeatureListSchema extends ComponentSchema {
   };
 }
 
+export interface CTASectionSchema extends ComponentSchema {
+  type: 'CTASection';
+  fields: {
+    heading: TextField;
+    description: TextField;
+    buttonText: TextField;
+    buttonUrl: TextField;
+  };
+}
+
 // Page schema
 export interface PageSchema {
   id: string;

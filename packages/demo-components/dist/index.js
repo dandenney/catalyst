@@ -20,4 +20,5 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
 Object.defineProperty(exports, "__esModule", { value: true });
 __exportStar(require("./HeroBanner"), exports);
 __exportStar(require("./FeatureList"), exports);
+__exportStar(require("./CTASection"), exports);
 __exportStar(require("./ComponentRenderer"), exports);

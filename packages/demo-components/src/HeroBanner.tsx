@@ -3,9 +3,9 @@
  * Hero banner with background image, title, and subtitle
  */
 
-import React, { useState } from 'react';
-import { HeroBannerSchema, applyPersonalization, getLocalizedValue } from '@catalyst/core';
-import { EditableText, useCatalyst, VariantSelector } from '@catalyst/react';
+import React from 'react';
+import { HeroBannerSchema, getLocalizedValue } from '@catalyst/core';
+import { EditableText, useCatalyst, VariantSelector, useVariantHandling } from '@catalyst/react';
 
 export interface HeroBannerProps {
   schema: HeroBannerSchema;
@@ -13,85 +13,13 @@ export interface HeroBannerProps {
 }
 
 export function HeroBanner({ schema, onUpdate }: HeroBannerProps) {
-  const { personalization, locale, isEditMode } = useCatalyst();
-  const [editingVariant, setEditingVariant] = useState<string | null>(null);
+  const { locale, isEditMode } = useCatalyst();
 
-  // In edit mode, determine which schema to display based on editing variant
-  // In view mode, apply personalization normally
-  const displaySchema = isEditMode && editingVariant
-    ? applyPersonalization(schema, { segment: editingVariant }) as HeroBannerSchema
-    : isEditMode
-    ? schema
-    : applyPersonalization(schema, personalization) as HeroBannerSchema;
+  // Use the centralized variant handling hook
+  const { displaySchema, editingVariant, setEditingVariant, updateField } =
+    useVariantHandling({ schema });
 
   const { fields } = displaySchema;
-
-  const handleFieldUpdate = (fieldName: keyof HeroBannerSchema['fields'], updatedContent: any) => {
-    if (!onUpdate) return;
-
-    // If editing a variant, update the variant fields
-    if (editingVariant) {
-      // Get the current field from either the variant or base fields
-      const variantField = schema.variants?.[editingVariant]?.[fieldName];
-      const currentField = variantField || schema.fields[fieldName];
-
-      // Create the updated field based on field type
-      let updatedField;
-      if (currentField.type === 'image') {
-        // For image fields, update the alt text
-        updatedField = {
-          ...currentField,
-          alt: updatedContent,
-        };
-      } else {
-        // For text fields, update the value
-        updatedField = {
-          ...currentField,
-          value: updatedContent,
-        };
-      }
-
-      const updatedSchema: HeroBannerSchema = {
-        ...schema,
-        variants: {
-          ...schema.variants,
-          [editingVariant]: {
-            ...schema.variants?.[editingVariant],
-            [fieldName]: updatedField,
-          },
-        },
-      };
-      onUpdate(updatedSchema);
-    } else {
-      // Otherwise, update base fields
-      const currentField = schema.fields[fieldName];
-
-      // Create the updated field based on field type
-      let updatedField;
-      if (currentField.type === 'image') {
-        // For image fields, update the alt text
-        updatedField = {
-          ...currentField,
-          alt: updatedContent,
-        };
-      } else {
-        // For text fields, update the value
-        updatedField = {
-          ...currentField,
-          value: updatedContent,
-        };
-      }
-
-      const updatedSchema: HeroBannerSchema = {
-        ...schema,
-        fields: {
-          ...schema.fields,
-          [fieldName]: updatedField,
-        },
-      };
-      onUpdate(updatedSchema);
-    }
-  };
 
   const bgImage = getLocalizedValue(fields.backgroundImage.alt, locale);
 
@@ -153,7 +81,7 @@ export function HeroBanner({ schema, onUpdate }: HeroBannerProps) {
           )}
           <EditableText
             content={fields.title.value}
-            onUpdate={(content) => handleFieldUpdate('title', content)}
+            onUpdate={(content) => updateField('title', content, onUpdate)}
             as="h1"
             className="hero-title"
             style={{
@@ -186,7 +114,7 @@ export function HeroBanner({ schema, onUpdate }: HeroBannerProps) {
           )}
           <EditableText
             content={fields.subtitle.value}
-            onUpdate={(content) => handleFieldUpdate('subtitle', content)}
+            onUpdate={(content) => updateField('subtitle', content, onUpdate)}
             as="p"
             className="hero-subtitle"
             style={{

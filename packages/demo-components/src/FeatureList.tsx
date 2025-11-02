@@ -3,9 +3,9 @@
  * Displays a list of features with titles and descriptions
  */
 
-import React, { useState } from 'react';
-import { FeatureListSchema, getLocalizedValue, applyPersonalization, TextField, Field } from '@catalyst/core';
-import { EditableText, useCatalyst, VariantSelector } from '@catalyst/react';
+import React from 'react';
+import { FeatureListSchema, LocalizedContent } from '@catalyst/core';
+import { EditableText, useCatalyst, VariantSelector, useVariantHandling } from '@catalyst/react';
 
 export interface FeatureListProps {
   schema: FeatureListSchema;
@@ -13,176 +13,40 @@ export interface FeatureListProps {
 }
 
 export function FeatureList({ schema, onUpdate }: FeatureListProps) {
-  const { locale, isEditMode, personalization } = useCatalyst();
-  const [editingVariant, setEditingVariant] = useState<string | null>(null);
+  const { isEditMode } = useCatalyst();
 
-  // Log when editing variant changes
-  const handleVariantChange = (variant: string | null) => {
-    console.log('🎯 FeatureList: editingVariant changing from', editingVariant, 'to', variant);
-    setEditingVariant(variant);
-  };
-
-  // In edit mode, determine which schema to display based on editing variant
-  // In view mode, apply personalization normally
-  const displaySchema = isEditMode && editingVariant
-    ? applyPersonalization(schema, { segment: editingVariant }) as FeatureListSchema
-    : isEditMode
-    ? schema
-    : applyPersonalization(schema, personalization) as FeatureListSchema;
+  // Use the centralized variant handling hook
+  const { displaySchema, editingVariant, setEditingVariant, updateField } =
+    useVariantHandling({ schema });
 
   const { fields } = displaySchema;
 
-  const handleHeadingUpdate = (updatedContent: any) => {
+  const handleItemTitleUpdate = (index: number, updatedContent: LocalizedContent) => {
     if (!onUpdate) return;
 
-    // If editing a variant, update the variant fields
-    if (editingVariant) {
-      // Get the current field from either the variant or base fields
-      const variantField = schema.variants?.[editingVariant]?.heading;
-      const currentField = variantField || schema.fields.heading;
+    // Clone the current items array
+    const updatedItems = [...fields.items.value];
+    updatedItems[index] = {
+      ...updatedItems[index],
+      title: updatedContent,
+    };
 
-      const updatedSchema: FeatureListSchema = {
-        ...schema,
-        variants: {
-          ...schema.variants,
-          [editingVariant]: {
-            ...schema.variants?.[editingVariant],
-            heading: {
-              ...currentField,
-              value: updatedContent,
-            } as TextField,
-          },
-        },
-      };
-      onUpdate(updatedSchema);
-    } else {
-      // Otherwise, update base fields
-      const updatedSchema: FeatureListSchema = {
-        ...schema,
-        fields: {
-          ...schema.fields,
-          heading: {
-            ...schema.fields.heading,
-            value: updatedContent,
-          },
-        },
-      };
-      onUpdate(updatedSchema);
-    }
+    // Use the hook's updateField to handle variant logic
+    updateField('items', updatedItems, onUpdate);
   };
 
-  const handleItemTitleUpdate = (index: number, updatedContent: any) => {
+  const handleItemDescriptionUpdate = (index: number, updatedContent: LocalizedContent) => {
     if (!onUpdate) return;
 
-    console.log('🔧 handleItemTitleUpdate called', {
-      editingVariant,
-      index,
-      updatedContent,
-      hasVariants: !!schema.variants,
-      variantKeys: schema.variants ? Object.keys(schema.variants) : []
-    });
+    // Clone the current items array
+    const updatedItems = [...fields.items.value];
+    updatedItems[index] = {
+      ...updatedItems[index],
+      description: updatedContent,
+    };
 
-    // If editing a variant, update the variant fields
-    if (editingVariant) {
-      console.log('📝 Editing variant:', editingVariant);
-      // Get current items from variant or base
-      const variantItems = schema.variants?.[editingVariant]?.items as FeatureListSchema['fields']['items'] | undefined;
-      const currentItems = variantItems?.value || schema.fields.items.value;
-      console.log('📋 Current items source:', variantItems ? 'variant' : 'base', currentItems);
-
-      const updatedItems = [...currentItems];
-      updatedItems[index] = {
-        ...updatedItems[index],
-        title: updatedContent,
-      };
-
-      const updatedSchema: FeatureListSchema = {
-        ...schema,
-        variants: {
-          ...schema.variants,
-          [editingVariant]: {
-            ...schema.variants?.[editingVariant],
-            items: {
-              type: 'list',
-              value: updatedItems,
-            } as FeatureListSchema['fields']['items'],
-          } as Partial<Record<string, Field>>,
-        },
-      };
-      console.log('✅ Updated schema (variant):', JSON.stringify(updatedSchema, null, 2));
-      onUpdate(updatedSchema);
-    } else {
-      console.log('📝 Editing base');
-
-      // Otherwise, update base fields
-      const updatedItems = [...schema.fields.items.value];
-      updatedItems[index] = {
-        ...updatedItems[index],
-        title: updatedContent,
-      };
-
-      const updatedSchema: FeatureListSchema = {
-        ...schema,
-        fields: {
-          ...schema.fields,
-          items: {
-            ...schema.fields.items,
-            value: updatedItems,
-          },
-        },
-      };
-      onUpdate(updatedSchema);
-    }
-  };
-
-  const handleItemDescriptionUpdate = (index: number, updatedContent: any) => {
-    if (!onUpdate) return;
-
-    // If editing a variant, update the variant fields
-    if (editingVariant) {
-      // Get current items from variant or base
-      const variantItems = schema.variants?.[editingVariant]?.items as FeatureListSchema['fields']['items'] | undefined;
-      const currentItems = variantItems?.value || schema.fields.items.value;
-      const updatedItems = [...currentItems];
-      updatedItems[index] = {
-        ...updatedItems[index],
-        description: updatedContent,
-      };
-
-      const updatedSchema: FeatureListSchema = {
-        ...schema,
-        variants: {
-          ...schema.variants,
-          [editingVariant]: {
-            ...schema.variants?.[editingVariant],
-            items: {
-              type: 'list',
-              value: updatedItems,
-            } as FeatureListSchema['fields']['items'],
-          } as Partial<Record<string, Field>>,
-        },
-      };
-      onUpdate(updatedSchema);
-    } else {
-      // Otherwise, update base fields
-      const updatedItems = [...schema.fields.items.value];
-      updatedItems[index] = {
-        ...updatedItems[index],
-        description: updatedContent,
-      };
-
-      const updatedSchema: FeatureListSchema = {
-        ...schema,
-        fields: {
-          ...schema.fields,
-          items: {
-            ...schema.fields.items,
-            value: updatedItems,
-          },
-        },
-      };
-      onUpdate(updatedSchema);
-    }
+    // Use the hook's updateField to handle variant logic
+    updateField('items', updatedItems, onUpdate);
   };
 
   return (
@@ -230,7 +94,7 @@ export function FeatureList({ schema, onUpdate }: FeatureListProps) {
           <VariantSelector
             variants={schema.variants}
             currentVariant={editingVariant}
-            onVariantChange={handleVariantChange}
+            onVariantChange={setEditingVariant}
           />
         </div>
       )}
@@ -256,7 +120,7 @@ export function FeatureList({ schema, onUpdate }: FeatureListProps) {
         )}
         <EditableText
           content={fields.heading.value}
-          onUpdate={handleHeadingUpdate}
+          onUpdate={(content) => updateField('heading', content, onUpdate)}
           as="h2"
           className="feature-list-heading"
           style={{

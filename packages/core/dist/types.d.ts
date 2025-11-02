@@ -53,6 +53,15 @@ export interface FeatureListSchema extends ComponentSchema {
         };
     };
 }
+export interface CTASectionSchema extends ComponentSchema {
+    type: 'CTASection';
+    fields: {
+        heading: TextField;
+        description: TextField;
+        buttonText: TextField;
+        buttonUrl: TextField;
+    };
+}
 export interface PageSchema {
     id: string;
     slug: string;

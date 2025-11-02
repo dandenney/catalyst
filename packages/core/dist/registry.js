@@ -65,6 +65,33 @@ function createDefaultFeatureList() {
     };
 }
 /**
+ * Creates a default CTASection component
+ */
+function createDefaultCTASection() {
+    return {
+        id: `cta-${Date.now()}`,
+        type: 'CTASection',
+        fields: {
+            heading: {
+                type: 'text',
+                value: { en: 'Ready to get started?' },
+            },
+            description: {
+                type: 'text',
+                value: { en: 'Join thousands of users who are already using our platform.' },
+            },
+            buttonText: {
+                type: 'text',
+                value: { en: 'Get Started' },
+            },
+            buttonUrl: {
+                type: 'text',
+                value: { en: '/signup' },
+            },
+        },
+    };
+}
+/**
  * Registry of all available components
  */
 exports.COMPONENT_REGISTRY = {
@@ -85,6 +112,15 @@ exports.COMPONENT_REGISTRY = {
         icon: '📋',
         thumbnail: '/component-previews/FeatureList.png',
         createDefault: createDefaultFeatureList,
+    },
+    CTASection: {
+        type: 'CTASection',
+        label: 'CTA Section',
+        description: 'Call-to-action section with heading, description, and button',
+        category: 'content',
+        icon: '📢',
+        thumbnail: '/component-previews/CTASection.png',
+        createDefault: createDefaultCTASection,
     },
 };
 /**

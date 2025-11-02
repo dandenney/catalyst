@@ -178,6 +178,52 @@
           }
         }
       }
+    },
+    {
+      "id": "cta-1762118904046",
+      "type": "CTASection",
+      "fields": {
+        "heading": {
+          "type": "text",
+          "value": {
+            "en": "Ready to get started?"
+          }
+        },
+        "description": {
+          "type": "text",
+          "value": {
+            "en": "Join thousands of users who are already using our platform."
+          }
+        },
+        "buttonText": {
+          "type": "text",
+          "value": {
+            "en": "Get Started"
+          }
+        },
+        "buttonUrl": {
+          "type": "text",
+          "value": {
+            "en": "/signup"
+          }
+        }
+      },
+      "variants": {
+        "isSubscribed": {
+          "heading": {
+            "type": "text",
+            "value": {
+              "en": "Ready to add a team?"
+            }
+          },
+          "description": {
+            "type": "text",
+            "value": {
+              "en": "This would upsell to teams from regular"
+            }
+          }
+        }
+      }
     }
   ]
 }
