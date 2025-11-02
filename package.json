@@ -9,9 +9,17 @@
   "scripts": {
     "dev": "npm run dev --workspace=consumer-app",
     "build": "npm run build --workspaces --if-present",
-    "clean": "rm -rf node_modules packages/*/node_modules packages/*/dist consumer-app/node_modules consumer-app/.next"
+    "clean": "rm -rf node_modules packages/*/node_modules packages/*/dist consumer-app/node_modules consumer-app/.next",
+    "lint": "eslint packages/*/src --ext .ts,.tsx",
+    "lint:fix": "eslint packages/*/src --ext .ts,.tsx --fix",
+    "test": "npm test --workspace=@catalyst/react"
   },
   "devDependencies": {
-    "typescript": "^5.6.3"
+    "typescript": "^5.6.3",
+    "@typescript-eslint/parser": "^6.0.0",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "eslint": "^8.0.0",
+    "eslint-plugin-react": "^7.33.0",
+    "eslint-plugin-react-hooks": "^4.6.0"
   }
 }

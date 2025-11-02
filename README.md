@@ -158,14 +158,19 @@ Storage adapter implementations:
 React bindings including:
 - `CatalystProvider`: Context provider for locale, personalization, and edit mode
 - `EditableText`: Component for editable text fields
-- `useCatalyst`: Hook for accessing context
+- `VariantSelector`: UI for selecting and editing component variants
+- `useCatalyst`: Hook for accessing context (locale, edit mode, personalization)
+- `useVariantHandling`: **Required hook** that centralizes variant logic for all components
 
 ### @catalyst/demo-components
 
 Demo React components:
 - `HeroBanner`: Hero banner component
 - `FeatureList`: Feature list component
+- `CTASection`: Call-to-action component (with gradient background and button)
 - `ComponentRenderer`: Component registry for rendering schemas
+
+**All components are required to support variants for personalization.**
 
 ### Consumer App
 
@@ -218,7 +223,88 @@ Pages are stored as JSON files in `consumer-app/data/`. Example:
 }
 ```
 
+## Creating New Components
+
+All components **must** support variants for personalization. We provide tools to ensure consistency:
+
+### Quick Start
+
+1. **Copy the template**:
+   ```bash
+   cp packages/demo-components/.component-template.tsx packages/demo-components/src/YourComponent.tsx
+   ```
+
+2. **Follow the checklist** in `docs/component-development-guide.md`
+
+3. **Required elements**:
+   - Import and use `useVariantHandling` hook
+   - Render `<VariantSelector>` in edit mode
+   - Use `displaySchema` (not raw `schema`)
+   - Use `updateField` helper for all updates
+
+### Example Component Structure
+
+```tsx
+import { useVariantHandling } from '@catalyst/react';
+
+export function MyComponent({ schema, onUpdate }) {
+  const { locale, isEditMode } = useCatalyst();
+
+  // Required: Use variant handling hook
+  const { displaySchema, editingVariant, setEditingVariant, updateField } =
+    useVariantHandling({ schema });
+
+  const { fields } = displaySchema;
+
+  return (
+    <div>
+      {/* Required: Variant selector */}
+      {isEditMode && (
+        <VariantSelector
+          variants={schema.variants}
+          currentVariant={editingVariant}
+          onVariantChange={setEditingVariant}
+        />
+      )}
+
+      <EditableText
+        content={fields.heading.value}
+        onUpdate={(content) => updateField('heading', content, onUpdate)}
+      />
+    </div>
+  );
+}
+```
+
+### Documentation
+
+- **[Component Development Guide](docs/component-development-guide.md)** - Complete guide with checklist
+- **[Variant Enforcement Summary](docs/variant-enforcement-summary.md)** - Architecture overview
+- **[Component Template](packages/demo-components/.component-template.tsx)** - Starter template
+
+### Enforcement Layers
+
+We ensure variant support through multiple layers:
+
+1. **`useVariantHandling` Hook** - Centralizes all variant logic (required)
+2. **Documentation & Templates** - Clear guidelines and copy-paste template
+3. **ESLint Rules** - Automated linting to catch common mistakes
+4. **TypeScript** - Compile-time type safety
+5. **Manual Testing Checklist** - Runtime verification
+
 ## Development
+
+### Linting
+
+Check for issues:
+```bash
+npm run lint
+```
+
+Auto-fix when possible:
+```bash
+npm run lint:fix
+```
 
 ### Building Packages
 

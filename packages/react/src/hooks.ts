@@ -6,6 +6,9 @@ import { useState, useEffect, useCallback } from 'react';
 import { PageSchema, ComponentSchema } from '@catalyst/core';
 import { useCatalyst } from './CatalystContext';
 
+// Re-export variant handling hook
+export * from './useVariantHandling';
+
 /**
  * Hook to load and manage a page
  */

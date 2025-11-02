@@ -1,6 +1,7 @@
 /**
  * VariantSelector
  * Allows switching between base and variant editing modes
+ * Includes ability to create new variants
  */
 
 import React, { useState, useEffect } from 'react';
@@ -24,29 +25,36 @@ const injectStyles = () => {
 };
 
 export interface VariantSelectorProps {
-  variants?: Record<string, any>;
+  variants?: Record<string, unknown>;
   currentVariant: string | null;
   onVariantChange: (variant: string | null) => void;
 }
 
 export function VariantSelector({
-  variants,
+  variants = {},
   currentVariant,
   onVariantChange,
 }: VariantSelectorProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const [isCreating, setIsCreating] = useState(false);
+  const [newVariantName, setNewVariantName] = useState('');
 
   // Inject styles on mount
   useEffect(() => {
     injectStyles();
   }, []);
 
-  // If no variants exist, don't show the selector
-  if (!variants || Object.keys(variants).length === 0) {
-    return null;
-  }
+  const variantNames = Object.keys(variants || {});
 
-  const variantNames = Object.keys(variants);
+  const handleCreateVariant = () => {
+    if (!newVariantName.trim()) return;
+
+    // Switch to the new variant (it will be created when user makes first edit)
+    onVariantChange(newVariantName.trim());
+    setNewVariantName('');
+    setIsCreating(false);
+    setIsOpen(false);
+  };
 
   return (
     <div
@@ -95,7 +103,11 @@ export function VariantSelector({
         <>
           {/* Backdrop */}
           <div
-            onClick={() => setIsOpen(false)}
+            onClick={() => {
+              setIsOpen(false);
+              setIsCreating(false);
+              setNewVariantName('');
+            }}
             style={{
               position: 'fixed',
               top: 0,
@@ -118,14 +130,13 @@ export function VariantSelector({
               borderRadius: '4px',
               boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
               zIndex: 20,
-              minWidth: '150px',
+              minWidth: '200px',
             }}
           >
             {/* Base option */}
             <button
               className="variant-selector-option"
               onClick={() => {
-                console.log('🔵 VariantSelector: Switching to Base');
                 onVariantChange(null);
                 setIsOpen(false);
               }}
@@ -160,7 +171,6 @@ export function VariantSelector({
                 key={variantName}
                 className="variant-selector-option"
                 onClick={() => {
-                  console.log('🟣 VariantSelector: Switching to variant:', variantName);
                   onVariantChange(variantName);
                   setIsOpen(false);
                 }}
@@ -169,7 +179,7 @@ export function VariantSelector({
                   padding: '0.75rem',
                   background: currentVariant === variantName ? '#f1f5f9' : 'white',
                   border: 'none',
-                  borderBottom: index < variantNames.length - 1 ? '1px solid #e5e7eb' : 'none',
+                  borderBottom: isCreating || index < variantNames.length - 1 ? '1px solid #e5e7eb' : 'none',
                   cursor: 'pointer',
                   fontSize: '0.875rem',
                   textAlign: 'left',
@@ -189,6 +199,111 @@ export function VariantSelector({
                 {variantName}
               </button>
             ))}
+
+            {/* Create new variant form */}
+            {isCreating ? (
+              <div
+                style={{
+                  padding: '0.75rem',
+                  borderTop: variantNames.length > 0 ? '1px solid #e5e7eb' : 'none',
+                }}
+                onClick={(e) => e.stopPropagation()}
+              >
+                <input
+                  type="text"
+                  value={newVariantName}
+                  onChange={(e) => setNewVariantName(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      handleCreateVariant();
+                    } else if (e.key === 'Escape') {
+                      setIsCreating(false);
+                      setNewVariantName('');
+                    }
+                  }}
+                  placeholder="e.g., premium, mobile"
+                  autoFocus
+                  style={{
+                    width: '100%',
+                    padding: '0.5rem',
+                    border: '1px solid #cbd5e1',
+                    borderRadius: '4px',
+                    fontSize: '0.875rem',
+                    marginBottom: '0.5rem',
+                    color: '#1f2937',
+                    backgroundColor: '#ffffff',
+                  }}
+                />
+                <div style={{ display: 'flex', gap: '0.5rem' }}>
+                  <button
+                    onClick={handleCreateVariant}
+                    disabled={!newVariantName.trim()}
+                    style={{
+                      flex: 1,
+                      padding: '0.5rem',
+                      background: newVariantName.trim() ? '#10b981' : '#d1d5db',
+                      color: 'white',
+                      border: 'none',
+                      borderRadius: '4px',
+                      fontSize: '0.75rem',
+                      fontWeight: '600',
+                      cursor: newVariantName.trim() ? 'pointer' : 'not-allowed',
+                    }}
+                  >
+                    Create
+                  </button>
+                  <button
+                    onClick={() => {
+                      setIsCreating(false);
+                      setNewVariantName('');
+                    }}
+                    style={{
+                      flex: 1,
+                      padding: '0.5rem',
+                      background: 'white',
+                      color: '#64748b',
+                      border: '1px solid #cbd5e1',
+                      borderRadius: '4px',
+                      fontSize: '0.75rem',
+                      fontWeight: '600',
+                      cursor: 'pointer',
+                    }}
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </div>
+            ) : (
+              /* Add Variant button */
+              <button
+                className="variant-selector-option"
+                onClick={() => setIsCreating(true)}
+                style={{
+                  width: '100%',
+                  padding: '0.75rem',
+                  background: 'white',
+                  border: 'none',
+                  borderTop: '1px solid #e5e7eb',
+                  cursor: 'pointer',
+                  fontSize: '0.875rem',
+                  textAlign: 'left',
+                  color: '#3b82f6',
+                  fontWeight: '600',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.5rem',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = '#eff6ff';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = 'white';
+                }}
+              >
+                <span style={{ fontSize: '1rem' }}>+</span>
+                Add Variant
+              </button>
+            )}
           </div>
         </>
       )}

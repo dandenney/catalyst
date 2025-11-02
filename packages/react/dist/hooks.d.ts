@@ -2,6 +2,7 @@
  * React hooks for Catalyst
  */
 import { PageSchema, ComponentSchema } from '@catalyst/core';
+export * from './useVariantHandling';
 /**
  * Hook to load and manage a page
  */
