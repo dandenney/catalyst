@@ -80,6 +80,23 @@ export interface CTASectionSchema extends ComponentSchema {
   };
 }
 
+export interface OnlineCoursesSchema extends ComponentSchema {
+  type: 'OnlineCourses';
+  fields: {
+    title: TextField;
+    description: TextField;
+    courses: {
+      type: 'list';
+      value: Array<{
+        courseName: LocalizedContent;
+        instructor: LocalizedContent;
+        description: LocalizedContent;
+        duration: LocalizedContent;
+      }>;
+    };
+  };
+}
+
 // Page schema
 export interface PageSchema {
   id: string;

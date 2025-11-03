@@ -100,86 +100,6 @@
       }
     },
     {
-      "id": "features-1761495662760",
-      "type": "FeatureList",
-      "fields": {
-        "heading": {
-          "type": "text",
-          "value": {
-            "en": "Base Features"
-          }
-        },
-        "items": {
-          "type": "list",
-          "value": [
-            {
-              "title": {
-                "en": "Base Feature One"
-              },
-              "description": {
-                "en": "This is the base version of feature one."
-              }
-            },
-            {
-              "title": {
-                "en": "Base Feature Two"
-              },
-              "description": {
-                "en": "This is the base version of feature two."
-              }
-            },
-            {
-              "title": {
-                "en": "Base Feature Three"
-              },
-              "description": {
-                "en": "This is the base version of feature three."
-              }
-            }
-          ]
-        }
-      },
-      "variants": {
-        "finance": {
-          "heading": {
-            "type": "text",
-            "value": {
-              "en": "Finance Features"
-            }
-          },
-          "items": {
-            "type": "list",
-            "value": [
-              {
-                "title": {
-                  "en": "Finance Feature One"
-                },
-                "description": {
-                  "en": "This is the finance version of feature one."
-                }
-              },
-              {
-                "title": {
-                  "en": "Finance Feature Two"
-                },
-                "description": {
-                  "en": "This is the finance version of feature two."
-                }
-              },
-              {
-                "title": {
-                  "en": "Finance Feature Three"
-                },
-                "description": {
-                  "en": "This is the finance version of feature three."
-                }
-              }
-            ]
-          }
-        }
-      }
-    },
-    {
       "id": "cta-1762118904046",
       "type": "CTASection",
       "fields": {
@@ -222,6 +142,71 @@
               "en": "This would upsell to teams from regular"
             }
           }
+        }
+      }
+    },
+    {
+      "id": "courses-1762126774286",
+      "type": "OnlineCourses",
+      "fields": {
+        "title": {
+          "type": "text",
+          "value": {
+            "en": "Online Courses"
+          }
+        },
+        "description": {
+          "type": "text",
+          "value": {
+            "en": "Explore our selection of online courses designed to help you grow your skills."
+          }
+        },
+        "courses": {
+          "type": "list",
+          "value": [
+            {
+              "courseName": {
+                "en": "Introduction to Web Development"
+              },
+              "instructor": {
+                "en": "Sarah Johnson"
+              },
+              "description": {
+                "en": "Learn the fundamentals of HTML, CSS, and JavaScript to build modern websites."
+              },
+              "duration": {
+                "en": "8 weeks"
+              }
+            },
+            {
+              "courseName": {
+                "en": "Advanced React Patterns"
+              },
+              "instructor": {
+                "en": "Michael Chen"
+              },
+              "description": {
+                "en": "Master advanced React concepts including hooks, context, and performance optimization."
+              },
+              "duration": {
+                "en": "6 weeks"
+              }
+            },
+            {
+              "courseName": {
+                "en": "Full-Stack Development"
+              },
+              "instructor": {
+                "en": "Emma Davis"
+              },
+              "description": {
+                "en": "Build complete web applications from front-end to back-end with Node.js and databases."
+              },
+              "duration": {
+                "en": "12 weeks"
+              }
+            }
+          ]
         }
       }
     }

@@ -3,7 +3,7 @@
  * Central registry of all available components for the page builder
  */
 
-import { ComponentSchema, HeroBannerSchema, FeatureListSchema, CTASectionSchema } from './types';
+import { ComponentSchema, HeroBannerSchema, FeatureListSchema, CTASectionSchema, OnlineCoursesSchema } from './types';
 
 export interface ComponentMetadata {
   type: string;
@@ -102,6 +102,49 @@ function createDefaultCTASection(): CTASectionSchema {
 }
 
 /**
+ * Creates a default OnlineCourses component
+ */
+function createDefaultOnlineCourses(): OnlineCoursesSchema {
+  return {
+    id: `courses-${Date.now()}`,
+    type: 'OnlineCourses',
+    fields: {
+      title: {
+        type: 'text',
+        value: { en: 'Online Courses' },
+      },
+      description: {
+        type: 'text',
+        value: { en: 'Explore our selection of online courses designed to help you grow your skills.' },
+      },
+      courses: {
+        type: 'list',
+        value: [
+          {
+            courseName: { en: 'Introduction to Web Development' },
+            instructor: { en: 'Sarah Johnson' },
+            description: { en: 'Learn the fundamentals of HTML, CSS, and JavaScript to build modern websites.' },
+            duration: { en: '8 weeks' },
+          },
+          {
+            courseName: { en: 'Advanced React Patterns' },
+            instructor: { en: 'Michael Chen' },
+            description: { en: 'Master advanced React concepts including hooks, context, and performance optimization.' },
+            duration: { en: '6 weeks' },
+          },
+          {
+            courseName: { en: 'Full-Stack Development' },
+            instructor: { en: 'Emma Davis' },
+            description: { en: 'Build complete web applications from front-end to back-end with Node.js and databases.' },
+            duration: { en: '12 weeks' },
+          },
+        ],
+      },
+    },
+  };
+}
+
+/**
  * Registry of all available components
  */
 export const COMPONENT_REGISTRY: Record<string, ComponentMetadata> = {
@@ -131,6 +174,15 @@ export const COMPONENT_REGISTRY: Record<string, ComponentMetadata> = {
     icon: '📢',
     thumbnail: '/component-previews/CTASection.png',
     createDefault: createDefaultCTASection,
+  },
+  OnlineCourses: {
+    type: 'OnlineCourses',
+    label: 'Online Courses',
+    description: 'Display a grid of online courses with title, description, and instructor',
+    category: 'content',
+    icon: '🎓',
+    thumbnail: '/component-previews/OnlineCourses.png',
+    createDefault: createDefaultOnlineCourses,
   },
 };
 

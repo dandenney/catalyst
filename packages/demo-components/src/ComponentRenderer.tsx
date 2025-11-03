@@ -8,6 +8,7 @@ import { ComponentSchema } from '@catalyst/core';
 import { HeroBanner } from './HeroBanner';
 import { FeatureList } from './FeatureList';
 import { CTASection } from './CTASection';
+import { OnlineCourses } from './OnlineCourses';
 
 export interface ComponentRendererProps {
   schema: ComponentSchema;
@@ -24,6 +25,9 @@ export function ComponentRenderer({ schema, onUpdate }: ComponentRendererProps) 
 
     case 'CTASection':
       return <CTASection schema={schema as any} onUpdate={onUpdate as any} />;
+
+    case 'OnlineCourses':
+      return <OnlineCourses schema={schema as any} onUpdate={onUpdate as any} />;
 
     default:
       return (
