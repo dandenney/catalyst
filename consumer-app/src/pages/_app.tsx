@@ -4,6 +4,17 @@ import { CatalystProvider } from "@catalyst/react";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 
+// Import components to register with Catalyst
+// Components live in the consumer app - this is the pattern for real-world usage
+import { CTASection, HeroBanner, FeatureList } from "@/components";
+
+// Component registry - maps schema type names to React components
+const components = {
+  CTASection,
+  HeroBanner,
+  FeatureList,
+};
+
 export default function App({ Component, pageProps }: AppProps) {
   const router = useRouter();
   const [isEditMode, setIsEditMode] = useState(false);
@@ -32,6 +43,7 @@ export default function App({ Component, pageProps }: AppProps) {
       locale={locale}
       personalization={{ segment }}
       isEditMode={isEditMode}
+      components={components}
     >
       <Component {...pageProps} />
     </CatalystProvider>

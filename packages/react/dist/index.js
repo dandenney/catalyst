@@ -18,10 +18,23 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
     for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+// Core components and context
 __exportStar(require("./CatalystContext"), exports);
+__exportStar(require("./ComponentRenderer"), exports);
+__exportStar(require("./EditableImage"), exports);
+__exportStar(require("./EditableLink"), exports);
 __exportStar(require("./EditableText"), exports);
 __exportStar(require("./hooks"), exports);
 __exportStar(require("./ComponentPanel"), exports);
 __exportStar(require("./ComponentControls"), exports);
 __exportStar(require("./InsertButton"), exports);
 __exportStar(require("./VariantSelector"), exports);
+// UI primitives (shadcn/ui-style components)
+__exportStar(require("./ui/button"), exports);
+__exportStar(require("./ui/input"), exports);
+__exportStar(require("./ui/label"), exports);
+__exportStar(require("./ui/popover"), exports);
+__exportStar(require("./ui/dropdown-menu"), exports);
+__exportStar(require("./ui/sheet"), exports);
+// Utilities
+__exportStar(require("./lib/utils"), exports);

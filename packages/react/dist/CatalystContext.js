@@ -1,7 +1,7 @@
 "use strict";
 /**
  * Catalyst Context Provider
- * Provides locale, personalization, and editing state to components
+ * Provides locale, personalization, editing state, and component registry to components
  */
 var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
@@ -41,12 +41,13 @@ exports.CatalystProvider = CatalystProvider;
 exports.useCatalyst = useCatalyst;
 const react_1 = __importStar(require("react"));
 const CatalystContext = (0, react_1.createContext)(null);
-function CatalystProvider({ locale = 'en', personalization = {}, isEditMode = false, storageAdapter, children, }) {
+function CatalystProvider({ locale = 'en', personalization = {}, isEditMode = false, storageAdapter, components = {}, children, }) {
     const value = {
         locale,
         personalization,
         isEditMode,
         storageAdapter,
+        components,
     };
     return (react_1.default.createElement(CatalystContext.Provider, { value: value }, children));
 }

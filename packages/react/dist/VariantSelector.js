@@ -40,31 +40,13 @@ var __importStar = (this && this.__importStar) || (function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.VariantSelector = VariantSelector;
 const react_1 = __importStar(require("react"));
-// Inject styles directly into the document head
-const injectStyles = () => {
-    if (typeof document === 'undefined')
-        return;
-    const styleId = 'variant-selector-styles';
-    if (document.getElementById(styleId))
-        return;
-    const style = document.createElement('style');
-    style.id = styleId;
-    style.textContent = `
-    .variant-selector-option {
-      color: #000000 !important;
-      -webkit-text-fill-color: #000000 !important;
-    }
-  `;
-    document.head.appendChild(style);
-};
+const utils_1 = require("./lib/utils");
+const dropdown_menu_1 = require("./ui/dropdown-menu");
+const button_1 = require("./ui/button");
+const input_1 = require("./ui/input");
 function VariantSelector({ variants = {}, currentVariant, onVariantChange, }) {
-    const [isOpen, setIsOpen] = (0, react_1.useState)(false);
     const [isCreating, setIsCreating] = (0, react_1.useState)(false);
     const [newVariantName, setNewVariantName] = (0, react_1.useState)('');
-    // Inject styles on mount
-    (0, react_1.useEffect)(() => {
-        injectStyles();
-    }, []);
     const variantNames = Object.keys(variants || {});
     const handleCreateVariant = () => {
         if (!newVariantName.trim())
@@ -73,179 +55,32 @@ function VariantSelector({ variants = {}, currentVariant, onVariantChange, }) {
         onVariantChange(newVariantName.trim());
         setNewVariantName('');
         setIsCreating(false);
-        setIsOpen(false);
     };
-    return (react_1.default.createElement("div", { style: {
-            position: 'relative',
-            display: 'inline-block',
-        } },
-        react_1.default.createElement("button", { onClick: () => setIsOpen(!isOpen), style: {
-                padding: '0.5rem 0.75rem',
-                background: currentVariant ? '#8b5cf6' : 'white',
-                border: '1px solid #cbd5e1',
-                borderRadius: '4px',
-                cursor: 'pointer',
-                fontSize: '0.875rem',
-                color: currentVariant ? 'white' : '#64748b',
-                fontWeight: '500',
-                boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '0.5rem',
-            }, title: "Select variant to edit", onMouseEnter: (e) => {
-                if (currentVariant) {
-                    e.currentTarget.style.background = '#7c3aed';
-                }
-                else {
-                    e.currentTarget.style.background = '#f1f5f9';
-                }
-            }, onMouseLeave: (e) => {
-                if (currentVariant) {
-                    e.currentTarget.style.background = '#8b5cf6';
-                }
-                else {
-                    e.currentTarget.style.background = 'white';
-                }
-            } },
-            currentVariant ? `Variant: ${currentVariant}` : 'Base',
-            react_1.default.createElement("span", { style: { fontSize: '0.75rem' } }, "\u25BC")),
-        isOpen && (react_1.default.createElement(react_1.default.Fragment, null,
-            react_1.default.createElement("div", { onClick: () => {
-                    setIsOpen(false);
-                    setIsCreating(false);
-                    setNewVariantName('');
-                }, style: {
-                    position: 'fixed',
-                    top: 0,
-                    left: 0,
-                    right: 0,
-                    bottom: 0,
-                    zIndex: 19,
-                } }),
-            react_1.default.createElement("div", { style: {
-                    position: 'absolute',
-                    top: '100%',
-                    right: 0,
-                    marginTop: '0.25rem',
-                    background: 'white',
-                    border: '1px solid #cbd5e1',
-                    borderRadius: '4px',
-                    boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
-                    zIndex: 20,
-                    minWidth: '200px',
-                } },
-                react_1.default.createElement("button", { className: "variant-selector-option", onClick: () => {
-                        onVariantChange(null);
-                        setIsOpen(false);
-                    }, style: {
-                        width: '100%',
-                        padding: '0.75rem',
-                        background: currentVariant === null ? '#f1f5f9' : 'white',
-                        border: 'none',
-                        borderBottom: '1px solid #e5e7eb',
-                        cursor: 'pointer',
-                        fontSize: '0.875rem',
-                        textAlign: 'left',
-                        fontWeight: currentVariant === null ? '600' : '400',
-                    }, onMouseEnter: (e) => {
-                        if (currentVariant !== null) {
-                            e.currentTarget.style.background = '#f8fafc';
+    return (react_1.default.createElement(dropdown_menu_1.DropdownMenu, null,
+        react_1.default.createElement(dropdown_menu_1.DropdownMenuTrigger, { asChild: true },
+            react_1.default.createElement(button_1.Button, { variant: currentVariant ? 'accent' : 'outline', size: "sm", className: "gap-2", title: "Select variant to edit" },
+                currentVariant ? `Variant: ${currentVariant}` : 'Base',
+                react_1.default.createElement("span", { className: "text-xs" }, "\u25BC"))),
+        react_1.default.createElement(dropdown_menu_1.DropdownMenuContent, { align: "end" },
+            react_1.default.createElement(dropdown_menu_1.DropdownMenuItem, { onClick: () => onVariantChange(null), className: (0, utils_1.cn)(currentVariant === null && 'font-semibold bg-[var(--catalyst-secondary)]') }, "Base"),
+            variantNames.map((variantName) => (react_1.default.createElement(dropdown_menu_1.DropdownMenuItem, { key: variantName, onClick: () => onVariantChange(variantName), className: (0, utils_1.cn)(currentVariant === variantName && 'font-semibold bg-[var(--catalyst-secondary)]') }, variantName))),
+            react_1.default.createElement(dropdown_menu_1.DropdownMenuSeparator, null),
+            isCreating ? (react_1.default.createElement("div", { className: "p-2", onClick: (e) => e.stopPropagation() },
+                react_1.default.createElement(input_1.Input, { type: "text", value: newVariantName, onChange: (e) => setNewVariantName(e.target.value), onKeyDown: (e) => {
+                        if (e.key === 'Enter') {
+                            handleCreateVariant();
                         }
-                    }, onMouseLeave: (e) => {
-                        if (currentVariant !== null) {
-                            e.currentTarget.style.background = 'white';
+                        else if (e.key === 'Escape') {
+                            setIsCreating(false);
+                            setNewVariantName('');
                         }
-                    } }, "Base"),
-                variantNames.map((variantName, index) => (react_1.default.createElement("button", { key: variantName, className: "variant-selector-option", onClick: () => {
-                        onVariantChange(variantName);
-                        setIsOpen(false);
-                    }, style: {
-                        width: '100%',
-                        padding: '0.75rem',
-                        background: currentVariant === variantName ? '#f1f5f9' : 'white',
-                        border: 'none',
-                        borderBottom: isCreating || index < variantNames.length - 1 ? '1px solid #e5e7eb' : 'none',
-                        cursor: 'pointer',
-                        fontSize: '0.875rem',
-                        textAlign: 'left',
-                        fontWeight: currentVariant === variantName ? '600' : '400',
-                    }, onMouseEnter: (e) => {
-                        if (currentVariant !== variantName) {
-                            e.currentTarget.style.background = '#f8fafc';
-                        }
-                    }, onMouseLeave: (e) => {
-                        if (currentVariant !== variantName) {
-                            e.currentTarget.style.background = 'white';
-                        }
-                    } }, variantName))),
-                isCreating ? (react_1.default.createElement("div", { style: {
-                        padding: '0.75rem',
-                        borderTop: variantNames.length > 0 ? '1px solid #e5e7eb' : 'none',
-                    }, onClick: (e) => e.stopPropagation() },
-                    react_1.default.createElement("input", { type: "text", value: newVariantName, onChange: (e) => setNewVariantName(e.target.value), onKeyDown: (e) => {
-                            if (e.key === 'Enter') {
-                                handleCreateVariant();
-                            }
-                            else if (e.key === 'Escape') {
-                                setIsCreating(false);
-                                setNewVariantName('');
-                            }
-                        }, placeholder: "e.g., premium, mobile", autoFocus: true, style: {
-                            width: '100%',
-                            padding: '0.5rem',
-                            border: '1px solid #cbd5e1',
-                            borderRadius: '4px',
-                            fontSize: '0.875rem',
-                            marginBottom: '0.5rem',
-                            color: '#1f2937',
-                            backgroundColor: '#ffffff',
-                        } }),
-                    react_1.default.createElement("div", { style: { display: 'flex', gap: '0.5rem' } },
-                        react_1.default.createElement("button", { onClick: handleCreateVariant, disabled: !newVariantName.trim(), style: {
-                                flex: 1,
-                                padding: '0.5rem',
-                                background: newVariantName.trim() ? '#10b981' : '#d1d5db',
-                                color: 'white',
-                                border: 'none',
-                                borderRadius: '4px',
-                                fontSize: '0.75rem',
-                                fontWeight: '600',
-                                cursor: newVariantName.trim() ? 'pointer' : 'not-allowed',
-                            } }, "Create"),
-                        react_1.default.createElement("button", { onClick: () => {
-                                setIsCreating(false);
-                                setNewVariantName('');
-                            }, style: {
-                                flex: 1,
-                                padding: '0.5rem',
-                                background: 'white',
-                                color: '#64748b',
-                                border: '1px solid #cbd5e1',
-                                borderRadius: '4px',
-                                fontSize: '0.75rem',
-                                fontWeight: '600',
-                                cursor: 'pointer',
-                            } }, "Cancel")))) : (
-                /* Add Variant button */
-                react_1.default.createElement("button", { className: "variant-selector-option", onClick: () => setIsCreating(true), style: {
-                        width: '100%',
-                        padding: '0.75rem',
-                        background: 'white',
-                        border: 'none',
-                        borderTop: '1px solid #e5e7eb',
-                        cursor: 'pointer',
-                        fontSize: '0.875rem',
-                        textAlign: 'left',
-                        color: '#3b82f6',
-                        fontWeight: '600',
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '0.5rem',
-                    }, onMouseEnter: (e) => {
-                        e.currentTarget.style.background = '#eff6ff';
-                    }, onMouseLeave: (e) => {
-                        e.currentTarget.style.background = 'white';
-                    } },
-                    react_1.default.createElement("span", { style: { fontSize: '1rem' } }, "+"),
-                    "Add Variant")))))));
+                    }, placeholder: "e.g., premium, mobile", autoFocus: true, className: "mb-2" }),
+                react_1.default.createElement("div", { className: "flex gap-2" },
+                    react_1.default.createElement(button_1.Button, { variant: "success", size: "sm", onClick: handleCreateVariant, disabled: !newVariantName.trim(), className: "flex-1" }, "Create"),
+                    react_1.default.createElement(button_1.Button, { variant: "outline", size: "sm", onClick: () => {
+                            setIsCreating(false);
+                            setNewVariantName('');
+                        }, className: "flex-1" }, "Cancel")))) : (react_1.default.createElement(dropdown_menu_1.DropdownMenuItem, { onClick: () => setIsCreating(true), className: "text-[var(--catalyst-primary)] font-semibold gap-2" },
+                react_1.default.createElement("span", null, "+"),
+                "Add Variant")))));
 }

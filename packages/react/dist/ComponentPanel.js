@@ -40,11 +40,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.ComponentPanel = ComponentPanel;
 const react_1 = __importStar(require("react"));
 const core_1 = require("@catalyst/core");
+const utils_1 = require("./lib/utils");
+const sheet_1 = require("./ui/sheet");
+const button_1 = require("./ui/button");
 function ComponentPanel({ isOpen, onClose, onSelectComponent }) {
     const [selectedComponent, setSelectedComponent] = (0, react_1.useState)(null);
     const availableComponents = (0, core_1.getAvailableComponents)();
-    if (!isOpen)
-        return null;
     const handleSelectComponent = (component) => {
         setSelectedComponent(component);
     };
@@ -54,109 +55,25 @@ function ComponentPanel({ isOpen, onClose, onSelectComponent }) {
             setSelectedComponent(null);
         }
     };
-    return (react_1.default.createElement(react_1.default.Fragment, null,
-        react_1.default.createElement("div", { onClick: onClose, style: {
-                position: 'fixed',
-                top: 0,
-                left: 0,
-                right: 0,
-                bottom: 0,
-                background: 'rgba(0, 0, 0, 0.3)',
-                zIndex: 999,
-            } }),
-        react_1.default.createElement("div", { style: {
-                position: 'fixed',
-                top: 0,
-                right: 0,
-                bottom: 0,
-                width: '400px',
-                background: 'white',
-                boxShadow: '-4px 0 12px rgba(0, 0, 0, 0.1)',
-                zIndex: 1000,
-                display: 'flex',
-                flexDirection: 'column',
-            } },
-            react_1.default.createElement("div", { style: {
-                    padding: '1.5rem',
-                    borderBottom: '1px solid #e5e7eb',
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                } },
-                react_1.default.createElement("h2", { style: { fontSize: '1.25rem', fontWeight: '600', margin: 0 } }, "Add Component"),
-                react_1.default.createElement("button", { onClick: onClose, style: {
-                        background: 'none',
-                        border: 'none',
-                        fontSize: '1.5rem',
-                        cursor: 'pointer',
-                        padding: '0.25rem 0.5rem',
-                        color: '#6b7280',
-                    }, "aria-label": "Close panel" }, "\u00D7")),
-            react_1.default.createElement("div", { style: {
-                    flex: 1,
-                    overflowY: 'auto',
-                    padding: '1rem',
-                } },
-                react_1.default.createElement("div", { style: { display: 'flex', flexDirection: 'column', gap: '0.75rem' } }, availableComponents.map((component) => (react_1.default.createElement("button", { key: component.type, onClick: () => handleSelectComponent(component), style: {
-                        padding: '1rem',
-                        border: selectedComponent?.type === component.type
-                            ? '2px solid #3b82f6'
-                            : '1px solid #e5e7eb',
-                        borderRadius: '8px',
-                        background: selectedComponent?.type === component.type
-                            ? '#eff6ff'
-                            : 'white',
-                        cursor: 'pointer',
-                        textAlign: 'left',
-                        transition: 'all 0.2s',
-                    }, onMouseEnter: (e) => {
-                        if (selectedComponent?.type !== component.type) {
-                            e.currentTarget.style.borderColor = '#cbd5e1';
-                        }
-                    }, onMouseLeave: (e) => {
-                        if (selectedComponent?.type !== component.type) {
-                            e.currentTarget.style.borderColor = '#e5e7eb';
-                        }
-                    } },
-                    react_1.default.createElement("div", { style: { display: 'flex', flexDirection: 'column', gap: '0.75rem' } },
-                        component.thumbnail && (react_1.default.createElement("div", { style: {
-                                width: '100%',
-                                height: '150px',
-                                borderRadius: '4px',
-                                overflow: 'hidden',
-                                background: '#f3f4f6',
-                            } },
-                            react_1.default.createElement("img", { src: component.thumbnail, alt: `${component.label} preview`, style: {
-                                    width: '100%',
-                                    height: '100%',
-                                    objectFit: 'cover',
-                                } }))),
-                        react_1.default.createElement("div", { style: { display: 'flex', alignItems: 'start', gap: '0.75rem' } },
-                            react_1.default.createElement("span", { style: { fontSize: '2rem', lineHeight: 1 } }, component.icon),
-                            react_1.default.createElement("div", { style: { flex: 1 } },
-                                react_1.default.createElement("div", { style: { fontWeight: '600', marginBottom: '0.25rem' } }, component.label),
-                                react_1.default.createElement("div", { style: { fontSize: '0.875rem', color: '#6b7280' } }, component.description))))))))),
-            selectedComponent && (react_1.default.createElement("div", { style: {
-                    padding: '1rem',
-                    borderTop: '1px solid #e5e7eb',
-                    background: '#f9fafb',
-                } },
-                react_1.default.createElement("div", { style: { marginBottom: '1rem', fontSize: '0.875rem', color: '#6b7280' } },
+    return (react_1.default.createElement(sheet_1.Sheet, { open: isOpen, onOpenChange: (open) => !open && onClose() },
+        react_1.default.createElement(sheet_1.SheetContent, { side: "right", className: "flex flex-col w-[400px] sm:max-w-[400px] p-0" },
+            react_1.default.createElement(sheet_1.SheetHeader, null,
+                react_1.default.createElement(sheet_1.SheetTitle, null, "Add Component")),
+            react_1.default.createElement("div", { className: "flex-1 overflow-y-auto p-4" },
+                react_1.default.createElement("div", { className: "flex flex-col gap-3" }, availableComponents.map((component) => (react_1.default.createElement("button", { key: component.type, onClick: () => handleSelectComponent(component), className: (0, utils_1.cn)('p-4 rounded-[var(--catalyst-radius-lg)] text-left transition-all', selectedComponent?.type === component.type
+                        ? 'border-2 border-[var(--catalyst-primary)] bg-blue-50'
+                        : 'border border-[var(--catalyst-border)] bg-[var(--catalyst-background)] hover:border-[var(--catalyst-border-input)]') },
+                    react_1.default.createElement("div", { className: "flex flex-col gap-3" },
+                        component.thumbnail && (react_1.default.createElement("div", { className: "w-full h-[150px] rounded-[var(--catalyst-radius-sm)] overflow-hidden bg-[var(--catalyst-muted)]" },
+                            react_1.default.createElement("img", { src: component.thumbnail, alt: `${component.label} preview`, className: "w-full h-full object-cover" }))),
+                        react_1.default.createElement("div", { className: "flex items-start gap-3" },
+                            react_1.default.createElement("span", { className: "text-2xl leading-none" }, component.icon),
+                            react_1.default.createElement("div", { className: "flex-1" },
+                                react_1.default.createElement("div", { className: "font-semibold mb-1" }, component.label),
+                                react_1.default.createElement("div", { className: "text-sm text-[var(--catalyst-muted-foreground)]" }, component.description))))))))),
+            selectedComponent && (react_1.default.createElement(sheet_1.SheetFooter, { className: "flex-col items-stretch gap-4" },
+                react_1.default.createElement("div", { className: "text-sm text-[var(--catalyst-muted-foreground)]" },
                     react_1.default.createElement("strong", null, selectedComponent.label),
                     " will be added to your page"),
-                react_1.default.createElement("button", { onClick: handleAddComponent, style: {
-                        width: '100%',
-                        padding: '0.75rem',
-                        background: '#3b82f6',
-                        color: 'white',
-                        border: 'none',
-                        borderRadius: '6px',
-                        fontSize: '1rem',
-                        fontWeight: '600',
-                        cursor: 'pointer',
-                    }, onMouseEnter: (e) => {
-                        e.currentTarget.style.background = '#2563eb';
-                    }, onMouseLeave: (e) => {
-                        e.currentTarget.style.background = '#3b82f6';
-                    } }, "Add to Page"))))));
+                react_1.default.createElement(button_1.Button, { onClick: handleAddComponent, className: "w-full" }, "Add to Page"))))));
 }

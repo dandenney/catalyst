@@ -41,6 +41,7 @@ exports.EditableText = EditableText;
 const react_1 = __importStar(require("react"));
 const core_1 = require("@catalyst/core");
 const CatalystContext_1 = require("./CatalystContext");
+const utils_1 = require("./lib/utils");
 function EditableText({ content, onUpdate, as: Component = 'span', className = '', style: customStyle = {}, }) {
     const { locale, isEditMode } = (0, CatalystContext_1.useCatalyst)();
     const [isEditing, setIsEditing] = (0, react_1.useState)(false);
@@ -98,19 +99,5 @@ function EditableText({ content, onUpdate, as: Component = 'span', className = '
             elementRef.current.textContent = displayValue;
         }
     }, [displayValue, isEditing]);
-    const editModeStyle = isEditMode
-        ? {
-            cursor: 'pointer',
-            outline: '1px dashed #94a3b8',
-            outlineOffset: '2px',
-        }
-        : {};
-    const editingStyle = isEditing
-        ? {
-            outline: '2px solid #3b82f6',
-            outlineOffset: '2px',
-        }
-        : {};
-    const mergedStyle = { ...customStyle, ...editModeStyle, ...editingStyle };
-    return (react_1.default.createElement(Component, { ref: elementRef, className: className, onDoubleClick: handleDoubleClick, onBlur: handleBlur, onKeyDown: handleKeyDown, style: mergedStyle, title: isEditMode ? 'Double-click to edit' : undefined, contentEditable: isEditing, suppressContentEditableWarning: true }, displayValue));
+    return (react_1.default.createElement(Component, { ref: elementRef, className: (0, utils_1.cn)(className, isEditMode && 'cursor-pointer outline-1 outline-dashed outline-[var(--catalyst-edit-outline)] outline-offset-2', isEditing && 'outline-2 outline-solid outline-[var(--catalyst-edit-active)] outline-offset-2'), onDoubleClick: handleDoubleClick, onBlur: handleBlur, onKeyDown: handleKeyDown, style: customStyle, title: isEditMode ? 'Double-click to edit' : undefined, contentEditable: isEditing, suppressContentEditableWarning: true }, displayValue));
 }

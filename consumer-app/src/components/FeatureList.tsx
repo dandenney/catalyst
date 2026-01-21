@@ -51,46 +51,20 @@ export function FeatureList({ schema, onUpdate }: FeatureListProps) {
 
   return (
     <div
-      className="feature-list"
-      style={{
-        position: 'relative',
-        padding: '3rem 1rem',
-        maxWidth: '1200px',
-        margin: '0 auto',
-        border: isEditMode ? '2px dashed #cbd5e1' : 'none',
-        borderRadius: isEditMode ? '8px' : '0',
-      }}
+      className={`feature-list relative px-4 py-12 max-w-screen-xl mx-auto ${
+        isEditMode ? 'border-2 border-dashed border-slate-300 rounded-lg' : ''
+      }`}
     >
       {/* Component ID label in edit mode */}
       {isEditMode && (
-        <div
-          style={{
-            position: 'absolute',
-            top: '0.5rem',
-            left: '1rem',
-            background: '#f3f4f6',
-            padding: '4px 8px',
-            borderRadius: '4px',
-            fontSize: '0.75rem',
-            color: '#6b7280',
-            fontFamily: 'monospace',
-            zIndex: 10,
-          }}
-        >
+        <div className="absolute top-2 left-4 bg-gray-100 px-2 py-1 rounded text-xs text-gray-500 font-mono z-10">
           {schema.id}
         </div>
       )}
 
-      {/* Variant Selector in edit mode */}
+      {/* Variant Selector in edit mode - positioned below ID label to avoid overlap with ComponentControls */}
       {isEditMode && (
-        <div
-          style={{
-            position: 'absolute',
-            top: '1rem',
-            right: '1rem',
-            zIndex: 10,
-          }}
-        >
+        <div className="absolute top-10 left-4 z-10">
           <VariantSelector
             variants={schema.variants}
             currentVariant={editingVariant}
@@ -98,23 +72,9 @@ export function FeatureList({ schema, onUpdate }: FeatureListProps) {
           />
         </div>
       )}
-      <div style={{ position: 'relative', marginBottom: '2rem' }}>
+      <div className="relative mb-8">
         {isEditMode && editingVariant && schema.variants?.[editingVariant]?.heading && (
-          <div
-            style={{
-              position: 'absolute',
-              top: '-24px',
-              left: '50%',
-              transform: 'translateX(-50%)',
-              background: '#8b5cf6',
-              color: 'white',
-              padding: '2px 8px',
-              borderRadius: '4px',
-              fontSize: '0.75rem',
-              fontWeight: '500',
-              whiteSpace: 'nowrap',
-            }}
-          >
+          <div className="absolute -top-6 left-1/2 -translate-x-1/2 bg-violet-600 text-white px-2 py-0.5 rounded text-xs font-medium whitespace-nowrap">
             Variant Override
           </div>
         )}
@@ -122,49 +82,18 @@ export function FeatureList({ schema, onUpdate }: FeatureListProps) {
           content={fields.heading.value}
           onUpdate={(content) => updateField('heading', content, onUpdate)}
           as="h2"
-          className="feature-list-heading"
-          style={{
-            fontSize: '2.5rem',
-            fontWeight: 'bold',
-            textAlign: 'center',
-          }}
+          className="feature-list-heading text-4xl font-bold text-center"
         />
       </div>
-      <div
-        style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-          gap: '2rem',
-        }}
-      >
+      <div className="grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))] gap-8">
         {fields.items.value.map((item, index) => (
           <div
             key={index}
-            className="feature-item"
-            style={{
-              position: 'relative',
-              padding: '1.5rem',
-              border: '1px solid #e5e7eb',
-              borderRadius: '8px',
-              background: 'white',
-            }}
+            className="feature-item relative p-6 border border-gray-200 rounded-lg bg-white"
           >
             {/* Variant Override indicator for the entire items list */}
             {isEditMode && editingVariant && schema.variants?.[editingVariant]?.items && index === 0 && (
-              <div
-                style={{
-                  position: 'absolute',
-                  top: '-12px',
-                  right: '8px',
-                  background: '#8b5cf6',
-                  color: 'white',
-                  padding: '2px 8px',
-                  borderRadius: '4px',
-                  fontSize: '0.75rem',
-                  fontWeight: '500',
-                  whiteSpace: 'nowrap',
-                }}
-              >
+              <div className="absolute -top-3 right-2 bg-violet-600 text-white px-2 py-0.5 rounded text-xs font-medium whitespace-nowrap">
                 Variant Override (All Items)
               </div>
             )}
@@ -174,12 +103,7 @@ export function FeatureList({ schema, onUpdate }: FeatureListProps) {
                 handleItemTitleUpdate(index, updatedContent)
               }
               as="h3"
-              className="feature-item-title"
-              style={{
-                fontSize: '1.5rem',
-                fontWeight: '600',
-                marginBottom: '0.75rem',
-              }}
+              className="feature-item-title text-2xl font-semibold mb-3"
             />
             <EditableText
               content={item.description}
@@ -187,12 +111,7 @@ export function FeatureList({ schema, onUpdate }: FeatureListProps) {
                 handleItemDescriptionUpdate(index, updatedContent)
               }
               as="p"
-              className="feature-item-description"
-              style={{
-                fontSize: '1rem',
-                color: '#6b7280',
-                lineHeight: '1.6',
-              }}
+              className="feature-item-description text-base text-gray-500 leading-relaxed"
             />
           </div>
         ))}

@@ -13,174 +13,7 @@
   },
   "components": [
     {
-      "id": "hero-1",
-      "type": "HeroBanner",
-      "fields": {
-        "title": {
-          "type": "text",
-          "value": {
-            "en": "This the heading",
-            "es": "Bienvenido a Catalyst"
-          }
-        },
-        "subtitle": {
-          "type": "text",
-          "value": {
-            "en": "This is the default option",
-            "es": "Crea páginas increíbles con facilidad"
-          }
-        },
-        "backgroundImage": {
-          "type": "image",
-          "src": "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=1200&h=600&fit=crop",
-          "alt": {
-            "en": "Technology background with digital network",
-            "es": "Fondo de tecnología con red digital"
-          }
-        }
-      },
-      "variants": {
-        "finance": {
-          "subtitle": {
-            "type": "text",
-            "value": {
-              "en": "Financial solutions tailored for you",
-              "es": "Soluciones financieras diseñadas para ti"
-            }
-          }
-        }
-      }
-    },
-    {
-      "id": "features-1",
-      "type": "FeatureList",
-      "fields": {
-        "heading": {
-          "type": "text",
-          "value": {
-            "en": "Catalyst, yo",
-            "es": "¿Por qué elegir Catalyst?"
-          }
-        },
-        "items": {
-          "type": "list",
-          "value": [
-            {
-              "title": {
-                "en": "Schema-Driven",
-                "es": "Basado en Esquemas"
-              },
-              "description": {
-                "en": "Define your content structure with flexible, type-safe schemas that adapt to your needs.",
-                "es": "Define la estructura de tu contenido con esquemas flexibles y seguros que se adaptan a tus necesidades."
-              }
-            },
-            {
-              "title": {
-                "en": "Localization Built-In",
-                "es": "Localización Integrada"
-              },
-              "description": {
-                "en": "Support multiple languages out of the box with automatic fallback to your default locale.",
-                "es": "Soporte para múltiples idiomas desde el principio con respaldo automático a tu idioma predeterminado."
-              }
-            },
-            {
-              "title": {
-                "en": "Personalization Ready",
-                "es": "Listo para Personalización"
-              },
-              "description": {
-                "en": "Deliver tailored experiences based on user segments with variant support.",
-                "es": "Ofrece experiencias personalizadas basadas en segmentos de usuarios y preferencias con soporte de variantes."
-              }
-            }
-          ]
-        }
-      }
-    },
-    {
-      "id": "features-1761495662760",
-      "type": "FeatureList",
-      "fields": {
-        "heading": {
-          "type": "text",
-          "value": {
-            "en": "Base Features"
-          }
-        },
-        "items": {
-          "type": "list",
-          "value": [
-            {
-              "title": {
-                "en": "Base Feature One"
-              },
-              "description": {
-                "en": "This is the base version of feature one."
-              }
-            },
-            {
-              "title": {
-                "en": "Base Feature Two"
-              },
-              "description": {
-                "en": "This is the base version of feature two."
-              }
-            },
-            {
-              "title": {
-                "en": "Base Feature Three"
-              },
-              "description": {
-                "en": "This is the base version of feature three."
-              }
-            }
-          ]
-        }
-      },
-      "variants": {
-        "finance": {
-          "heading": {
-            "type": "text",
-            "value": {
-              "en": "Finance Features"
-            }
-          },
-          "items": {
-            "type": "list",
-            "value": [
-              {
-                "title": {
-                  "en": "Finance Feature One"
-                },
-                "description": {
-                  "en": "This is the finance version of feature one."
-                }
-              },
-              {
-                "title": {
-                  "en": "Finance Feature Two"
-                },
-                "description": {
-                  "en": "This is the finance version of feature two."
-                }
-              },
-              {
-                "title": {
-                  "en": "Finance Feature Three"
-                },
-                "description": {
-                  "en": "This is the finance version of feature three."
-                }
-              }
-            ]
-          }
-        }
-      }
-    },
-    {
-      "id": "cta-1762118904046",
+      "id": "cta-1768756919170",
       "type": "CTASection",
       "fields": {
         "heading": {
@@ -206,20 +39,27 @@
           "value": {
             "en": "/signup"
           }
+        },
+        "image": {
+          "type": "image",
+          "src": "https://images.unsplash.com/photo-1551434678-e076c223a692?w=200&h=200&fit=crop",
+          "alt": {
+            "en": "CTA image"
+          }
         }
       },
       "variants": {
-        "isSubscribed": {
+        "Finance": {
           "heading": {
             "type": "text",
             "value": {
-              "en": "Ready to add a team?"
+              "en": "Ready to get started making money?"
             }
           },
           "description": {
             "type": "text",
             "value": {
-              "en": "This would upsell to teams from regular"
+              "en": "Join thousands of users who are already using our platform to get them gainz."
             }
           }
         }

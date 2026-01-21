@@ -4,6 +4,8 @@
  */
 
 import React, { useState } from 'react';
+import { cn } from './lib/utils';
+import { Button } from './ui/button';
 
 export interface InsertButtonProps {
   onInsert: () => void;
@@ -14,39 +16,25 @@ export function InsertButton({ onInsert }: InsertButtonProps) {
 
   return (
     <div
-      style={{
-        position: 'relative',
-        height: '2px',
-        background: isHovered ? '#3b82f6' : '#e5e7eb',
-        margin: '0.5rem 0',
-        transition: 'all 0.2s',
-      }}
+      className={cn(
+        'relative h-0.5 my-2 transition-all',
+        isHovered ? 'bg-[var(--catalyst-primary)]' : 'bg-[var(--catalyst-border)]'
+      )}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      <button
+      <Button
         onClick={onInsert}
-        style={{
-          position: 'absolute',
-          top: '50%',
-          left: '50%',
-          transform: 'translate(-50%, -50%)',
-          padding: '0.5rem 1rem',
-          background: isHovered ? '#3b82f6' : 'white',
-          color: isHovered ? 'white' : '#3b82f6',
-          border: '2px solid #3b82f6',
-          borderRadius: '20px',
-          cursor: 'pointer',
-          fontSize: '0.875rem',
-          fontWeight: '600',
-          boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
-          transition: 'all 0.2s',
-          opacity: isHovered ? 1 : 0.7,
-        }}
+        variant={isHovered ? 'default' : 'outline'}
+        size="sm"
+        className={cn(
+          'absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full transition-all',
+          !isHovered && 'border-2 border-[var(--catalyst-primary)] text-[var(--catalyst-primary)] opacity-70'
+        )}
         title="Insert component here"
       >
         + Add Component
-      </button>
+      </Button>
     </div>
   );
 }

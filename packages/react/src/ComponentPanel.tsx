@@ -5,6 +5,15 @@
 
 import React, { useState } from 'react';
 import { ComponentMetadata, getAvailableComponents } from '@catalyst/core';
+import { cn } from './lib/utils';
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetFooter,
+} from './ui/sheet';
+import { Button } from './ui/button';
 
 export interface ComponentPanelProps {
   isOpen: boolean;
@@ -15,8 +24,6 @@ export interface ComponentPanelProps {
 export function ComponentPanel({ isOpen, onClose, onSelectComponent }: ComponentPanelProps) {
   const [selectedComponent, setSelectedComponent] = useState<ComponentMetadata | null>(null);
   const availableComponents = getAvailableComponents();
-
-  if (!isOpen) return null;
 
   const handleSelectComponent = (component: ComponentMetadata) => {
     setSelectedComponent(component);
@@ -30,136 +37,48 @@ export function ComponentPanel({ isOpen, onClose, onSelectComponent }: Component
   };
 
   return (
-    <>
-      {/* Backdrop */}
-      <div
-        onClick={onClose}
-        style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          background: 'rgba(0, 0, 0, 0.3)',
-          zIndex: 999,
-        }}
-      />
-
-      {/* Panel */}
-      <div
-        style={{
-          position: 'fixed',
-          top: 0,
-          right: 0,
-          bottom: 0,
-          width: '400px',
-          background: 'white',
-          boxShadow: '-4px 0 12px rgba(0, 0, 0, 0.1)',
-          zIndex: 1000,
-          display: 'flex',
-          flexDirection: 'column',
-        }}
-      >
-        {/* Header */}
-        <div
-          style={{
-            padding: '1.5rem',
-            borderBottom: '1px solid #e5e7eb',
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-          }}
-        >
-          <h2 style={{ fontSize: '1.25rem', fontWeight: '600', margin: 0 }}>
-            Add Component
-          </h2>
-          <button
-            onClick={onClose}
-            style={{
-              background: 'none',
-              border: 'none',
-              fontSize: '1.5rem',
-              cursor: 'pointer',
-              padding: '0.25rem 0.5rem',
-              color: '#6b7280',
-            }}
-            aria-label="Close panel"
-          >
-            ×
-          </button>
-        </div>
+    <Sheet open={isOpen} onOpenChange={(open) => !open && onClose()}>
+      <SheetContent side="right" className="flex flex-col w-[400px] sm:max-w-[400px] p-0">
+        <SheetHeader>
+          <SheetTitle>Add Component</SheetTitle>
+        </SheetHeader>
 
         {/* Component List */}
-        <div
-          style={{
-            flex: 1,
-            overflowY: 'auto',
-            padding: '1rem',
-          }}
-        >
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+        <div className="flex-1 overflow-y-auto p-4">
+          <div className="flex flex-col gap-3">
             {availableComponents.map((component) => (
               <button
                 key={component.type}
                 onClick={() => handleSelectComponent(component)}
-                style={{
-                  padding: '1rem',
-                  border: selectedComponent?.type === component.type
-                    ? '2px solid #3b82f6'
-                    : '1px solid #e5e7eb',
-                  borderRadius: '8px',
-                  background: selectedComponent?.type === component.type
-                    ? '#eff6ff'
-                    : 'white',
-                  cursor: 'pointer',
-                  textAlign: 'left',
-                  transition: 'all 0.2s',
-                }}
-                onMouseEnter={(e) => {
-                  if (selectedComponent?.type !== component.type) {
-                    e.currentTarget.style.borderColor = '#cbd5e1';
-                  }
-                }}
-                onMouseLeave={(e) => {
-                  if (selectedComponent?.type !== component.type) {
-                    e.currentTarget.style.borderColor = '#e5e7eb';
-                  }
-                }}
+                className={cn(
+                  'p-4 rounded-[var(--catalyst-radius-lg)] text-left transition-all',
+                  selectedComponent?.type === component.type
+                    ? 'border-2 border-[var(--catalyst-primary)] bg-blue-50'
+                    : 'border border-[var(--catalyst-border)] bg-[var(--catalyst-background)] hover:border-[var(--catalyst-border-input)]'
+                )}
               >
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                <div className="flex flex-col gap-3">
                   {/* Thumbnail Preview */}
                   {component.thumbnail && (
-                    <div
-                      style={{
-                        width: '100%',
-                        height: '150px',
-                        borderRadius: '4px',
-                        overflow: 'hidden',
-                        background: '#f3f4f6',
-                      }}
-                    >
+                    <div className="w-full h-[150px] rounded-[var(--catalyst-radius-sm)] overflow-hidden bg-[var(--catalyst-muted)]">
                       <img
                         src={component.thumbnail}
                         alt={`${component.label} preview`}
-                        style={{
-                          width: '100%',
-                          height: '100%',
-                          objectFit: 'cover',
-                        }}
+                        className="w-full h-full object-cover"
                       />
                     </div>
                   )}
 
                   {/* Component Info */}
-                  <div style={{ display: 'flex', alignItems: 'start', gap: '0.75rem' }}>
-                    <span style={{ fontSize: '2rem', lineHeight: 1 }}>
+                  <div className="flex items-start gap-3">
+                    <span className="text-2xl leading-none">
                       {component.icon}
                     </span>
-                    <div style={{ flex: 1 }}>
-                      <div style={{ fontWeight: '600', marginBottom: '0.25rem' }}>
+                    <div className="flex-1">
+                      <div className="font-semibold mb-1">
                         {component.label}
                       </div>
-                      <div style={{ fontSize: '0.875rem', color: '#6b7280' }}>
+                      <div className="text-sm text-[var(--catalyst-muted-foreground)]">
                         {component.description}
                       </div>
                     </div>
@@ -172,41 +91,16 @@ export function ComponentPanel({ isOpen, onClose, onSelectComponent }: Component
 
         {/* Preview & Add Button */}
         {selectedComponent && (
-          <div
-            style={{
-              padding: '1rem',
-              borderTop: '1px solid #e5e7eb',
-              background: '#f9fafb',
-            }}
-          >
-            <div style={{ marginBottom: '1rem', fontSize: '0.875rem', color: '#6b7280' }}>
+          <SheetFooter className="flex-col items-stretch gap-4">
+            <div className="text-sm text-[var(--catalyst-muted-foreground)]">
               <strong>{selectedComponent.label}</strong> will be added to your page
             </div>
-            <button
-              onClick={handleAddComponent}
-              style={{
-                width: '100%',
-                padding: '0.75rem',
-                background: '#3b82f6',
-                color: 'white',
-                border: 'none',
-                borderRadius: '6px',
-                fontSize: '1rem',
-                fontWeight: '600',
-                cursor: 'pointer',
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.background = '#2563eb';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.background = '#3b82f6';
-              }}
-            >
+            <Button onClick={handleAddComponent} className="w-full">
               Add to Page
-            </button>
-          </div>
+            </Button>
+          </SheetFooter>
         )}
-      </div>
-    </>
+      </SheetContent>
+    </Sheet>
   );
 }

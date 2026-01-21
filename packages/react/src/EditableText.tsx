@@ -6,6 +6,7 @@
 import React, { useState, useCallback, useRef, useEffect, KeyboardEvent } from 'react';
 import { LocalizedContent, getLocalizedValue } from '@catalyst/core';
 import { useCatalyst } from './CatalystContext';
+import { cn } from './lib/utils';
 
 export interface EditableTextProps {
   content: LocalizedContent;
@@ -86,31 +87,18 @@ export function EditableText({
     }
   }, [displayValue, isEditing]);
 
-  const editModeStyle = isEditMode
-    ? {
-        cursor: 'pointer',
-        outline: '1px dashed #94a3b8',
-        outlineOffset: '2px',
-      }
-    : {};
-
-  const editingStyle = isEditing
-    ? {
-        outline: '2px solid #3b82f6',
-        outlineOffset: '2px',
-      }
-    : {};
-
-  const mergedStyle = { ...customStyle, ...editModeStyle, ...editingStyle };
-
   return (
     <Component
       ref={elementRef as any}
-      className={className}
+      className={cn(
+        className,
+        isEditMode && 'cursor-pointer outline-1 outline-dashed outline-[var(--catalyst-edit-outline)] outline-offset-2',
+        isEditing && 'outline-2 outline-solid outline-[var(--catalyst-edit-active)] outline-offset-2'
+      )}
       onDoubleClick={handleDoubleClick}
       onBlur={handleBlur}
       onKeyDown={handleKeyDown}
-      style={mergedStyle}
+      style={customStyle}
       title={isEditMode ? 'Double-click to edit' : undefined}
       contentEditable={isEditing}
       suppressContentEditableWarning

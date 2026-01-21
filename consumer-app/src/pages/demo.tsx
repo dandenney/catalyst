@@ -1,9 +1,9 @@
 import { usePage } from "@/hooks/usePage";
-import { ComponentRenderer } from "@catalyst/demo-components";
 import Head from "next/head";
 import { getLocalizedValue, createComponent } from "@catalyst/core";
 import {
   useCatalyst,
+  ComponentRenderer,
   ComponentPanel,
   ComponentControls,
   InsertButton
@@ -95,8 +95,8 @@ export default function DemoPage() {
       </Head>
 
       <main style={{ minHeight: "100vh" }}>
-        {/* Add Component Button (fixed in edit mode) */}
-        {isEditMode && (
+        {/* Add Component Button (fixed in edit mode, hidden when panel is open) */}
+        {isEditMode && !isPanelOpen && (
           <button
             onClick={() => {
               setInsertPosition(undefined);

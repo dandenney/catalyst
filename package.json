@@ -8,6 +8,7 @@
   ],
   "scripts": {
     "dev": "npm run dev --workspace=consumer-app",
+    "dev:watch": "concurrently \"npm run dev --workspace=@catalyst/core\" \"npm run dev --workspace=@catalyst/react\" \"npm run dev --workspace=@catalyst/storage\" \"npm run dev --workspace=consumer-app\" --names \"core,react,storage,next\" --prefix-colors \"blue,green,cyan,magenta\"",
     "build": "npm run build --workspaces --if-present",
     "clean": "rm -rf node_modules packages/*/node_modules packages/*/dist consumer-app/node_modules consumer-app/.next",
     "lint": "eslint packages/*/src --ext .ts,.tsx",
@@ -15,11 +16,16 @@
     "test": "npm test --workspace=@catalyst/react"
   },
   "devDependencies": {
-    "typescript": "^5.6.3",
-    "@typescript-eslint/parser": "^6.0.0",
     "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0",
+    "concurrently": "^9.1.2",
     "eslint": "^8.0.0",
     "eslint-plugin-react": "^7.33.0",
-    "eslint-plugin-react-hooks": "^4.6.0"
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "typescript": "^5.6.3"
+  },
+  "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e",
+  "dependencies": {
+    "lightningcss": "^1.30.2"
   }
 }

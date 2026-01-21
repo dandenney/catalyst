@@ -1,0 +1,64 @@
+/**
+ * Catalyst CSS Variables
+ * These use --catalyst- prefix to avoid conflicts with consumer apps
+ */
+
+:root {
+  /* Base colors */
+  --catalyst-background: #ffffff;
+  --catalyst-foreground: #111827;
+
+  /* Muted colors for secondary content */
+  --catalyst-muted: #f3f4f6;
+  --catalyst-muted-foreground: #6b7280;
+
+  /* Primary action color (blue) */
+  --catalyst-primary: #3b82f6;
+  --catalyst-primary-foreground: #ffffff;
+  --catalyst-primary-hover: #2563eb;
+
+  /* Secondary/neutral color */
+  --catalyst-secondary: #f1f5f9;
+  --catalyst-secondary-foreground: #374151;
+  --catalyst-secondary-hover: #e2e8f0;
+
+  /* Destructive/danger color (red) */
+  --catalyst-destructive: #ef4444;
+  --catalyst-destructive-foreground: #ffffff;
+  --catalyst-destructive-hover: #dc2626;
+
+  /* Accent color (purple for variants) */
+  --catalyst-accent: #8b5cf6;
+  --catalyst-accent-foreground: #ffffff;
+  --catalyst-accent-hover: #7c3aed;
+
+  /* Success color (green) */
+  --catalyst-success: #10b981;
+  --catalyst-success-foreground: #ffffff;
+
+  /* Border colors */
+  --catalyst-border: #e5e7eb;
+  --catalyst-border-input: #d1d5db;
+  --catalyst-border-focus: #3b82f6;
+
+  /* Ring (focus outline) */
+  --catalyst-ring: #3b82f6;
+
+  /* Edit mode indicator */
+  --catalyst-edit-outline: #94a3b8;
+  --catalyst-edit-active: #3b82f6;
+
+  /* Overlay/backdrop */
+  --catalyst-overlay: rgba(0, 0, 0, 0.3);
+
+  /* Shadow */
+  --catalyst-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
+  --catalyst-shadow-md: 0 4px 12px rgba(0, 0, 0, 0.15);
+  --catalyst-shadow-lg: -4px 0 12px rgba(0, 0, 0, 0.1);
+
+  /* Border radius */
+  --catalyst-radius-sm: 4px;
+  --catalyst-radius-md: 6px;
+  --catalyst-radius-lg: 8px;
+  --catalyst-radius-full: 9999px;
+}

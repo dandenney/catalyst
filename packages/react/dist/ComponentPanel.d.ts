@@ -8,4 +8,4 @@ export interface ComponentPanelProps {
     onClose: () => void;
     onSelectComponent: (type: string) => void;
 }
-export declare function ComponentPanel({ isOpen, onClose, onSelectComponent }: ComponentPanelProps): React.JSX.Element | null;
+export declare function ComponentPanel({ isOpen, onClose, onSelectComponent }: ComponentPanelProps): React.JSX.Element;

@@ -97,6 +97,11 @@ function createDefaultCTASection(): CTASectionSchema {
         type: 'text',
         value: { en: '/signup' },
       },
+      image: {
+        type: 'image',
+        src: 'https://images.unsplash.com/photo-1551434678-e076c223a692?w=200&h=200&fit=crop',
+        alt: { en: 'CTA image' },
+      },
     },
   };
 }

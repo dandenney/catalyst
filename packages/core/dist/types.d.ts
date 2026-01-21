@@ -60,6 +60,7 @@ export interface CTASectionSchema extends ComponentSchema {
         description: TextField;
         buttonText: TextField;
         buttonUrl: TextField;
+        image: ImageField;
     };
 }
 export interface PageSchema {

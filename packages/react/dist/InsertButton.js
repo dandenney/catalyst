@@ -39,30 +39,10 @@ var __importStar = (this && this.__importStar) || (function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.InsertButton = InsertButton;
 const react_1 = __importStar(require("react"));
+const utils_1 = require("./lib/utils");
+const button_1 = require("./ui/button");
 function InsertButton({ onInsert }) {
     const [isHovered, setIsHovered] = (0, react_1.useState)(false);
-    return (react_1.default.createElement("div", { style: {
-            position: 'relative',
-            height: '2px',
-            background: isHovered ? '#3b82f6' : '#e5e7eb',
-            margin: '0.5rem 0',
-            transition: 'all 0.2s',
-        }, onMouseEnter: () => setIsHovered(true), onMouseLeave: () => setIsHovered(false) },
-        react_1.default.createElement("button", { onClick: onInsert, style: {
-                position: 'absolute',
-                top: '50%',
-                left: '50%',
-                transform: 'translate(-50%, -50%)',
-                padding: '0.5rem 1rem',
-                background: isHovered ? '#3b82f6' : 'white',
-                color: isHovered ? 'white' : '#3b82f6',
-                border: '2px solid #3b82f6',
-                borderRadius: '20px',
-                cursor: 'pointer',
-                fontSize: '0.875rem',
-                fontWeight: '600',
-                boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
-                transition: 'all 0.2s',
-                opacity: isHovered ? 1 : 0.7,
-            }, title: "Insert component here" }, "+ Add Component")));
+    return (react_1.default.createElement("div", { className: (0, utils_1.cn)('relative h-0.5 my-2 transition-all', isHovered ? 'bg-[var(--catalyst-primary)]' : 'bg-[var(--catalyst-border)]'), onMouseEnter: () => setIsHovered(true), onMouseLeave: () => setIsHovered(false) },
+        react_1.default.createElement(button_1.Button, { onClick: onInsert, variant: isHovered ? 'default' : 'outline', size: "sm", className: (0, utils_1.cn)('absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full transition-all', !isHovered && 'border-2 border-[var(--catalyst-primary)] text-[var(--catalyst-primary)] opacity-70'), title: "Insert component here" }, "+ Add Component")));
 }
