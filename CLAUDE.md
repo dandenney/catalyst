@@ -3,13 +3,35 @@
 ## Quick Reference
 
 ```
-MONOREPO STRUCTURE:
+MONOREPO STRUCTURE (pnpm workspace):
+├── pnpm-workspace.yaml  # Workspace config
+├── package.json         # Root scripts (dev, build, test)
 ├── packages/
-│   ├── core/           # Published: types, schemas, utilities (framework-agnostic)
-│   ├── react/          # Published: React bindings, hooks, ComponentRenderer
-│   └── storage/        # Published: persistence adapters
-└── consumer-app/       # Example app (NOT published) - shows how to use catalyst
-    └── src/components/ # Example component implementations live HERE
+│   └── catalyst/        # THE published package (name: "catalyst")
+│       └── src/
+│           ├── index.ts     # Main export
+│           ├── core/        # Types, schemas, utilities (framework-agnostic)
+│           ├── react/       # React bindings, hooks, ComponentRenderer
+│           └── storage/     # Persistence adapters
+└── consumer-app/        # Example Next.js app (NOT published)
+    └── components/      # Example component implementations
+```
+
+### Import Pattern
+
+```typescript
+// Single package import - everything from 'catalyst'
+import {
+  // Core types
+  ComponentSchema, PageSchema, LocalizedContent, Locale,
+  // React bindings
+  CatalystProvider, useCatalyst, ComponentRenderer, EditableText,
+  // Storage
+  JsonStorageAdapter
+} from 'catalyst';
+
+// CSS variables (optional)
+import 'catalyst/styles.css';
 ```
 
 ## Component Registry Pattern
@@ -20,19 +42,19 @@ Catalyst uses a **registry pattern** where consumers register their own React co
 
 | Purpose | File |
 |---------|------|
-| Registry types | `packages/react/src/CatalystContext.tsx` |
-| Dynamic renderer | `packages/react/src/ComponentRenderer.tsx` |
-| Variant handling hook | `packages/react/src/useVariantHandling.ts` |
-| Editable text | `packages/react/src/EditableText.tsx` |
-| Editable image | `packages/react/src/EditableImage.tsx` |
-| Editable link | `packages/react/src/EditableLink.tsx` |
-| Example components | `consumer-app/src/components/*.tsx` |
-| Consumer registration | `consumer-app/src/pages/_app.tsx` |
+| Registry types | `packages/catalyst/src/react/CatalystContext.tsx` |
+| Dynamic renderer | `packages/catalyst/src/react/ComponentRenderer.tsx` |
+| Variant handling hook | `packages/catalyst/src/react/useVariantHandling.ts` |
+| Editable text | `packages/catalyst/src/react/EditableText.tsx` |
+| Editable image | `packages/catalyst/src/react/EditableImage.tsx` |
+| Editable link | `packages/catalyst/src/react/EditableLink.tsx` |
+| Core types | `packages/catalyst/src/core/types.ts` |
+| Component registry | `packages/catalyst/src/core/registry.ts` |
 
 ### Type Definitions
 
 ```typescript
-// From packages/react/src/CatalystContext.tsx
+// From packages/catalyst/src/react/CatalystContext.tsx
 
 // Contract for Catalyst-compatible components
 type CatalystComponent<T extends ComponentSchema = ComponentSchema> =
@@ -50,10 +72,10 @@ type ComponentRegistry = Record<string, CatalystComponent>;
 ```typescript
 // In _app.tsx or root component
 
-import { CatalystProvider } from '@catalyst/react';
+import { CatalystProvider } from 'catalyst';
 import { CTASection, HeroBanner, FeatureList } from '@/components';
 
-// Components are defined in the consumer app, NOT in a catalyst package
+// Components are defined in the consumer app, NOT in catalyst
 const components = {
   CTASection,
   HeroBanner,
@@ -70,7 +92,7 @@ const components = {
 ```typescript
 // In any page/component
 
-import { ComponentRenderer } from '@catalyst/react';
+import { ComponentRenderer } from 'catalyst';
 
 // ComponentRenderer looks up schema.type in registry
 <ComponentRenderer
@@ -83,7 +105,7 @@ import { ComponentRenderer } from '@catalyst/react';
 
 ### Step 1: Define Schema in Core
 
-File: `packages/core/src/types.ts`
+File: `packages/catalyst/src/core/types.ts`
 
 ```typescript
 export interface MyComponentSchema extends ComponentSchema {
@@ -97,7 +119,7 @@ export interface MyComponentSchema extends ComponentSchema {
 
 ### Step 2: Add to Registry Metadata
 
-File: `packages/core/src/registry.ts`
+File: `packages/catalyst/src/core/registry.ts`
 
 ```typescript
 export const COMPONENT_REGISTRY: Record<string, ComponentMetadata> = {
@@ -126,16 +148,10 @@ export function createDefaultMyComponent(): MyComponentSchema {
 
 ### Step 3: Create React Component
 
-File: `consumer-app/src/components/MyComponent.tsx` (in YOUR app, not catalyst)
+File: `consumer-app/components/MyComponent.tsx` (in YOUR app, not catalyst)
 
 ```typescript
-import { MyComponentSchema, getLocalizedValue } from '@catalyst/core';
-import {
-  useCatalyst,
-  useVariantHandling,
-  EditableText,
-  VariantSelector
-} from '@catalyst/react';
+import { MyComponentSchema, getLocalizedValue, useCatalyst, useVariantHandling, EditableText, VariantSelector } from 'catalyst';
 
 interface MyComponentProps {
   schema: MyComponentSchema;
@@ -161,7 +177,6 @@ export function MyComponent({ schema, onUpdate }: MyComponentProps) {
 
       <EditableText
         content={fields.title.value}
-        locale={locale}
         onUpdate={(content) => updateField('title', content, onUpdate)}
       />
     </section>
@@ -171,7 +186,7 @@ export function MyComponent({ schema, onUpdate }: MyComponentProps) {
 
 ### Step 4: Register in Consumer
 
-File: `consumer-app/src/pages/_app.tsx`
+File: `consumer-app/app/layout.tsx` or root component
 
 ```typescript
 import { MyComponent } from '@/components';
@@ -212,7 +227,7 @@ updateField(
 For inline text editing. Double-click to edit in edit mode.
 
 ```typescript
-import { EditableText } from '@catalyst/react';
+import { EditableText } from 'catalyst';
 
 <EditableText
   content={fields.title.value}      // LocalizedContent
@@ -226,10 +241,8 @@ import { EditableText } from '@catalyst/react';
 
 For image URL and alt text editing. Click to edit in edit mode.
 
-File: `packages/react/src/EditableImage.tsx`
-
 ```typescript
-import { EditableImage } from '@catalyst/react';
+import { EditableImage } from 'catalyst';
 
 <EditableImage
   src={fields.heroImage.src}        // string URL
@@ -270,10 +283,8 @@ import { EditableImage } from '@catalyst/react';
 
 For link URL and text editing. Click to edit in edit mode.
 
-File: `packages/react/src/EditableLink.tsx`
-
 ```typescript
-import { EditableLink } from '@catalyst/react';
+import { EditableLink } from 'catalyst';
 
 <EditableLink
   href={fields.buttonUrl.value}    // LocalizedContent (URL)
@@ -312,7 +323,7 @@ import { EditableLink } from '@catalyst/react';
 
 ## Field Types
 
-From `packages/core/src/types.ts`:
+From `packages/catalyst/src/core/types.ts`:
 
 | Type | Structure |
 |------|-----------|
@@ -351,13 +362,12 @@ Access via `useCatalyst()`:
 ### Add a component type to existing page
 
 1. Create component following pattern above
-2. Register in `_app.tsx` components object
+2. Register in root component
 3. Add to page data JSON with matching `type` field
 
 ### Swap a component implementation
 
 ```typescript
-// _app.tsx
 // Just change which component is registered for a type
 import { MyCustomHeroBanner } from '@/components/MyCustomHeroBanner';
 
@@ -378,41 +388,53 @@ const MyComponent = components['MyComponent'];
 
 | Need to... | Look in... |
 |------------|------------|
-| Add/modify schema types | `packages/core/src/types.ts` |
-| Add component metadata | `packages/core/src/registry.ts` |
-| Modify context/provider | `packages/react/src/CatalystContext.tsx` |
-| Modify dynamic renderer | `packages/react/src/ComponentRenderer.tsx` |
-| See component examples | `consumer-app/src/components/*.tsx` |
-| Modify consumer registration | `consumer-app/src/pages/_app.tsx` |
-| Modify page rendering | `consumer-app/src/pages/demo.tsx` |
-| Modify page data | `consumer-app/data/demo.json` |
+| Add/modify schema types | `packages/catalyst/src/core/types.ts` |
+| Add component metadata | `packages/catalyst/src/core/registry.ts` |
+| Modify context/provider | `packages/catalyst/src/react/CatalystContext.tsx` |
+| Modify dynamic renderer | `packages/catalyst/src/react/ComponentRenderer.tsx` |
+| See catalyst source | `packages/catalyst/src/` |
 
-## Package Dependencies
+## Package Structure
 
 ```
-@catalyst/core (0 deps)        ← Published to npm
-    ↑
-    ├── @catalyst/react        ← Published to npm (depends on core)
-    └── @catalyst/storage      ← Published to npm (depends on core)
-            ↑
-            └── consumer-app   ← NOT published (example app, depends on react + storage)
-                └── src/components/  ← Components live HERE in consumer apps
+catalyst (single published package)
+└── src/
+    ├── index.ts      # Re-exports everything
+    ├── core/         # Framework-agnostic types and utilities
+    │   ├── types.ts
+    │   ├── utils.ts
+    │   ├── storage.ts
+    │   └── registry.ts
+    ├── react/        # React bindings
+    │   ├── CatalystContext.tsx
+    │   ├── ComponentRenderer.tsx
+    │   ├── EditableText.tsx
+    │   ├── EditableImage.tsx
+    │   ├── EditableLink.tsx
+    │   ├── hooks.ts
+    │   ├── useVariantHandling.ts
+    │   └── ui/       # UI primitives
+    └── storage/      # Storage adapters
+        └── json-adapter.ts
 ```
 
 ## Running the Project
 
 ```bash
-# Install dependencies
-npm install
+# Install dependencies (using pnpm)
+pnpm install
 
 # Run consumer app dev server
-npm run dev
+pnpm dev
 
 # Run with file watching for all packages
-npm run dev:watch
+pnpm dev:watch
+
+# Build catalyst package
+pnpm build
 
 # Run tests
-npm test
+pnpm test
 ```
 
 ## URL Parameters (consumer-app)
