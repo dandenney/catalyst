@@ -9,5 +9,5 @@ export * from './core';
 // React bindings
 export * from './react';
 
-// Storage adapters
-export * from './storage';
+// Note: Storage adapters are server-only and must be imported from 'catalyst/server'
+// import { JsonStorageAdapter } from 'catalyst/server';

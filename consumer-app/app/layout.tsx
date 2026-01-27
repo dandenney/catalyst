@@ -2,6 +2,7 @@ import "@/app/globals.css";
 
 import type { Metadata } from "next";
 
+import { CatalystWrapper } from "@/components/contexts/catalyst-wrapper";
 import { ThemeProvider } from "@/components/contexts/theme-provider";
 import { inter } from "@/lib/fonts";
 
@@ -67,7 +68,9 @@ export default function RootLayout({
   return (
     <html lang="en" style={{ colorScheme: "dark" }} className="dark">
       <body className={`${inter.className} bg-background antialiased`}>
-        <ThemeProvider>{children}</ThemeProvider>
+        <ThemeProvider>
+          <CatalystWrapper>{children}</CatalystWrapper>
+        </ThemeProvider>
       </body>
     </html>
   );
