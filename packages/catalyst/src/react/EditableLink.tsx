@@ -3,9 +3,9 @@
  * Renders a link that can have its URL and text edited in edit mode
  */
 
-import React, { useState, useCallback, useEffect } from 'react';
-import { LocalizedContent, getLocalizedValue } from '../core';
-import { useCatalyst } from './CatalystContext';
+import React from 'react';
+import { LocalizedContent } from '../core';
+import { useEditableLink } from './useEditableLink';
 import { cn } from './lib/utils';
 import { Popover, PopoverTrigger, PopoverContent } from './ui/popover';
 import { Button } from './ui/button';
@@ -21,6 +21,10 @@ export interface EditableLinkProps {
   target?: string;
   rel?: string;
   children?: React.ReactNode;
+  /** Custom class for edit mode outline (overrides default) */
+  editClassName?: string;
+  /** Custom class for active/open state outline (overrides default) */
+  editingClassName?: string;
 }
 
 export function EditableLink({
@@ -32,112 +36,57 @@ export function EditableLink({
   target,
   rel,
   children,
+  editClassName,
+  editingClassName,
 }: EditableLinkProps) {
-  const { locale, isEditMode } = useCatalyst();
-  const [isOpen, setIsOpen] = useState(false);
-  const [editHref, setEditHref] = useState(getLocalizedValue(href, locale));
-  const [editText, setEditText] = useState(getLocalizedValue(text, locale));
-
-  const displayHref = getLocalizedValue(href, locale);
-  const displayText = getLocalizedValue(text, locale);
-
-  // Sync state when props change
-  useEffect(() => {
-    if (!isOpen) {
-      setEditHref(getLocalizedValue(href, locale));
-      setEditText(getLocalizedValue(text, locale));
-    }
-  }, [href, text, locale, isOpen]);
-
-  const handleClick = useCallback((e: React.MouseEvent) => {
-    if (isEditMode) {
-      e.preventDefault();
-      setIsOpen(true);
-    }
-  }, [isEditMode]);
-
-  const handleSave = useCallback(() => {
-    if (onUpdate) {
-      const updatedHref: LocalizedContent = {
-        ...href,
-        [locale]: editHref,
-      };
-      const updatedText: LocalizedContent = {
-        ...text,
-        [locale]: editText,
-      };
-      onUpdate({ href: updatedHref, text: updatedText });
-    }
-    setIsOpen(false);
-  }, [editHref, editText, href, text, locale, onUpdate]);
-
-  const handleCancel = useCallback(() => {
-    setEditHref(displayHref);
-    setEditText(displayText);
-    setIsOpen(false);
-  }, [displayHref, displayText]);
-
-  const handleKeyDown = useCallback(
-    (e: React.KeyboardEvent) => {
-      if (e.key === 'Escape') {
-        handleCancel();
-      } else if (e.key === 'Enter' && e.metaKey) {
-        handleSave();
-      }
-    },
-    [handleCancel, handleSave]
-  );
+  const link = useEditableLink({ href, text, onUpdate, editClassName, editingClassName });
 
   return (
-    <Popover open={isOpen} onOpenChange={(open) => isEditMode && setIsOpen(open)}>
+    <Popover open={link.isOpen} onOpenChange={(open) => link.isEditMode && link.setIsOpen(open)}>
       <PopoverTrigger asChild>
         <a
-          href={isEditMode ? undefined : displayHref}
-          target={isEditMode ? undefined : target}
-          rel={isEditMode ? undefined : rel}
-          className={cn(
-            className,
-            isEditMode && 'cursor-pointer outline-1 outline-dashed outline-[var(--catalyst-edit-outline)] outline-offset-2',
-            isOpen && 'outline-2 outline-solid outline-[var(--catalyst-edit-active)] outline-offset-2'
-          )}
-          onClick={handleClick}
-          title={isEditMode ? 'Click to edit link' : undefined}
+          href={link.isEditMode ? undefined : link.displayHref}
+          target={link.isEditMode ? undefined : target}
+          rel={link.isEditMode ? undefined : rel}
+          className={cn(className, link.editModeClassName)}
+          onClick={link.handleClick}
+          title={link.isEditMode ? 'Click to edit link' : undefined}
           style={customStyle}
         >
-          <span>{displayText}</span>
+          <span>{link.displayText}</span>
           {children}
         </a>
       </PopoverTrigger>
-      <PopoverContent onKeyDown={handleKeyDown}>
+      <PopoverContent onKeyDown={link.handleKeyDown}>
         <div className="space-y-3">
           <div>
-            <Label htmlFor="link-text">Link Text ({locale.toUpperCase()})</Label>
+            <Label htmlFor="link-text">Link Text ({link.locale.toUpperCase()})</Label>
             <Input
               id="link-text"
               type="text"
-              value={editText}
-              onChange={(e) => setEditText(e.target.value)}
+              value={link.editText}
+              onChange={(e) => link.setEditText(e.target.value)}
               placeholder="Click here"
               autoFocus
             />
           </div>
 
           <div>
-            <Label htmlFor="link-url">URL ({locale.toUpperCase()})</Label>
+            <Label htmlFor="link-url">URL ({link.locale.toUpperCase()})</Label>
             <Input
               id="link-url"
               type="text"
-              value={editHref}
-              onChange={(e) => setEditHref(e.target.value)}
+              value={link.editHref}
+              onChange={(e) => link.setEditHref(e.target.value)}
               placeholder="https://example.com"
             />
           </div>
 
           <div className="flex gap-2 justify-end">
-            <Button variant="outline" size="sm" onClick={handleCancel}>
+            <Button variant="outline" size="sm" onClick={link.handleCancel}>
               Cancel
             </Button>
-            <Button size="sm" onClick={handleSave}>
+            <Button size="sm" onClick={link.handleSave}>
               Save
             </Button>
           </div>
