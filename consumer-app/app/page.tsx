@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { type HeroSectionSchema, type LogosSectionSchema, type ItemsSectionSchema, createComponent } from "catalyst";
+import { type HeroSectionSchema, type LogosSectionSchema, type ItemsSectionSchema, type StatsSectionSchema, createComponent } from "catalyst";
 
 import CTA from "../components/sections/cta/default";
 import FAQ from "../components/sections/faq/default";
@@ -11,7 +11,7 @@ import SchemaItems from "../components/sections/items/schema-items";
 import SchemaLogos from "../components/sections/logos/schema-logos";
 import Navbar from "../components/sections/navbar/default";
 import Pricing from "../components/sections/pricing/default";
-import Stats from "../components/sections/stats/default";
+import SchemaStats from "../components/sections/stats/schema-stats";
 import { EditModeIndicator } from "../components/ui/edit-mode-indicator";
 import { LayoutLines } from "../components/ui/layout-lines";
 
@@ -117,6 +117,83 @@ export default function Home() {
       },
     };
   });
+  const [statsSchema, setStatsSchema] = useState<StatsSectionSchema>(() => {
+    const baseSchema = createComponent("StatsSection") as StatsSectionSchema;
+    return {
+      ...baseSchema,
+      variants: {
+        finance: {
+          stats: {
+            type: "list",
+            value: [
+              {
+                type: "statItem",
+                label: { en: "trusted by" },
+                value: { en: "500" },
+                suffix: { en: "+" },
+                description: { en: "financial institutions worldwide" },
+              },
+              {
+                type: "statItem",
+                label: { en: "processing" },
+                value: { en: "2.5" },
+                suffix: { en: "B" },
+                description: { en: "transactions annually" },
+              },
+              {
+                type: "statItem",
+                label: { en: "uptime" },
+                value: { en: "99.99" },
+                suffix: { en: "%" },
+                description: { en: "guaranteed availability" },
+              },
+              {
+                type: "statItem",
+                label: { en: "compliance" },
+                value: { en: "50" },
+                suffix: { en: "+" },
+                description: { en: "regulatory frameworks supported" },
+              },
+            ],
+          },
+        },
+        startup: {
+          stats: {
+            type: "list",
+            value: [
+              {
+                type: "statItem",
+                label: { en: "launched" },
+                value: { en: "10" },
+                suffix: { en: "k" },
+                description: { en: "startups using our platform" },
+              },
+              {
+                type: "statItem",
+                label: { en: "raised" },
+                value: { en: "5" },
+                suffix: { en: "B" },
+                description: { en: "in funding by our customers" },
+              },
+              {
+                type: "statItem",
+                label: { en: "shipped" },
+                value: { en: "3x" },
+                description: { en: "faster than industry average" },
+              },
+              {
+                type: "statItem",
+                label: { en: "saved" },
+                value: { en: "200" },
+                suffix: { en: "+" },
+                description: { en: "engineering hours per month" },
+              },
+            ],
+          },
+        },
+      },
+    };
+  });
 
   return (
     <main className="bg-background text-foreground min-h-screen w-full">
@@ -126,7 +203,7 @@ export default function Home() {
       <SchemaHero schema={heroSchema} onUpdate={setHeroSchema} />
       <SchemaLogos schema={logosSchema} onUpdate={setLogosSchema} />
       <SchemaItems schema={itemsSchema} onUpdate={setItemsSchema} />
-      <Stats />
+      <SchemaStats schema={statsSchema} onUpdate={setStatsSchema} />
       <Pricing />
       <FAQ />
       <CTA />
