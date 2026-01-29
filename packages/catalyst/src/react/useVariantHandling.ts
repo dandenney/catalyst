@@ -5,7 +5,7 @@
  */
 
 import { useState, useCallback } from 'react';
-import { ComponentSchema, applyPersonalization, Field, TextField, RichTextField, ImageField, ListField, BadgeField, ButtonField, MockupField } from '../core';
+import { ComponentSchema, applyPersonalization, Field, TextField, RichTextField, ImageField, ListField, BadgeField, ButtonField, MockupField, LogoItemField } from '../core';
 import { useCatalyst } from './CatalystContext';
 
 interface UseVariantHandlingOptions<T extends ComponentSchema> {
@@ -111,6 +111,10 @@ export function useVariantHandling<T extends ComponentSchema>({
             const mockupField = currentField as MockupField;
             // Merge partial updates
             return { ...mockupField, ...content };
+          }
+          case 'logoItem': {
+            const logoField = currentField as LogoItemField;
+            return { ...logoField, ...content };
           }
           default:
             return currentField;

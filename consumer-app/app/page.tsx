@@ -1,14 +1,14 @@
 "use client";
 
 import { useState } from "react";
-import { type HeroSectionSchema, createComponent } from "catalyst";
+import { type HeroSectionSchema, type LogosSectionSchema, createComponent } from "catalyst";
 
 import CTA from "../components/sections/cta/default";
 import FAQ from "../components/sections/faq/default";
 import Footer from "../components/sections/footer/default";
 import SchemaHero from "../components/sections/hero/schema-hero";
 import Items from "../components/sections/items/default";
-import Logos from "../components/sections/logos/default";
+import SchemaLogos from "../components/sections/logos/schema-logos";
 import Navbar from "../components/sections/navbar/default";
 import Pricing from "../components/sections/pricing/default";
 import Stats from "../components/sections/stats/default";
@@ -57,6 +57,40 @@ export default function Home() {
       },
     };
   });
+  const [logosSchema, setLogosSchema] = useState<LogosSectionSchema>(() => {
+    const baseSchema = createComponent("LogosSection") as LogosSectionSchema;
+    return {
+      ...baseSchema,
+      variants: {
+        finance: {
+          title: {
+            type: "text",
+            value: {
+              en: "Trusted by leading enterprises worldwide",
+              es: "Con la confianza de empresas líderes en todo el mundo",
+            },
+          },
+          badgeText: {
+            type: "text",
+            value: { en: "Enterprise partners", es: "Socios empresariales" },
+          },
+        },
+        startup: {
+          title: {
+            type: "text",
+            value: {
+              en: "Built with modern tools for fast iteration",
+              es: "Construido con herramientas modernas para iterar rápido",
+            },
+          },
+          badgeText: {
+            type: "text",
+            value: { en: "Startup stack", es: "Stack para startups" },
+          },
+        },
+      },
+    };
+  });
 
   return (
     <main className="bg-background text-foreground min-h-screen w-full">
@@ -64,7 +98,7 @@ export default function Home() {
       <EditModeIndicator />
       <Navbar />
       <SchemaHero schema={heroSchema} onUpdate={setHeroSchema} />
-      <Logos />
+      <SchemaLogos schema={logosSchema} onUpdate={setLogosSchema} />
       <Items />
       <Stats />
       <Pricing />

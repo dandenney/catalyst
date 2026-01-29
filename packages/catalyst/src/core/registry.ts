@@ -3,7 +3,7 @@
  * Central registry of all available components for the page builder
  */
 
-import { ComponentSchema, HeroBannerSchema, FeatureListSchema, CTASectionSchema, HeroSectionSchema } from './types';
+import { ComponentSchema, HeroBannerSchema, FeatureListSchema, CTASectionSchema, HeroSectionSchema, LogosSectionSchema } from './types';
 
 export interface ComponentMetadata {
   type: string;
@@ -174,6 +174,61 @@ function createDefaultHeroSection(): HeroSectionSchema {
 }
 
 /**
+ * Creates a default LogosSection component
+ */
+function createDefaultLogosSection(): LogosSectionSchema {
+  return {
+    id: `logos-${Date.now()}`,
+    type: 'LogosSection',
+    fields: {
+      title: {
+        type: 'text',
+        value: { en: 'Built with industry-standard tools and best practices' },
+      },
+      badgeText: {
+        type: 'text',
+        value: { en: 'Last updated: January 2026' },
+      },
+      logos: {
+        type: 'list',
+        value: [
+          {
+            type: 'logoItem',
+            name: { en: 'Figma' },
+            imageKey: 'figma',
+          },
+          {
+            type: 'logoItem',
+            name: { en: 'React' },
+            version: { en: '19.2.1' },
+            imageKey: 'react',
+          },
+          {
+            type: 'logoItem',
+            name: { en: 'TypeScript' },
+            version: { en: '5.9.3' },
+            imageKey: 'typescript',
+          },
+          {
+            type: 'logoItem',
+            name: { en: 'Shadcn/ui' },
+            version: { en: '3.6.3' },
+            badge: { en: 'New' },
+            imageKey: 'shadcn',
+          },
+          {
+            type: 'logoItem',
+            name: { en: 'Tailwind' },
+            version: { en: '4.1.18' },
+            imageKey: 'tailwind',
+          },
+        ],
+      },
+    },
+  };
+}
+
+/**
  * Registry of all available components
  */
 export const COMPONENT_REGISTRY: Record<string, ComponentMetadata> = {
@@ -212,6 +267,15 @@ export const COMPONENT_REGISTRY: Record<string, ComponentMetadata> = {
     icon: '🦸',
     thumbnail: '/component-previews/HeroSection.png',
     createDefault: createDefaultHeroSection,
+  },
+  LogosSection: {
+    type: 'LogosSection',
+    label: 'Logos Section',
+    description: 'Display partner/technology logos with names and versions',
+    category: 'content',
+    icon: '🏷️',
+    thumbnail: '/component-previews/LogosSection.png',
+    createDefault: createDefaultLogosSection,
   },
 };
 

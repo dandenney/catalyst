@@ -120,9 +120,162 @@ For edit popovers with proper theming, use consumer-app's shadcn components (Pop
 | `?lang=es` | Switch to Spanish |
 | `?segment=premium` | Apply personalization variant |
 
-## Adding a New Component Type
+## Making a Component Editable (Complete Pattern)
 
-1. **Define schema** in `packages/catalyst/src/core/types.ts`
-2. **Add metadata** in `packages/catalyst/src/core/registry.ts` (including `createDefault` function)
-3. **Create React component** in consumer-app using `useCatalyst`, `useVariantHandling`, and editable components
-4. **Register** in consumer-app's `CatalystProvider`
+When asked to make a component editable, follow this complete pattern:
+
+### Step 1: Define Schema Types (`packages/catalyst/src/core/types.ts`)
+
+Add any new field types needed, then add the component schema:
+
+```typescript
+// If needed: new field type
+export interface MyItemField {
+  type: 'myItem';
+  name: LocalizedContent;
+  // ... other properties
+}
+
+// Update Field union if new field type added
+export type Field = TextField | RichTextField | ImageField | ListField | MyItemField;
+
+// Component schema
+export interface MySectionSchema extends ComponentSchema {
+  type: 'MySection';
+  fields: {
+    title: TextField;
+    items: ListField<MyItemField>;
+  };
+}
+```
+
+### Step 2: Add to Registry (`packages/catalyst/src/core/registry.ts`)
+
+1. Import the new schema type
+2. Create the default factory function
+3. Add to COMPONENT_REGISTRY
+
+```typescript
+import { ..., MySectionSchema } from './types';
+
+function createDefaultMySection(): MySectionSchema {
+  return {
+    id: `my-section-${Date.now()}`,
+    type: 'MySection',
+    fields: {
+      title: { type: 'text', value: { en: 'Default Title' } },
+      items: { type: 'list', value: [...] },
+    },
+  };
+}
+
+// In COMPONENT_REGISTRY:
+MySection: {
+  type: 'MySection',
+  label: 'My Section',
+  description: 'Description here',
+  category: 'content',
+  icon: '📦',
+  createDefault: createDefaultMySection,
+},
+```
+
+### Step 3: Create Schema Component (`consumer-app/components/sections/[name]/schema-[name].tsx`)
+
+**IMPORTANT:** Always include variant support using `useVariantHandling` and `VariantSelector`.
+
+```typescript
+"use client";
+
+import {
+  EditableText,
+  type LocalizedContent,
+  type MySectionSchema,
+  useCatalyst,
+  useVariantHandling,
+  VariantSelector,
+} from "catalyst";
+
+// Edit mode styling constants
+const EDIT_CLASS = "cursor-pointer outline-1 outline-dashed outline-primary/50 outline-offset-2";
+const EDITING_CLASS = "outline-2 outline-solid outline-primary outline-offset-2";
+
+interface SchemaMySectionProps {
+  schema: MySectionSchema;
+  onUpdate?: (schema: MySectionSchema) => void;
+  className?: string;
+}
+
+export default function SchemaMySection({ schema, onUpdate, className }: SchemaMySectionProps) {
+  const { isEditMode } = useCatalyst();
+
+  // ALWAYS use useVariantHandling for variant support
+  const { displaySchema, editingVariant, setEditingVariant, updateField } =
+    useVariantHandling({ schema });
+
+  const { fields } = displaySchema;
+
+  const handleTitleUpdate = (content: LocalizedContent) => {
+    updateField("title", content, onUpdate);
+  };
+
+  return (
+    <Section className={className}>
+      {/* ALWAYS include VariantSelector in edit mode */}
+      {isEditMode && schema.variants && Object.keys(schema.variants).length > 0 && (
+        <div className="flex justify-end mb-4">
+          <VariantSelector
+            variants={schema.variants}
+            currentVariant={editingVariant}
+            onVariantChange={setEditingVariant}
+          />
+        </div>
+      )}
+
+      <EditableText
+        content={fields.title.value}
+        onUpdate={handleTitleUpdate}
+        as="h2"
+        editClassName={EDIT_CLASS}
+        editingClassName={EDITING_CLASS}
+      />
+      {/* ... rest of component */}
+    </Section>
+  );
+}
+```
+
+### Step 4: Update Page to Use Schema Component (`consumer-app/app/page.tsx`)
+
+```typescript
+"use client";
+
+import { useState } from "react";
+import { type MySectionSchema, createComponent } from "catalyst";
+import SchemaMySection from "../components/sections/my-section/schema-my-section";
+
+export default function Home() {
+  const [mySectionSchema, setMySectionSchema] = useState<MySectionSchema>(
+    () => createComponent("MySection") as MySectionSchema
+  );
+
+  return (
+    <main>
+      <SchemaMySection schema={mySectionSchema} onUpdate={setMySectionSchema} />
+    </main>
+  );
+}
+```
+
+### Checklist for Editable Components
+
+- [ ] Schema type defined in `types.ts`
+- [ ] Field union updated if new field type added
+- [ ] `createDefault` function in `registry.ts`
+- [ ] Added to `COMPONENT_REGISTRY`
+- [ ] Schema component uses `useVariantHandling` hook
+- [ ] Schema component includes `VariantSelector` when in edit mode
+- [ ] All text fields use `EditableText` with edit styling classes
+- [ ] Custom fields have popover editors with consumer-app UI components
+- [ ] Page uses `useState` with `createComponent()` initializer
+- [ ] Build passes (`pnpm build`)
