@@ -35,7 +35,34 @@ export interface ListField<T = any> {
   value: T[];
 }
 
-export type Field = TextField | RichTextField | ImageField | ListField;
+export interface BadgeField {
+  type: 'badge';
+  label: LocalizedContent;
+  link: {
+    href: LocalizedContent;
+    text: LocalizedContent;
+  };
+}
+
+export interface ButtonField {
+  type: 'button';
+  href: LocalizedContent;
+  text: LocalizedContent;
+  variant?: string; // 'default' | 'glow' etc.
+  icon?: string; // 'github', 'arrow-right'
+  iconPosition?: 'left' | 'right';
+}
+
+export interface MockupField {
+  type: 'mockup';
+  srcLight: string;
+  srcDark?: string;
+  alt: LocalizedContent;
+  width: number;
+  height: number;
+}
+
+export type Field = TextField | RichTextField | ImageField | ListField | BadgeField | ButtonField | MockupField;
 
 // Component schema base
 export interface ComponentSchema {
@@ -78,6 +105,17 @@ export interface CTASectionSchema extends ComponentSchema {
     buttonText: TextField;
     buttonUrl: TextField;
     image: ImageField;
+  };
+}
+
+export interface HeroSectionSchema extends ComponentSchema {
+  type: 'HeroSection';
+  fields: {
+    title: TextField;
+    description: TextField;
+    badge: BadgeField;
+    buttons: ListField<ButtonField>;
+    mockup: MockupField;
   };
 }
 

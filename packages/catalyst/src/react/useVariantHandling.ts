@@ -5,7 +5,7 @@
  */
 
 import { useState, useCallback } from 'react';
-import { ComponentSchema, applyPersonalization, Field, TextField, RichTextField, ImageField, ListField } from '../core';
+import { ComponentSchema, applyPersonalization, Field, TextField, RichTextField, ImageField, ListField, BadgeField, ButtonField, MockupField } from '../core';
 import { useCatalyst } from './CatalystContext';
 
 interface UseVariantHandlingOptions<T extends ComponentSchema> {
@@ -78,42 +78,50 @@ export function useVariantHandling<T extends ComponentSchema>({
     ) => {
       if (!onUpdate) return;
 
+      // Helper to create updated field based on type
+      const createUpdatedField = (currentField: Field, content: any): Field => {
+        switch (currentField.type) {
+          case 'image': {
+            const imageField = currentField as ImageField;
+            return { ...imageField, alt: content };
+          }
+          case 'text': {
+            const textField = currentField as TextField;
+            return { ...textField, value: content };
+          }
+          case 'richtext': {
+            const richtextField = currentField as RichTextField;
+            return { ...richtextField, value: content };
+          }
+          case 'list': {
+            const listField = currentField as ListField;
+            return { ...listField, value: content };
+          }
+          case 'badge': {
+            const badgeField = currentField as BadgeField;
+            // Merge partial updates (e.g., { label: newLabel } or { link: newLink })
+            return { ...badgeField, ...content };
+          }
+          case 'button': {
+            const buttonField = currentField as ButtonField;
+            // Merge partial updates
+            return { ...buttonField, ...content };
+          }
+          case 'mockup': {
+            const mockupField = currentField as MockupField;
+            // Merge partial updates
+            return { ...mockupField, ...content };
+          }
+          default:
+            return currentField;
+        }
+      };
+
       // If editing a variant, update the variant fields
       if (editingVariant) {
         const variantField = schema.variants?.[editingVariant]?.[fieldName] as Field | undefined;
         const currentField = (variantField || schema.fields[fieldName]) as Field;
-
-        let updatedField: Field;
-
-        // Handle different field types
-        if (currentField.type === 'image') {
-          const imageField = currentField as ImageField;
-          updatedField = {
-            ...imageField,
-            alt: updatedContent,
-          };
-        } else if (currentField.type === 'text') {
-          const textField = currentField as TextField;
-          updatedField = {
-            ...textField,
-            value: updatedContent,
-          };
-        } else if (currentField.type === 'richtext') {
-          const richtextField = currentField as RichTextField;
-          updatedField = {
-            ...richtextField,
-            value: updatedContent,
-          };
-        } else if (currentField.type === 'list') {
-          const listField = currentField as ListField;
-          updatedField = {
-            ...listField,
-            value: updatedContent,
-          };
-        } else {
-          // Fallback
-          updatedField = currentField;
-        }
+        const updatedField = createUpdatedField(currentField, updatedContent);
 
         const updatedSchema: T = {
           ...schema,
@@ -129,38 +137,7 @@ export function useVariantHandling<T extends ComponentSchema>({
       } else {
         // Otherwise, update base fields
         const currentField = schema.fields[fieldName] as Field;
-
-        let updatedField: Field;
-
-        // Handle different field types
-        if (currentField.type === 'image') {
-          const imageField = currentField as ImageField;
-          updatedField = {
-            ...imageField,
-            alt: updatedContent,
-          };
-        } else if (currentField.type === 'text') {
-          const textField = currentField as TextField;
-          updatedField = {
-            ...textField,
-            value: updatedContent,
-          };
-        } else if (currentField.type === 'richtext') {
-          const richtextField = currentField as RichTextField;
-          updatedField = {
-            ...richtextField,
-            value: updatedContent,
-          };
-        } else if (currentField.type === 'list') {
-          const listField = currentField as ListField;
-          updatedField = {
-            ...listField,
-            value: updatedContent,
-          };
-        } else {
-          // Fallback
-          updatedField = currentField;
-        }
+        const updatedField = createUpdatedField(currentField, updatedContent);
 
         const updatedSchema: T = {
           ...schema,
