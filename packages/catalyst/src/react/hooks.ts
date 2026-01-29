@@ -9,6 +9,9 @@ import { useCatalyst } from './CatalystContext';
 // Re-export variant handling hook
 export * from './useVariantHandling';
 
+// Re-export editable link hook
+export * from './useEditableLink';
+
 /**
  * Hook to load and manage a page
  */

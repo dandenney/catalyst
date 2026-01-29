@@ -48,3 +48,4 @@ Links to relevant resources.
 |-----|-------|--------|------|
 | [0001](./0001-monorepo-structure.md) | Monorepo Structure with Single Catalyst Package | Accepted | 2025-01-26 |
 | [0002](./0002-client-server-exports.md) | Separate Client and Server Exports | Accepted | 2025-01-26 |
+| [0003](./0003-consumer-owned-edit-ui.md) | Consumer-Owned Edit UI Styling | Accepted | 2026-01-28 |

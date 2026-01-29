@@ -14,7 +14,14 @@ export interface EditableTextProps {
   as?: 'h1' | 'h2' | 'h3' | 'p' | 'span';
   className?: string;
   style?: React.CSSProperties;
+  /** Custom class for edit mode outline (overrides default) */
+  editClassName?: string;
+  /** Custom class for active editing outline (overrides default) */
+  editingClassName?: string;
 }
+
+const defaultEditClassName = 'cursor-pointer outline-1 outline-dashed outline-[var(--catalyst-edit-outline,#94a3b8)] outline-offset-2';
+const defaultEditingClassName = 'outline-2 outline-solid outline-[var(--catalyst-edit-active,#3b82f6)] outline-offset-2';
 
 export function EditableText({
   content,
@@ -22,6 +29,8 @@ export function EditableText({
   as: Component = 'span',
   className = '',
   style: customStyle = {},
+  editClassName,
+  editingClassName,
 }: EditableTextProps) {
   const { locale, isEditMode } = useCatalyst();
   const [isEditing, setIsEditing] = useState(false);
@@ -92,8 +101,8 @@ export function EditableText({
       ref={elementRef as any}
       className={cn(
         className,
-        isEditMode && 'cursor-pointer outline-1 outline-dashed outline-[var(--catalyst-edit-outline)] outline-offset-2',
-        isEditing && 'outline-2 outline-solid outline-[var(--catalyst-edit-active)] outline-offset-2'
+        isEditMode && (editClassName ?? defaultEditClassName),
+        isEditing && (editingClassName ?? defaultEditingClassName)
       )}
       onDoubleClick={handleDoubleClick}
       onBlur={handleBlur}
