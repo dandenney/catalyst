@@ -62,7 +62,15 @@ export interface MockupField {
   height: number;
 }
 
-export type Field = TextField | RichTextField | ImageField | ListField | BadgeField | ButtonField | MockupField;
+export interface LogoItemField {
+  type: 'logoItem';
+  name: LocalizedContent;
+  version?: LocalizedContent;
+  badge?: LocalizedContent;
+  imageKey: string; // Key to look up the SVG component in consumer app
+}
+
+export type Field = TextField | RichTextField | ImageField | ListField | BadgeField | ButtonField | MockupField | LogoItemField;
 
 // Component schema base
 export interface ComponentSchema {
@@ -116,6 +124,15 @@ export interface HeroSectionSchema extends ComponentSchema {
     badge: BadgeField;
     buttons: ListField<ButtonField>;
     mockup: MockupField;
+  };
+}
+
+export interface LogosSectionSchema extends ComponentSchema {
+  type: 'LogosSection';
+  fields: {
+    title: TextField;
+    badgeText: TextField;
+    logos: ListField<LogoItemField>;
   };
 }
 
