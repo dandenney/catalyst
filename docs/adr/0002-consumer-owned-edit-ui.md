@@ -1,4 +1,4 @@
-# ADR 0002: Consumer-Owned Edit UI Styling
+# ADR 0003: Consumer-Owned Edit UI Styling
 
 ## Status
 

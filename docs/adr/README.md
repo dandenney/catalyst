@@ -47,4 +47,4 @@ Links to relevant resources.
 | ADR | Title | Status | Date |
 |-----|-------|--------|------|
 | [0001](./0001-monorepo-structure.md) | Monorepo Structure with Single Catalyst Package | Accepted | 2025-01-26 |
-| [0002](./0002-consumer-owned-edit-ui.md) | Consumer-Owned Edit UI Styling | Accepted | 2026-01-28 |
+| [0003](./0003-consumer-owned-edit-ui.md) | Consumer-Owned Edit UI Styling | Accepted | 2026-01-28 |
