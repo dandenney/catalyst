@@ -111,6 +111,9 @@ export function EditableText({
       title={isEditMode ? 'Double-click to edit' : undefined}
       contentEditable={isEditing}
       suppressContentEditableWarning
+      role={isEditing ? 'textbox' : undefined}
+      aria-label={isEditing ? 'Edit text content' : undefined}
+      tabIndex={isEditing ? 0 : undefined}
     >
       {displayValue}
     </Component>
