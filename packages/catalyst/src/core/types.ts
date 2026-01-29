@@ -82,7 +82,15 @@ export interface ItemField {
   icon: IconField;
 }
 
-export type Field = TextField | RichTextField | ImageField | ListField | BadgeField | ButtonField | MockupField | LogoItemField | IconField | ItemField;
+export interface StatItemField {
+  type: 'statItem';
+  label?: LocalizedContent;
+  value: LocalizedContent;
+  suffix?: LocalizedContent;
+  description: LocalizedContent;
+}
+
+export type Field = TextField | RichTextField | ImageField | ListField | BadgeField | ButtonField | MockupField | LogoItemField | IconField | ItemField | StatItemField;
 
 // Component schema base
 export interface ComponentSchema {
@@ -153,6 +161,13 @@ export interface ItemsSectionSchema extends ComponentSchema {
   fields: {
     title: TextField;
     items: ListField<ItemField>;
+  };
+}
+
+export interface StatsSectionSchema extends ComponentSchema {
+  type: 'StatsSection';
+  fields: {
+    stats: ListField<StatItemField>;
   };
 }
 

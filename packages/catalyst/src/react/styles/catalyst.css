@@ -62,3 +62,58 @@
   --catalyst-radius-lg: 8px;
   --catalyst-radius-full: 9999px;
 }
+
+/* Dark mode variants */
+.dark {
+  /* Base colors */
+  --catalyst-background: #1f2937;
+  --catalyst-foreground: #f9fafb;
+
+  /* Muted colors for secondary content */
+  --catalyst-muted: #374151;
+  --catalyst-muted-foreground: #9ca3af;
+
+  /* Primary action color (blue) */
+  --catalyst-primary: #60a5fa;
+  --catalyst-primary-foreground: #1f2937;
+  --catalyst-primary-hover: #3b82f6;
+
+  /* Secondary/neutral color */
+  --catalyst-secondary: #374151;
+  --catalyst-secondary-foreground: #e5e7eb;
+  --catalyst-secondary-hover: #4b5563;
+
+  /* Destructive/danger color (red) */
+  --catalyst-destructive: #f87171;
+  --catalyst-destructive-foreground: #1f2937;
+  --catalyst-destructive-hover: #ef4444;
+
+  /* Accent color (purple for variants) */
+  --catalyst-accent: #a78bfa;
+  --catalyst-accent-foreground: #1f2937;
+  --catalyst-accent-hover: #8b5cf6;
+
+  /* Success color (green) */
+  --catalyst-success: #34d399;
+  --catalyst-success-foreground: #1f2937;
+
+  /* Border colors */
+  --catalyst-border: #4b5563;
+  --catalyst-border-input: #6b7280;
+  --catalyst-border-focus: #60a5fa;
+
+  /* Ring (focus outline) */
+  --catalyst-ring: #60a5fa;
+
+  /* Edit mode indicator */
+  --catalyst-edit-outline: #6b7280;
+  --catalyst-edit-active: #60a5fa;
+
+  /* Overlay/backdrop */
+  --catalyst-overlay: rgba(0, 0, 0, 0.5);
+
+  /* Shadow */
+  --catalyst-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
+  --catalyst-shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
+  --catalyst-shadow-lg: -4px 0 12px rgba(0, 0, 0, 0.3);
+}

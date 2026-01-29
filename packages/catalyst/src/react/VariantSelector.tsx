@@ -65,7 +65,8 @@ export function VariantSelector({
       <DropdownMenuContent align="end">
         <DropdownMenuItem
           onClick={() => onVariantChange(null)}
-          className={cn(currentVariant === null && 'font-semibold bg-[var(--catalyst-secondary)]')}
+          className={cn(currentVariant === null && 'font-medium')}
+          style={currentVariant === null ? { backgroundColor: 'rgba(255,255,255,0.08)' } : undefined}
         >
           Base
         </DropdownMenuItem>
@@ -74,7 +75,8 @@ export function VariantSelector({
           <DropdownMenuItem
             key={variantName}
             onClick={() => onVariantChange(variantName)}
-            className={cn(currentVariant === variantName && 'font-semibold bg-[var(--catalyst-secondary)]')}
+            className={cn(currentVariant === variantName && 'font-medium')}
+            style={currentVariant === variantName ? { backgroundColor: 'rgba(255,255,255,0.08)' } : undefined}
           >
             {variantName}
           </DropdownMenuItem>
@@ -129,9 +131,10 @@ export function VariantSelector({
               e.preventDefault(); // Prevent dropdown from closing
               setIsCreating(true);
             }}
-            className="text-[var(--catalyst-primary)] font-semibold gap-2"
+            className="gap-2"
+            style={{ color: '#a1a1aa' }}
           >
-            <span>+</span>
+            <span style={{ color: '#e5a158' }}>+</span>
             Add Variant
           </DropdownMenuItem>
         )}

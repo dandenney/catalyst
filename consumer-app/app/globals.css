@@ -227,3 +227,70 @@
     scroll-behavior: auto !important;
   }
 }
+
+/* Catalyst UI Variables */
+:root {
+  --catalyst-background: #ffffff;
+  --catalyst-foreground: #111827;
+  --catalyst-muted: #f3f4f6;
+  --catalyst-muted-foreground: #6b7280;
+  --catalyst-primary: #3b82f6;
+  --catalyst-primary-foreground: #ffffff;
+  --catalyst-primary-hover: #2563eb;
+  --catalyst-secondary: #f1f5f9;
+  --catalyst-secondary-foreground: #374151;
+  --catalyst-secondary-hover: #e2e8f0;
+  --catalyst-destructive: #ef4444;
+  --catalyst-destructive-foreground: #ffffff;
+  --catalyst-destructive-hover: #dc2626;
+  --catalyst-accent: #8b5cf6;
+  --catalyst-accent-foreground: #ffffff;
+  --catalyst-accent-hover: #7c3aed;
+  --catalyst-success: #10b981;
+  --catalyst-success-foreground: #ffffff;
+  --catalyst-border: #e5e7eb;
+  --catalyst-border-input: #d1d5db;
+  --catalyst-border-focus: #3b82f6;
+  --catalyst-ring: #3b82f6;
+  --catalyst-edit-outline: #94a3b8;
+  --catalyst-edit-active: #3b82f6;
+  --catalyst-overlay: rgba(0, 0, 0, 0.3);
+  --catalyst-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
+  --catalyst-shadow-md: 0 4px 12px rgba(0, 0, 0, 0.15);
+  --catalyst-shadow-lg: -4px 0 12px rgba(0, 0, 0, 0.1);
+  --catalyst-radius-sm: 4px;
+  --catalyst-radius-md: 6px;
+  --catalyst-radius-lg: 8px;
+  --catalyst-radius-full: 9999px;
+}
+
+.dark {
+  --catalyst-background: #1f2937;
+  --catalyst-foreground: #f9fafb;
+  --catalyst-muted: #374151;
+  --catalyst-muted-foreground: #9ca3af;
+  --catalyst-primary: #60a5fa;
+  --catalyst-primary-foreground: #1f2937;
+  --catalyst-primary-hover: #3b82f6;
+  --catalyst-secondary: #374151;
+  --catalyst-secondary-foreground: #e5e7eb;
+  --catalyst-secondary-hover: #4b5563;
+  --catalyst-destructive: #f87171;
+  --catalyst-destructive-foreground: #1f2937;
+  --catalyst-destructive-hover: #ef4444;
+  --catalyst-accent: #a78bfa;
+  --catalyst-accent-foreground: #1f2937;
+  --catalyst-accent-hover: #8b5cf6;
+  --catalyst-success: #34d399;
+  --catalyst-success-foreground: #1f2937;
+  --catalyst-border: #4b5563;
+  --catalyst-border-input: #6b7280;
+  --catalyst-border-focus: #60a5fa;
+  --catalyst-ring: #60a5fa;
+  --catalyst-edit-outline: #6b7280;
+  --catalyst-edit-active: #60a5fa;
+  --catalyst-overlay: rgba(0, 0, 0, 0.5);
+  --catalyst-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
+  --catalyst-shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
+  --catalyst-shadow-lg: -4px 0 12px rgba(0, 0, 0, 0.3);
+}

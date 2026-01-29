@@ -3,7 +3,7 @@
  * Central registry of all available components for the page builder
  */
 
-import { ComponentSchema, HeroBannerSchema, FeatureListSchema, CTASectionSchema, HeroSectionSchema, LogosSectionSchema, ItemsSectionSchema } from './types';
+import { ComponentSchema, HeroBannerSchema, FeatureListSchema, CTASectionSchema, HeroSectionSchema, LogosSectionSchema, ItemsSectionSchema, StatsSectionSchema } from './types';
 
 export interface ComponentMetadata {
   type: string;
@@ -298,6 +298,49 @@ function createDefaultItemsSection(): ItemsSectionSchema {
 }
 
 /**
+ * Creates a default StatsSection component
+ */
+function createDefaultStatsSection(): StatsSectionSchema {
+  return {
+    id: `stats-${Date.now()}`,
+    type: 'StatsSection',
+    fields: {
+      stats: {
+        type: 'list',
+        value: [
+          {
+            type: 'statItem',
+            label: { en: 'used by' },
+            value: { en: '76.93' },
+            suffix: { en: 'k' },
+            description: { en: 'designers on Figma Community' },
+          },
+          {
+            type: 'statItem',
+            label: { en: 'over' },
+            value: { en: '1829' },
+            description: { en: 'clones and forks of the template on Github' },
+          },
+          {
+            type: 'statItem',
+            label: { en: 'already' },
+            value: { en: '164.93' },
+            suffix: { en: 'k' },
+            description: { en: 'installations with shadcn/ui CLI' },
+          },
+          {
+            type: 'statItem',
+            label: { en: 'includes' },
+            value: { en: '74' },
+            description: { en: 'blocks and sections' },
+          },
+        ],
+      },
+    },
+  };
+}
+
+/**
  * Registry of all available components
  */
 export const COMPONENT_REGISTRY: Record<string, ComponentMetadata> = {
@@ -354,6 +397,15 @@ export const COMPONENT_REGISTRY: Record<string, ComponentMetadata> = {
     icon: '📦',
     thumbnail: '/component-previews/ItemsSection.png',
     createDefault: createDefaultItemsSection,
+  },
+  StatsSection: {
+    type: 'StatsSection',
+    label: 'Stats Section',
+    description: 'Display statistics with values, labels, and descriptions',
+    category: 'content',
+    icon: '📊',
+    thumbnail: '/component-previews/StatsSection.png',
+    createDefault: createDefaultStatsSection,
   },
 };
 
