@@ -3,7 +3,7 @@
  * Central registry of all available components for the page builder
  */
 
-import { ComponentSchema, HeroBannerSchema, FeatureListSchema, CTASectionSchema } from './types';
+import { ComponentSchema, HeroBannerSchema, FeatureListSchema, CTASectionSchema, HeroSectionSchema } from './types';
 
 export interface ComponentMetadata {
   type: string;
@@ -107,6 +107,73 @@ function createDefaultCTASection(): CTASectionSchema {
 }
 
 /**
+ * Creates a default HeroSection component
+ */
+function createDefaultHeroSection(): HeroSectionSchema {
+  return {
+    id: `hero-section-${Date.now()}`,
+    type: 'HeroSection',
+    fields: {
+      title: {
+        type: 'text',
+        value: {
+          en: 'Give your big idea the design it deserves',
+          es: 'Dale a tu gran idea el diseño que merece',
+        },
+      },
+      description: {
+        type: 'text',
+        value: {
+          en: 'Professionally designed blocks and templates built with React, Shadcn/ui and Tailwind that will help your product stand out.',
+          es: 'Bloques y plantillas diseñados profesionalmente con React, Shadcn/ui y Tailwind que ayudarán a destacar tu producto.',
+        },
+      },
+      badge: {
+        type: 'badge',
+        label: {
+          en: 'New version of Launch UI is out!',
+          es: '¡Nueva versión de Launch UI disponible!',
+        },
+        link: {
+          href: { en: '/docs/getting-started' },
+          text: { en: 'Get started', es: 'Comenzar' },
+        },
+      },
+      buttons: {
+        type: 'list',
+        value: [
+          {
+            type: 'button',
+            href: { en: '/docs/getting-started' },
+            text: { en: 'Get Started', es: 'Comenzar' },
+            variant: 'default',
+          },
+          {
+            type: 'button',
+            href: { en: 'https://github.com/launch-ui/launch-ui' },
+            text: { en: 'Github' },
+            variant: 'glow',
+            icon: 'github',
+            iconPosition: 'left',
+          },
+        ],
+      },
+      mockup: {
+        type: 'mockup',
+        srcLight: '/dashboard-light.png',
+        srcDark: '/dashboard-dark.png',
+        alt: {
+          en: 'Launch UI app screenshot',
+          es: 'Captura de pantalla de Launch UI',
+        },
+        width: 1248,
+        height: 765,
+      },
+    },
+  };
+}
+
+/**
  * Registry of all available components
  */
 export const COMPONENT_REGISTRY: Record<string, ComponentMetadata> = {
@@ -136,6 +203,15 @@ export const COMPONENT_REGISTRY: Record<string, ComponentMetadata> = {
     icon: '📢',
     thumbnail: '/component-previews/CTASection.png',
     createDefault: createDefaultCTASection,
+  },
+  HeroSection: {
+    type: 'HeroSection',
+    label: 'Hero Section',
+    description: 'Hero section with title, description, badge, buttons, and mockup',
+    category: 'layout',
+    icon: '🦸',
+    thumbnail: '/component-previews/HeroSection.png',
+    createDefault: createDefaultHeroSection,
   },
 };
 
