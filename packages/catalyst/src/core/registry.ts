@@ -3,7 +3,7 @@
  * Central registry of all available components for the page builder
  */
 
-import { ComponentSchema, HeroBannerSchema, FeatureListSchema, CTASectionSchema, HeroSectionSchema, LogosSectionSchema } from './types';
+import { ComponentSchema, HeroBannerSchema, FeatureListSchema, CTASectionSchema, HeroSectionSchema, LogosSectionSchema, ItemsSectionSchema } from './types';
 
 export interface ComponentMetadata {
   type: string;
@@ -229,6 +229,75 @@ function createDefaultLogosSection(): LogosSectionSchema {
 }
 
 /**
+ * Creates a default ItemsSection component
+ */
+function createDefaultItemsSection(): ItemsSectionSchema {
+  return {
+    id: `items-${Date.now()}`,
+    type: 'ItemsSection',
+    fields: {
+      title: {
+        type: 'text',
+        value: { en: 'Everything you need. Nothing you don\'t.' },
+      },
+      items: {
+        type: 'list',
+        value: [
+          {
+            type: 'item',
+            title: { en: 'Accessibility first' },
+            description: { en: 'Fully WCAG 2.0 compliant, made with best a11y practices' },
+            icon: { type: 'icon', iconKey: 'scan-face' },
+          },
+          {
+            type: 'item',
+            title: { en: 'Responsive design' },
+            description: { en: 'Looks and works great on any device and screen size' },
+            icon: { type: 'icon', iconKey: 'monitor-smartphone' },
+          },
+          {
+            type: 'item',
+            title: { en: 'Light and dark mode' },
+            description: { en: 'Seamless switching between color schemes, 6 themes included' },
+            icon: { type: 'icon', iconKey: 'eclipse' },
+          },
+          {
+            type: 'item',
+            title: { en: 'Easy to customize' },
+            description: { en: 'Flexible options to match your product or brand' },
+            icon: { type: 'icon', iconKey: 'blocks' },
+          },
+          {
+            type: 'item',
+            title: { en: 'Top-level performance' },
+            description: { en: 'Made for lightning-fast load times and smooth interactions' },
+            icon: { type: 'icon', iconKey: 'fast-forward' },
+          },
+          {
+            type: 'item',
+            title: { en: 'Production ready' },
+            description: { en: 'Thoroughly tested and launch-prepared' },
+            icon: { type: 'icon', iconKey: 'rocket' },
+          },
+          {
+            type: 'item',
+            title: { en: 'Made for localisation' },
+            description: { en: 'Easy to implement support for multiple languages and regions' },
+            icon: { type: 'icon', iconKey: 'languages' },
+          },
+          {
+            type: 'item',
+            title: { en: 'CMS friendly' },
+            description: { en: 'Built to work with your any headless content management system' },
+            icon: { type: 'icon', iconKey: 'square-pen' },
+          },
+        ],
+      },
+    },
+  };
+}
+
+/**
  * Registry of all available components
  */
 export const COMPONENT_REGISTRY: Record<string, ComponentMetadata> = {
@@ -276,6 +345,15 @@ export const COMPONENT_REGISTRY: Record<string, ComponentMetadata> = {
     icon: '🏷️',
     thumbnail: '/component-previews/LogosSection.png',
     createDefault: createDefaultLogosSection,
+  },
+  ItemsSection: {
+    type: 'ItemsSection',
+    label: 'Items Section',
+    description: 'Grid of feature items with icons, titles, and descriptions',
+    category: 'content',
+    icon: '📦',
+    thumbnail: '/component-previews/ItemsSection.png',
+    createDefault: createDefaultItemsSection,
   },
 };
 

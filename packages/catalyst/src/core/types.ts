@@ -70,7 +70,19 @@ export interface LogoItemField {
   imageKey: string; // Key to look up the SVG component in consumer app
 }
 
-export type Field = TextField | RichTextField | ImageField | ListField | BadgeField | ButtonField | MockupField | LogoItemField;
+export interface IconField {
+  type: 'icon';
+  iconKey: string; // Key to look up the icon component in consumer app
+}
+
+export interface ItemField {
+  type: 'item';
+  title: LocalizedContent;
+  description: LocalizedContent;
+  icon: IconField;
+}
+
+export type Field = TextField | RichTextField | ImageField | ListField | BadgeField | ButtonField | MockupField | LogoItemField | IconField | ItemField;
 
 // Component schema base
 export interface ComponentSchema {
@@ -133,6 +145,14 @@ export interface LogosSectionSchema extends ComponentSchema {
     title: TextField;
     badgeText: TextField;
     logos: ListField<LogoItemField>;
+  };
+}
+
+export interface ItemsSectionSchema extends ComponentSchema {
+  type: 'ItemsSection';
+  fields: {
+    title: TextField;
+    items: ListField<ItemField>;
   };
 }
 

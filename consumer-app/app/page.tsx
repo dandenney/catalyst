@@ -1,13 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import { type HeroSectionSchema, type LogosSectionSchema, createComponent } from "catalyst";
+import { type HeroSectionSchema, type LogosSectionSchema, type ItemsSectionSchema, createComponent } from "catalyst";
 
 import CTA from "../components/sections/cta/default";
 import FAQ from "../components/sections/faq/default";
 import Footer from "../components/sections/footer/default";
 import SchemaHero from "../components/sections/hero/schema-hero";
-import Items from "../components/sections/items/default";
+import SchemaItems from "../components/sections/items/schema-items";
 import SchemaLogos from "../components/sections/logos/schema-logos";
 import Navbar from "../components/sections/navbar/default";
 import Pricing from "../components/sections/pricing/default";
@@ -91,6 +91,32 @@ export default function Home() {
       },
     };
   });
+  const [itemsSchema, setItemsSchema] = useState<ItemsSectionSchema>(() => {
+    const baseSchema = createComponent("ItemsSection") as ItemsSectionSchema;
+    return {
+      ...baseSchema,
+      variants: {
+        finance: {
+          title: {
+            type: "text",
+            value: {
+              en: "Enterprise-grade features for financial services",
+              es: "Funciones de nivel empresarial para servicios financieros",
+            },
+          },
+        },
+        startup: {
+          title: {
+            type: "text",
+            value: {
+              en: "Ship fast with everything you need built-in",
+              es: "Lanza rápido con todo lo que necesitas integrado",
+            },
+          },
+        },
+      },
+    };
+  });
 
   return (
     <main className="bg-background text-foreground min-h-screen w-full">
@@ -99,7 +125,7 @@ export default function Home() {
       <Navbar />
       <SchemaHero schema={heroSchema} onUpdate={setHeroSchema} />
       <SchemaLogos schema={logosSchema} onUpdate={setLogosSchema} />
-      <Items />
+      <SchemaItems schema={itemsSchema} onUpdate={setItemsSchema} />
       <Stats />
       <Pricing />
       <FAQ />
