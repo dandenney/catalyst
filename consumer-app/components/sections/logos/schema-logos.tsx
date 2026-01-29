@@ -108,9 +108,11 @@ function EditableLogo({ logo, index, onUpdate }: EditableLogoProps) {
   return (
     <Popover open={isOpen} onOpenChange={(open) => isEditMode && setIsOpen(open)}>
       <PopoverTrigger asChild>
-        <div
+        <button
+          type="button"
           className={cn(
             "flex items-center gap-2 text-sm font-medium",
+            isEditMode ? "cursor-pointer" : "cursor-default",
             editOutlineClass
           )}
           onClick={handleOpen}
@@ -133,7 +135,7 @@ function EditableLogo({ logo, index, onUpdate }: EditableLogoProps) {
               {displayBadge}
             </Badge>
           )}
-        </div>
+        </button>
       </PopoverTrigger>
       <PopoverContent className="w-80" onKeyDown={handleKeyDown}>
         <div className="space-y-4">
@@ -146,7 +148,7 @@ function EditableLogo({ logo, index, onUpdate }: EditableLogoProps) {
               type="text"
               value={editName}
               onChange={(e) => setEditName(e.target.value)}
-              placeholder="Logo name"
+              placeholder="Logo name…"
               autoFocus
             />
           </div>
@@ -160,7 +162,7 @@ function EditableLogo({ logo, index, onUpdate }: EditableLogoProps) {
               type="text"
               value={editVersion}
               onChange={(e) => setEditVersion(e.target.value)}
-              placeholder="e.g., 1.0.0 (optional)"
+              placeholder="e.g., 1.0.0 (optional)…"
             />
           </div>
 
@@ -173,7 +175,7 @@ function EditableLogo({ logo, index, onUpdate }: EditableLogoProps) {
               type="text"
               value={editBadge}
               onChange={(e) => setEditBadge(e.target.value)}
-              placeholder="e.g., New (optional)"
+              placeholder="e.g., New (optional)…"
             />
           </div>
 

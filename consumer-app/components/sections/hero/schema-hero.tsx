@@ -85,7 +85,7 @@ function EditableBadgeLink({
               type="text"
               value={link.editText}
               onChange={(e) => link.setEditText(e.target.value)}
-              placeholder="Click here"
+              placeholder="Click here…"
               autoFocus
             />
           </div>
@@ -99,7 +99,7 @@ function EditableBadgeLink({
               type="text"
               value={link.editHref}
               onChange={(e) => link.setEditHref(e.target.value)}
-              placeholder="https://example.com"
+              placeholder="https://example.com…"
             />
           </div>
 
@@ -184,7 +184,7 @@ function EditableButton({
               type="text"
               value={link.editText}
               onChange={(e) => link.setEditText(e.target.value)}
-              placeholder="Click here"
+              placeholder="Click here…"
               autoFocus
             />
           </div>
@@ -196,7 +196,7 @@ function EditableButton({
               type="text"
               value={link.editHref}
               onChange={(e) => link.setEditHref(e.target.value)}
-              placeholder="https://example.com"
+              placeholder="https://example.com…"
             />
           </div>
 

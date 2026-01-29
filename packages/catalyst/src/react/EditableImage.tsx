@@ -69,6 +69,16 @@ export function EditableImage({
     }
   }, [isEditMode]);
 
+  const handleTriggerKeyDown = useCallback(
+    (e: React.KeyboardEvent) => {
+      if (isEditMode && (e.key === 'Enter' || e.key === ' ')) {
+        e.preventDefault();
+        setIsOpen(true);
+      }
+    },
+    [isEditMode]
+  );
+
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent) => {
       if (e.key === 'Escape') {
@@ -86,18 +96,19 @@ export function EditableImage({
         <img
           src={src}
           alt={displayAlt}
+          width={width}
+          height={height}
           onClick={handleClick}
+          onKeyDown={handleTriggerKeyDown}
+          tabIndex={isEditMode ? 0 : undefined}
+          role={isEditMode ? 'button' : undefined}
           className={cn(
             className,
             isEditMode && 'cursor-pointer outline-1 outline-dashed outline-[var(--catalyst-edit-outline)] outline-offset-2',
             isOpen && 'outline-2 outline-solid outline-[var(--catalyst-edit-active)] outline-offset-2'
           )}
           title={isEditMode ? 'Click to edit image' : undefined}
-          style={{
-            ...customStyle,
-            width,
-            height,
-          }}
+          style={customStyle}
         />
       </PopoverTrigger>
       <PopoverContent onKeyDown={handleKeyDown}>
@@ -109,7 +120,7 @@ export function EditableImage({
               type="text"
               value={editSrc}
               onChange={(e) => setEditSrc(e.target.value)}
-              placeholder="https://example.com/image.jpg"
+              placeholder="https://example.com/image.jpg…"
               autoFocus
             />
           </div>
@@ -121,7 +132,7 @@ export function EditableImage({
               type="text"
               value={editAlt}
               onChange={(e) => setEditAlt(e.target.value)}
-              placeholder="Describe the image"
+              placeholder="Describe the image…"
             />
           </div>
 

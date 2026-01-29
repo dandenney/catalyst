@@ -141,7 +141,7 @@ export default function EditableScreenshot({
               type="text"
               value={editSrcLight}
               onChange={(e) => setEditSrcLight(e.target.value)}
-              placeholder="/image-light.png"
+              placeholder="/image-light.png…"
               autoFocus
             />
           </div>
@@ -153,7 +153,7 @@ export default function EditableScreenshot({
               type="text"
               value={editSrcDark}
               onChange={(e) => setEditSrcDark(e.target.value)}
-              placeholder="/image-dark.png (optional)"
+              placeholder="/image-dark.png (optional)…"
             />
           </div>
 
@@ -166,7 +166,7 @@ export default function EditableScreenshot({
               type="text"
               value={editAlt}
               onChange={(e) => setEditAlt(e.target.value)}
-              placeholder="Describe the image"
+              placeholder="Describe the image…"
             />
           </div>
 

@@ -8,6 +8,53 @@ import { useState, useCallback } from 'react';
 import { ComponentSchema, applyPersonalization, Field, TextField, RichTextField, ImageField, ListField, BadgeField, ButtonField, MockupField, LogoItemField } from '../core';
 import { useCatalyst } from './CatalystContext';
 
+/**
+ * Helper to create updated field based on type
+ * Extracted to module scope to avoid recreation on each render
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function createUpdatedField(currentField: Field, content: any): Field {
+  switch (currentField.type) {
+    case 'image': {
+      const imageField = currentField as ImageField;
+      return { ...imageField, alt: content };
+    }
+    case 'text': {
+      const textField = currentField as TextField;
+      return { ...textField, value: content };
+    }
+    case 'richtext': {
+      const richtextField = currentField as RichTextField;
+      return { ...richtextField, value: content };
+    }
+    case 'list': {
+      const listField = currentField as ListField;
+      return { ...listField, value: content };
+    }
+    case 'badge': {
+      const badgeField = currentField as BadgeField;
+      // Merge partial updates (e.g., { label: newLabel } or { link: newLink })
+      return { ...badgeField, ...content };
+    }
+    case 'button': {
+      const buttonField = currentField as ButtonField;
+      // Merge partial updates
+      return { ...buttonField, ...content };
+    }
+    case 'mockup': {
+      const mockupField = currentField as MockupField;
+      // Merge partial updates
+      return { ...mockupField, ...content };
+    }
+    case 'logoItem': {
+      const logoField = currentField as LogoItemField;
+      return { ...logoField, ...content };
+    }
+    default:
+      return currentField;
+  }
+}
+
 interface UseVariantHandlingOptions<T extends ComponentSchema> {
   schema: T;
 }
@@ -73,53 +120,11 @@ export function useVariantHandling<T extends ComponentSchema>({
   const updateField = useCallback(
     (
       fieldName: string,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       updatedContent: any,
       onUpdate?: (schema: T) => void
     ) => {
       if (!onUpdate) return;
-
-      // Helper to create updated field based on type
-      const createUpdatedField = (currentField: Field, content: any): Field => {
-        switch (currentField.type) {
-          case 'image': {
-            const imageField = currentField as ImageField;
-            return { ...imageField, alt: content };
-          }
-          case 'text': {
-            const textField = currentField as TextField;
-            return { ...textField, value: content };
-          }
-          case 'richtext': {
-            const richtextField = currentField as RichTextField;
-            return { ...richtextField, value: content };
-          }
-          case 'list': {
-            const listField = currentField as ListField;
-            return { ...listField, value: content };
-          }
-          case 'badge': {
-            const badgeField = currentField as BadgeField;
-            // Merge partial updates (e.g., { label: newLabel } or { link: newLink })
-            return { ...badgeField, ...content };
-          }
-          case 'button': {
-            const buttonField = currentField as ButtonField;
-            // Merge partial updates
-            return { ...buttonField, ...content };
-          }
-          case 'mockup': {
-            const mockupField = currentField as MockupField;
-            // Merge partial updates
-            return { ...mockupField, ...content };
-          }
-          case 'logoItem': {
-            const logoField = currentField as LogoItemField;
-            return { ...logoField, ...content };
-          }
-          default:
-            return currentField;
-        }
-      };
 
       // If editing a variant, update the variant fields
       if (editingVariant) {

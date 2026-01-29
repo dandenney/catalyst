@@ -51,7 +51,15 @@ export function VariantSelector({
           title="Select variant to edit"
         >
           {currentVariant ? `Variant: ${currentVariant}` : 'Base'}
-          <span className="text-xs">▼</span>
+          <svg
+            className="h-3 w-3"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            aria-hidden="true"
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+          </svg>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
@@ -88,7 +96,7 @@ export function VariantSelector({
                   setNewVariantName('');
                 }
               }}
-              placeholder="e.g., premium, mobile"
+              placeholder="e.g., premium, mobile…"
               autoFocus
               className="mb-2"
             />
