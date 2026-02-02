@@ -5,10 +5,7 @@
     "dev": "pnpm -F consumer-app dev",
     "dev:watch": "pnpm -r --parallel dev",
     "build": "pnpm -F catalyst build",
-    "test": "pnpm -F catalyst test",
-    "lint": "pnpm -F consumer-app lint",
-    "lint:fix": "pnpm -F consumer-app lint --fix",
-    "typecheck": "pnpm -F catalyst build && pnpm -F consumer-app typecheck"
+    "test": "pnpm -F catalyst test"
   },
   "devDependencies": {
     "typescript": "^5.6.0"

@@ -1,15 +1,16 @@
 "use client";
 
-import {
-  getLocalizedValue,
-  type LocalizedContent,
-  useCatalyst,
-} from "catalyst";
 import Image from "next/image";
 import { useTheme } from "next-themes";
 import { useCallback, useEffect, useState } from "react";
 
 import { cn } from "@/lib/utils";
+
+import {
+  type LocalizedContent,
+  getLocalizedValue,
+  useCatalyst,
+} from "catalyst";
 
 import { Button } from "./button";
 import { Input } from "./input";

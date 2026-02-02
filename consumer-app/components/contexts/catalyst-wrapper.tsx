@@ -1,8 +1,9 @@
 "use client";
 
-import { CatalystProvider, Locale } from "catalyst";
 import { useSearchParams } from "next/navigation";
 import { Suspense } from "react";
+
+import { CatalystProvider, Locale } from "catalyst";
 
 function CatalystProviderWithParams({
   children,
