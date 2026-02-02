@@ -1,9 +1,9 @@
 "use client";
 
-import { useMemo,useState } from "react";
+import { useState, useMemo } from "react";
 
-import { ICON_REGISTRY, type IconEntry } from "@/lib/icon-registry";
 import { cn } from "@/lib/utils";
+import { ICON_REGISTRY, type IconEntry } from "@/lib/icon-registry";
 
 import { Input } from "./input";
 

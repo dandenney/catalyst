@@ -1,18 +1,19 @@
 "use client";
 
+import { useState } from "react";
+
+import { cn } from "@/lib/utils";
+
 import {
   EditableText,
-  getLocalizedValue,
   type LocalizedContent,
-  type LogoItemField,
   type LogosSectionSchema,
+  type LogoItemField,
+  getLocalizedValue,
   useCatalyst,
   useVariantHandling,
   VariantSelector,
 } from "catalyst";
-import { useState } from "react";
-
-import { cn } from "@/lib/utils";
 
 import Figma from "../../logos/figma";
 import ReactLogo from "../../logos/react";

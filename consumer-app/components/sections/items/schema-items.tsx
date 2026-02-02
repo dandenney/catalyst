@@ -1,19 +1,20 @@
 "use client";
 
+import { useState } from "react";
+
+import { cn } from "@/lib/utils";
+import { getIconComponent } from "@/lib/icon-registry";
+
 import {
   EditableText,
-  getLocalizedValue,
-  type ItemField,
-  type ItemsSectionSchema,
   type LocalizedContent,
+  type ItemsSectionSchema,
+  type ItemField,
+  getLocalizedValue,
   useCatalyst,
   useVariantHandling,
   VariantSelector,
 } from "catalyst";
-import { useState } from "react";
-
-import { getIconComponent } from "@/lib/icon-registry";
-import { cn } from "@/lib/utils";
 
 import { Button } from "../../ui/button";
 import { IconPicker } from "../../ui/icon-picker";

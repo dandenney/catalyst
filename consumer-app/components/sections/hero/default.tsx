@@ -1,11 +1,5 @@
 "use client";
 
-import {
-  EditableText,
-  type LocalizedContent,
-  useCatalyst,
-  useEditableLink,
-} from "catalyst";
 import { type VariantProps } from "class-variance-authority";
 import { ArrowRightIcon } from "lucide-react";
 import { ReactNode, useState } from "react";
@@ -13,10 +7,17 @@ import { ReactNode, useState } from "react";
 import { siteConfig } from "@/config/site";
 import { cn } from "@/lib/utils";
 
-import Github from "../../logos/github";
+import {
+  EditableText,
+  type LocalizedContent,
+  useCatalyst,
+  useEditableLink,
+} from "catalyst";
+
 import { Badge } from "../../ui/badge";
 import { Button, buttonVariants } from "../../ui/button";
 import EditableScreenshot from "../../ui/editable-screenshot";
+import Github from "../../logos/github";
 import Glow from "../../ui/glow";
 import { Input } from "../../ui/input";
 import { Label } from "../../ui/label";
