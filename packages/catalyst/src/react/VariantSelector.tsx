@@ -20,12 +20,14 @@ export interface VariantSelectorProps {
   variants?: Record<string, unknown>;
   currentVariant: string | null;
   onVariantChange: (variant: string | null) => void;
+  extraItems?: React.ReactNode;
 }
 
 export function VariantSelector({
   variants = {},
   currentVariant,
   onVariantChange,
+  extraItems,
 }: VariantSelectorProps) {
   const [isCreating, setIsCreating] = useState(false);
   const [newVariantName, setNewVariantName] = useState('');
@@ -137,6 +139,13 @@ export function VariantSelector({
             <span style={{ color: '#e5a158' }}>+</span>
             Add Variant
           </DropdownMenuItem>
+        )}
+
+        {extraItems && (
+          <>
+            <DropdownMenuSeparator />
+            {extraItems}
+          </>
         )}
       </DropdownMenuContent>
     </DropdownMenu>

@@ -28,6 +28,10 @@ import { Label } from "../../ui/label";
 import { Mockup, MockupFrame } from "../../ui/mockup";
 import { Popover, PopoverContent, PopoverTrigger } from "../../ui/popover";
 import { Section } from "../../ui/section";
+import {
+  type SectionControls,
+  SectionDropdownItems,
+} from "../../ui/section-dropdown-items";
 
 // Consistent edit-mode styling for all editable items
 const EDIT_CLASS = "cursor-pointer outline-1 outline-dashed outline-primary/50 outline-offset-2";
@@ -37,6 +41,7 @@ interface SchemaHeroProps {
   schema: HeroSectionSchema;
   onUpdate?: (schema: HeroSectionSchema) => void;
   className?: string;
+  sectionControls?: SectionControls;
 }
 
 function EditableBadgeLink({
@@ -218,7 +223,12 @@ function EditableButton({
   );
 }
 
-export default function SchemaHero({ schema, onUpdate, className }: SchemaHeroProps) {
+export default function SchemaHero({
+  schema,
+  onUpdate,
+  className,
+  sectionControls,
+}: SchemaHeroProps) {
   const { isEditMode, locale } = useCatalyst();
   const { displaySchema, editingVariant, setEditingVariant, updateField } =
     useVariantHandling({ schema });
@@ -261,6 +271,9 @@ export default function SchemaHero({ schema, onUpdate, className }: SchemaHeroPr
     updateField('mockup', data, onUpdate);
   };
 
+  const hasVariants = schema.variants && Object.keys(schema.variants).length > 0;
+  const showVariantSelector = isEditMode && (hasVariants || !!sectionControls);
+
   return (
     <Section
       className={cn(
@@ -268,12 +281,17 @@ export default function SchemaHero({ schema, onUpdate, className }: SchemaHeroPr
         className,
       )}
     >
-      {isEditMode && (
+      {showVariantSelector && (
         <div className="max-w-container mx-auto flex justify-end mb-4">
           <VariantSelector
             variants={schema.variants}
             currentVariant={editingVariant}
             onVariantChange={setEditingVariant}
+            extraItems={
+              sectionControls ? (
+                <SectionDropdownItems controls={sectionControls} />
+              ) : null
+            }
           />
         </div>
       )}

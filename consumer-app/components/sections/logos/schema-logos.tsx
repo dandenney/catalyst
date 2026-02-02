@@ -26,6 +26,10 @@ import { Input } from "../../ui/input";
 import { Label } from "../../ui/label";
 import { Popover, PopoverContent, PopoverTrigger } from "../../ui/popover";
 import { Section } from "../../ui/section";
+import {
+  type SectionControls,
+  SectionDropdownItems,
+} from "../../ui/section-dropdown-items";
 
 // Consistent edit-mode styling for all editable items
 const EDIT_CLASS = "cursor-pointer outline-1 outline-dashed outline-primary/50 outline-offset-2";
@@ -44,6 +48,7 @@ interface SchemaLogosProps {
   schema: LogosSectionSchema;
   onUpdate?: (schema: LogosSectionSchema) => void;
   className?: string;
+  sectionControls?: SectionControls;
 }
 
 interface EditableLogoProps {
@@ -197,7 +202,12 @@ function EditableLogo({ logo, index, onUpdate }: EditableLogoProps) {
   );
 }
 
-export default function SchemaLogos({ schema, onUpdate, className }: SchemaLogosProps) {
+export default function SchemaLogos({
+  schema,
+  onUpdate,
+  className,
+  sectionControls,
+}: SchemaLogosProps) {
   const { isEditMode } = useCatalyst();
   const { displaySchema, editingVariant, setEditingVariant, updateField } =
     useVariantHandling({ schema });
@@ -218,14 +228,22 @@ export default function SchemaLogos({ schema, onUpdate, className }: SchemaLogos
     updateField("logos", newLogos, onUpdate);
   };
 
+  const hasVariants = schema.variants && Object.keys(schema.variants).length > 0;
+  const showVariantSelector = isEditMode && (hasVariants || !!sectionControls);
+
   return (
     <Section className={className}>
-      {isEditMode && schema.variants && Object.keys(schema.variants).length > 0 && (
+      {showVariantSelector && (
         <div className="max-w-container mx-auto flex justify-end mb-4">
           <VariantSelector
             variants={schema.variants}
             currentVariant={editingVariant}
             onVariantChange={setEditingVariant}
+            extraItems={
+              sectionControls ? (
+                <SectionDropdownItems controls={sectionControls} />
+              ) : null
+            }
           />
         </div>
       )}
