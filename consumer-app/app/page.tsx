@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import {
+  type FAQSectionSchema,
   type HeroSectionSchema,
   type LogosSectionSchema,
   type ItemsSectionSchema,
@@ -14,7 +15,7 @@ import {
 } from "catalyst";
 
 import CTA from "../components/sections/cta/default";
-import FAQ from "../components/sections/faq/default";
+import SchemaFAQ from "../components/sections/faq/schema-faq";
 import Footer from "../components/sections/footer/default";
 import SchemaHero from "../components/sections/hero/schema-hero";
 import SchemaItems from "../components/sections/items/schema-items";
@@ -30,11 +31,12 @@ import {
 } from "../components/ui/section-dropdown-items";
 
 export default function Home() {
-const [sections, setSections] = useState(() => {
+  const [sections, setSections] = useState(() => {
     const heroSchema = createComponent("HeroSection") as HeroSectionSchema;
     const logosSchema = createComponent("LogosSection") as LogosSectionSchema;
     const itemsSchema = createComponent("ItemsSection") as ItemsSectionSchema;
     const statsSchema = createComponent("StatsSection") as StatsSectionSchema;
+    const faqSchema = createComponent("FAQSection") as FAQSectionSchema;
 
     return [
       {
@@ -214,6 +216,10 @@ const [sections, setSections] = useState(() => {
           },
         } as StatsSectionSchema,
       },
+      {
+        type: "FAQSection",
+        schema: faqSchema,
+      },
     ];
   });
 
@@ -245,7 +251,8 @@ const [sections, setSections] = useState(() => {
       | HeroSectionSchema
       | LogosSectionSchema
       | ItemsSectionSchema
-      | StatsSectionSchema;
+      | StatsSectionSchema
+      | FAQSectionSchema;
     return { type, schema };
   };
 
@@ -266,6 +273,7 @@ const [sections, setSections] = useState(() => {
     { type: "LogosSection", label: "Logos section" },
     { type: "ItemsSection", label: "Items section" },
     { type: "StatsSection", label: "Stats section" },
+    { type: "FAQSection", label: "FAQ section" },
   ];
 
   return (
@@ -344,12 +352,21 @@ const [sections, setSections] = useState(() => {
                 sectionControls={sectionControls}
               />
             );
+          case "FAQSection":
+            return (
+              <SchemaFAQ
+                key={section.schema.id}
+                schema={section.schema as FAQSectionSchema}
+                onUpdate={(schema) => updateSectionSchema(index, schema)}
+                sectionControls={sectionControls}
+              />
+            );
           default:
             return null;
         }
       })}
       <Pricing />
-      <FAQ />
+      
       <CTA />
       <Footer />
     </main>
