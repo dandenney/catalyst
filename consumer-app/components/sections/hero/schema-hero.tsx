@@ -1,27 +1,25 @@
 "use client";
 
+import {
+  type ButtonField,
+  EditableText,
+  type HeroSectionSchema,
+  type LocalizedContent,
+  useCatalyst,
+  useEditableLink,
+  useVariantHandling,
+  VariantSelector,
+} from "catalyst";
 import { type VariantProps } from "class-variance-authority";
 import { ArrowRightIcon } from "lucide-react";
 import { ReactNode } from "react";
 
 import { cn } from "@/lib/utils";
 
-import {
-  EditableText,
-  type LocalizedContent,
-  type HeroSectionSchema,
-  type ButtonField,
-  getLocalizedValue,
-  useCatalyst,
-  useEditableLink,
-  useVariantHandling,
-  VariantSelector,
-} from "catalyst";
-
+import Github from "../../logos/github";
 import { Badge } from "../../ui/badge";
 import { Button, buttonVariants } from "../../ui/button";
 import EditableScreenshot from "../../ui/editable-screenshot";
-import Github from "../../logos/github";
 import Glow from "../../ui/glow";
 import { Input } from "../../ui/input";
 import { Label } from "../../ui/label";

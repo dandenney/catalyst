@@ -1,0 +1,36 @@
+# Component Conversion Progress
+
+## Session Log
+
+### Initial State (2026-02-02)
+- Branch: ralph-setup
+- Components to convert: Navbar, Pricing, FAQ, CTA, Footer
+- Reference implementations: schema-hero.tsx, schema-items.tsx, schema-logos.tsx, schema-stats.tsx
+
+### Setup Complete (2026-02-02)
+- Created ralph/ directory with HITL infrastructure
+- Set up eslint config in consumer-app
+- Verified all feedback loops pass:
+  - `pnpm build` ✓
+  - `pnpm typecheck` ✓
+  - `pnpm lint` ✓ (warnings only, no errors)
+
+## Completed
+(none yet)
+
+## In Progress
+(none yet)
+
+## Blocked
+(none yet)
+
+## Decisions Made
+- Use eslint with typescript-eslint, react, react-hooks, simple-import-sort, unused-imports plugins
+- Warnings are acceptable, errors must be fixed before commit
+- Use Sheet component for editing complex items (not Popover - better UX for multiple fields)
+
+## Notes
+- Follow the pattern established in schema-stats.tsx for complex list items
+- All schema components must include VariantSelector support
+- Use EDIT_CLASS and EDITING_CLASS constants consistently
+- Component order: Navbar → Pricing → FAQ → CTA → Footer

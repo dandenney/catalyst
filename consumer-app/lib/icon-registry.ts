@@ -18,6 +18,7 @@ import {
   GlobeIcon,
   LanguagesIcon,
   LockIcon,
+  type LucideIcon,
   MinusIcon,
   MonitorSmartphoneIcon,
   PlusIcon,
@@ -31,7 +32,6 @@ import {
   TerminalIcon,
   XIcon,
   ZapIcon,
-  type LucideIcon,
 } from "lucide-react";
 
 export interface IconEntry {
