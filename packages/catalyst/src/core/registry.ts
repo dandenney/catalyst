@@ -3,7 +3,7 @@
  * Central registry of all available components for the page builder
  */
 
-import { ComponentSchema, HeroBannerSchema, FeatureListSchema, CTASectionSchema, HeroSectionSchema, LogosSectionSchema, ItemsSectionSchema, StatsSectionSchema } from './types';
+import { ComponentSchema, HeroBannerSchema, FeatureListSchema, CTASectionSchema, HeroSectionSchema, LogosSectionSchema, ItemsSectionSchema, StatsSectionSchema, FAQSectionSchema } from './types';
 
 export interface ComponentMetadata {
   type: string;
@@ -341,6 +341,54 @@ function createDefaultStatsSection(): StatsSectionSchema {
 }
 
 /**
+ * Creates a default FAQSection component
+ */
+function createDefaultFAQSection(): FAQSectionSchema {
+  return {
+    id: `faq-${Date.now()}`,
+    type: 'FAQSection',
+    fields: {
+      title: {
+        type: 'text',
+        value: { en: 'Questions and Answers' },
+      },
+      items: {
+        type: 'list',
+        value: [
+          {
+            type: 'faqItem',
+            question: {
+              en: 'Why building a great landing page is critical for your business?',
+            },
+            answer: {
+              en: 'In today’s AI-driven world, standing out is harder than ever. A professional landing page makes the difference between success and failure.',
+            },
+          },
+          {
+            type: 'faqItem',
+            question: {
+              en: 'Why use Launch UI instead of a no-code tool?',
+            },
+            answer: {
+              en: 'No-code tools can lock you into recurring fees and limited control. Launch UI gives you full control of your code while maintaining professional quality.',
+            },
+          },
+          {
+            type: 'faqItem',
+            question: {
+              en: 'Are Figma files included?',
+            },
+            answer: {
+              en: 'Yes! The complete Launch UI template is available for free on the Figma community.',
+            },
+          },
+        ],
+      },
+    },
+  };
+}
+
+/**
  * Registry of all available components
  */
 export const COMPONENT_REGISTRY: Record<string, ComponentMetadata> = {
@@ -406,6 +454,15 @@ export const COMPONENT_REGISTRY: Record<string, ComponentMetadata> = {
     icon: '📊',
     thumbnail: '/component-previews/StatsSection.png',
     createDefault: createDefaultStatsSection,
+  },
+  FAQSection: {
+    type: 'FAQSection',
+    label: 'FAQ Section',
+    description: 'Frequently asked questions with answers',
+    category: 'content',
+    icon: '❓',
+    thumbnail: '/component-previews/FAQSection.png',
+    createDefault: createDefaultFAQSection,
   },
 };
 

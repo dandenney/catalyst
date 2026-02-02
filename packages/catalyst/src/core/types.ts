@@ -90,7 +90,13 @@ export interface StatItemField {
   description: LocalizedContent;
 }
 
-export type Field = TextField | RichTextField | ImageField | ListField | BadgeField | ButtonField | MockupField | LogoItemField | IconField | ItemField | StatItemField;
+export interface FAQItemField {
+  type: 'faqItem';
+  question: LocalizedContent;
+  answer: LocalizedContent;
+}
+
+export type Field = TextField | RichTextField | ImageField | ListField | BadgeField | ButtonField | MockupField | LogoItemField | IconField | ItemField | StatItemField | FAQItemField;
 
 // Component schema base
 export interface ComponentSchema {
@@ -168,6 +174,14 @@ export interface StatsSectionSchema extends ComponentSchema {
   type: 'StatsSection';
   fields: {
     stats: ListField<StatItemField>;
+  };
+}
+
+export interface FAQSectionSchema extends ComponentSchema {
+  type: 'FAQSection';
+  fields: {
+    title: TextField;
+    items: ListField<FAQItemField>;
   };
 }
 

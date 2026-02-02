@@ -12,7 +12,8 @@ export type SectionType =
   | "HeroSection"
   | "LogosSection"
   | "ItemsSection"
-  | "StatsSection";
+  | "StatsSection"
+  | "FAQSection";
 
 export interface SectionControls {
   canMoveUp: boolean;
@@ -28,6 +29,7 @@ const SECTION_LABELS: Record<SectionType, string> = {
   LogosSection: "Logos section",
   ItemsSection: "Items section",
   StatsSection: "Stats section",
+  FAQSection: "FAQ section",
 };
 
 function SectionDropdownItems({ controls }: { controls: SectionControls }) {
