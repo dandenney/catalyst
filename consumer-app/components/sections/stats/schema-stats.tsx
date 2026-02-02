@@ -1,18 +1,16 @@
 "use client";
 
-import { useState } from "react";
-
-import { cn } from "@/lib/utils";
-
 import {
-  type LocalizedContent,
-  type StatsSectionSchema,
-  type StatItemField,
   getLocalizedValue,
+  type StatItemField,
+  type StatsSectionSchema,
   useCatalyst,
   useVariantHandling,
   VariantSelector,
 } from "catalyst";
+import { useState } from "react";
+
+import { cn } from "@/lib/utils";
 
 import { Button } from "../../ui/button";
 import { Input } from "../../ui/input";

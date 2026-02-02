@@ -1,7 +1,7 @@
 "use client";
 
+import { createComponent,type HeroSectionSchema, type ItemsSectionSchema, type LogosSectionSchema, type StatsSectionSchema } from "catalyst";
 import { useState } from "react";
-import { type HeroSectionSchema, type LogosSectionSchema, type ItemsSectionSchema, type StatsSectionSchema, createComponent } from "catalyst";
 
 import CTA from "../components/sections/cta/default";
 import FAQ from "../components/sections/faq/default";
