@@ -23,6 +23,10 @@ import { Item, ItemDescription, ItemIcon, ItemTitle } from "../../ui/item";
 import { Label } from "../../ui/label";
 import { Section } from "../../ui/section";
 import {
+  type SectionControls,
+  SectionDropdownItems,
+} from "../../ui/section-dropdown-items";
+import {
   Sheet,
   SheetContent,
   SheetDescription,
@@ -42,6 +46,7 @@ interface SchemaItemsProps {
   schema: ItemsSectionSchema;
   onUpdate?: (schema: ItemsSectionSchema) => void;
   className?: string;
+  sectionControls?: SectionControls;
 }
 
 interface EditableItemProps {
@@ -164,6 +169,7 @@ export default function SchemaItems({
   schema,
   onUpdate,
   className,
+  sectionControls,
 }: SchemaItemsProps) {
   const { isEditMode } = useCatalyst();
   const { displaySchema, editingVariant, setEditingVariant, updateField } =
@@ -181,19 +187,25 @@ export default function SchemaItems({
     updateField("items", newItems, onUpdate);
   };
 
+  const hasVariants = schema.variants && Object.keys(schema.variants).length > 0;
+  const showVariantSelector = isEditMode && (hasVariants || !!sectionControls);
+
   return (
     <Section className={className}>
-      {isEditMode &&
-        schema.variants &&
-        Object.keys(schema.variants).length > 0 && (
-          <div className="max-w-container mx-auto flex justify-end mb-4">
-            <VariantSelector
-              variants={schema.variants}
-              currentVariant={editingVariant}
-              onVariantChange={setEditingVariant}
-            />
-          </div>
-        )}
+      {showVariantSelector && (
+        <div className="max-w-container mx-auto flex justify-end mb-4">
+          <VariantSelector
+            variants={schema.variants}
+            currentVariant={editingVariant}
+            onVariantChange={setEditingVariant}
+            extraItems={
+              sectionControls ? (
+                <SectionDropdownItems controls={sectionControls} />
+              ) : null
+            }
+          />
+        </div>
+      )}
       <div className="max-w-container mx-auto flex flex-col items-center gap-6 sm:gap-20">
         <EditableText
           content={fields.title.value}

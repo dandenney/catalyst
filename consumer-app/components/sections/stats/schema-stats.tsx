@@ -26,6 +26,10 @@ import {
   SheetHeader,
   SheetTitle,
 } from "../../ui/sheet";
+import {
+  type SectionControls,
+  SectionDropdownItems,
+} from "../../ui/section-dropdown-items";
 
 // Consistent edit-mode styling for all editable items
 const EDIT_CLASS =
@@ -37,6 +41,7 @@ interface SchemaStatsProps {
   schema: StatsSectionSchema;
   onUpdate?: (schema: StatsSectionSchema) => void;
   className?: string;
+  sectionControls?: SectionControls;
 }
 
 interface EditableStatProps {
@@ -207,6 +212,7 @@ export default function SchemaStats({
   schema,
   onUpdate,
   className,
+  sectionControls,
 }: SchemaStatsProps) {
   const { isEditMode } = useCatalyst();
   const { displaySchema, editingVariant, setEditingVariant, updateField } =
@@ -220,19 +226,25 @@ export default function SchemaStats({
     updateField("stats", newStats, onUpdate);
   };
 
+  const hasVariants = schema.variants && Object.keys(schema.variants).length > 0;
+  const showVariantSelector = isEditMode && (hasVariants || !!sectionControls);
+
   return (
     <Section className={className}>
-      {isEditMode &&
-        schema.variants &&
-        Object.keys(schema.variants).length > 0 && (
-          <div className="container mx-auto max-w-[960px] flex justify-end mb-4">
-            <VariantSelector
-              variants={schema.variants}
-              currentVariant={editingVariant}
-              onVariantChange={setEditingVariant}
-            />
-          </div>
-        )}
+      {showVariantSelector && (
+        <div className="container mx-auto max-w-[960px] flex justify-end mb-4">
+          <VariantSelector
+            variants={schema.variants}
+            currentVariant={editingVariant}
+            onVariantChange={setEditingVariant}
+            extraItems={
+              sectionControls ? (
+                <SectionDropdownItems controls={sectionControls} />
+              ) : null
+            }
+          />
+        </div>
+      )}
       <div className="container mx-auto max-w-[960px]">
         {fields.stats.value.length > 0 && (
           <div className="grid grid-cols-2 gap-12 sm:grid-cols-4">
