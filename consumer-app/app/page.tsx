@@ -3,6 +3,7 @@
 import { useState } from "react";
 import {
   type FAQSectionSchema,
+  type CTASectionSchema,
   type HeroSectionSchema,
   type LogosSectionSchema,
   type ItemsSectionSchema,
@@ -14,7 +15,7 @@ import {
   DropdownMenuTrigger,
 } from "catalyst";
 
-import CTA from "../components/sections/cta/default";
+import SchemaCTA from "../components/sections/cta/schema-cta";
 import SchemaFAQ from "../components/sections/faq/schema-faq";
 import Footer from "../components/sections/footer/default";
 import SchemaHero from "../components/sections/hero/schema-hero";
@@ -37,6 +38,7 @@ export default function Home() {
     const itemsSchema = createComponent("ItemsSection") as ItemsSectionSchema;
     const statsSchema = createComponent("StatsSection") as StatsSectionSchema;
     const faqSchema = createComponent("FAQSection") as FAQSectionSchema;
+    const ctaSchema = createComponent("CTASection") as CTASectionSchema;
 
     return [
       {
@@ -220,6 +222,10 @@ export default function Home() {
         type: "FAQSection",
         schema: faqSchema,
       },
+      {
+        type: "CTASection",
+        schema: ctaSchema,
+      },
     ];
   });
 
@@ -252,7 +258,8 @@ export default function Home() {
       | LogosSectionSchema
       | ItemsSectionSchema
       | StatsSectionSchema
-      | FAQSectionSchema;
+      | FAQSectionSchema
+      | CTASectionSchema;
     return { type, schema };
   };
 
@@ -274,6 +281,7 @@ export default function Home() {
     { type: "ItemsSection", label: "Items section" },
     { type: "StatsSection", label: "Stats section" },
     { type: "FAQSection", label: "FAQ section" },
+    { type: "CTASection", label: "CTA section" },
   ];
 
   return (
@@ -361,13 +369,21 @@ export default function Home() {
                 sectionControls={sectionControls}
               />
             );
+          case "CTASection":
+            return (
+              <SchemaCTA
+                key={section.schema.id}
+                schema={section.schema as CTASectionSchema}
+                onUpdate={(schema) => updateSectionSchema(index, schema)}
+                sectionControls={sectionControls}
+              />
+            );
           default:
             return null;
         }
       })}
       <Pricing />
       
-      <CTA />
       <Footer />
     </main>
   );
