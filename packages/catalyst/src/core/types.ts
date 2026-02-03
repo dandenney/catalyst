@@ -207,6 +207,25 @@ export interface FAQSectionSchema extends ComponentSchema {
   };
 }
 
+export interface PricingPlanField {
+  type: 'pricingPlan';
+  name: LocalizedContent;
+  description: LocalizedContent;
+  price: LocalizedContent;
+  priceNote: LocalizedContent;
+  cta: ButtonField;
+  features: LocalizedContent[];
+}
+
+export interface PricingSectionSchema extends ComponentSchema {
+  type: 'PricingSection';
+  fields: {
+    title: TextField;
+    description: TextField;
+    plans: ListField<PricingPlanField>;
+  };
+}
+
 // Page schema
 export interface PageSchema {
   id: string;
