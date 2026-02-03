@@ -3,7 +3,7 @@
  * Central registry of all available components for the page builder
  */
 
-import { ComponentSchema, HeroBannerSchema, FeatureListSchema, CTASectionSchema, HeroSectionSchema, LogosSectionSchema, ItemsSectionSchema, StatsSectionSchema, FAQSectionSchema, FooterSectionSchema } from './types';
+import { ComponentSchema, HeroBannerSchema, FeatureListSchema, CTASectionSchema, HeroSectionSchema, LogosSectionSchema, ItemsSectionSchema, StatsSectionSchema, FAQSectionSchema, FooterSectionSchema, PricingSectionSchema } from './types';
 
 export interface ComponentMetadata {
   type: string;
@@ -389,6 +389,78 @@ function createDefaultFAQSection(): FAQSectionSchema {
 }
 
 /**
+ * Creates a default PricingSection component
+ */
+function createDefaultPricingSection(): PricingSectionSchema {
+  return {
+    id: `pricing-${Date.now()}`,
+    type: 'PricingSection',
+    fields: {
+      title: {
+        type: 'text',
+        value: { en: 'Build your dream landing page, today.' },
+      },
+      description: {
+        type: 'text',
+        value: { en: 'Get lifetime access to all the components. No recurring fees. Just simple, transparent pricing.' },
+      },
+      plans: {
+        type: 'list',
+        value: [
+          {
+            type: 'pricingPlan',
+            name: { en: 'Free' },
+            description: { en: 'For everyone starting out on a website for their big idea' },
+            price: 0,
+            priceNote: { en: 'Free and open-source forever. Get started now.' },
+            ctaLabel: { en: 'Get started for free' },
+            ctaHref: { en: '/docs/getting-started/introduction' },
+            ctaVariant: 'glow',
+            features: [
+              { en: '1 website template' },
+              { en: '9 blocks and sections' },
+              { en: '4 custom animations' },
+            ],
+            variant: 'default',
+          },
+          {
+            type: 'pricingPlan',
+            name: { en: 'Pro' },
+            description: { en: 'For early-stage founders, solopreneurs and indie devs' },
+            price: 99,
+            priceNote: { en: 'Lifetime access. Free updates. No recurring fees.' },
+            ctaLabel: { en: 'Get all-access' },
+            ctaHref: { en: '#' },
+            ctaVariant: 'default',
+            features: [
+              { en: '5 templates' },
+              { en: '74 blocks and sections' },
+              { en: '20 illustrations' },
+              { en: '10 custom animations' },
+            ],
+            variant: 'glow-brand',
+          },
+          {
+            type: 'pricingPlan',
+            name: { en: 'Pro Team' },
+            description: { en: 'For teams and agencies working on cool products together' },
+            price: 499,
+            priceNote: { en: 'Lifetime access. Free updates. No recurring fees.' },
+            ctaLabel: { en: 'Get all-access for your team' },
+            ctaHref: { en: '#' },
+            ctaVariant: 'default',
+            features: [
+              { en: 'All the templates, components and sections available for your entire team' },
+            ],
+            variant: 'glow',
+          },
+        ],
+      },
+    },
+  };
+}
+
+/**
  * Creates a default FooterSection component
  */
 function createDefaultFooterSection(): FooterSectionSchema {
@@ -526,6 +598,15 @@ export const COMPONENT_REGISTRY: Record<string, ComponentMetadata> = {
     icon: '❓',
     thumbnail: '/component-previews/FAQSection.png',
     createDefault: createDefaultFAQSection,
+  },
+  PricingSection: {
+    type: 'PricingSection',
+    label: 'Pricing Section',
+    description: 'Pricing plans with features and CTAs',
+    category: 'content',
+    icon: '💰',
+    thumbnail: '/component-previews/PricingSection.png',
+    createDefault: createDefaultPricingSection,
   },
   FooterSection: {
     type: 'FooterSection',

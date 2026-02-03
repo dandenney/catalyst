@@ -14,6 +14,7 @@ export type SectionType =
   | "ItemsSection"
   | "StatsSection"
   | "FAQSection"
+  | "PricingSection"
   | "CTASection"
   | "FooterSection";
 
@@ -32,6 +33,7 @@ const SECTION_LABELS: Record<SectionType, string> = {
   ItemsSection: "Items section",
   StatsSection: "Stats section",
   FAQSection: "FAQ section",
+  PricingSection: "Pricing section",
   CTASection: "CTA section",
   FooterSection: "Footer section",
 };

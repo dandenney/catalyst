@@ -174,7 +174,7 @@ export default function SchemaFooter({
             <EditableText
               content={fields.copyright.value}
               onUpdate={handleCopyrightUpdate}
-              as="div"
+              as="p"
               editClassName={EDIT_CLASS}
               editingClassName={EDITING_CLASS}
             />

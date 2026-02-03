@@ -6,6 +6,7 @@ import {
   EditableText,
   type FAQSectionSchema,
   type FAQItemField,
+  type LocalizedContent,
   useCatalyst,
   useVariantHandling,
   VariantSelector,

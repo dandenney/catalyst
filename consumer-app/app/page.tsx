@@ -9,12 +9,28 @@ import {
   type ItemsSectionSchema,
   type StatsSectionSchema,
   type FooterSectionSchema,
+  type PricingSectionSchema,
   createComponent,
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "catalyst";
+
+type SectionSchema =
+  | HeroSectionSchema
+  | LogosSectionSchema
+  | ItemsSectionSchema
+  | StatsSectionSchema
+  | FAQSectionSchema
+  | PricingSectionSchema
+  | CTASectionSchema
+  | FooterSectionSchema;
+
+interface Section {
+  type: string;
+  schema: SectionSchema;
+}
 
 import SchemaCTA from "../components/sections/cta/schema-cta";
 import SchemaFAQ from "../components/sections/faq/schema-faq";
@@ -23,7 +39,7 @@ import SchemaHero from "../components/sections/hero/schema-hero";
 import SchemaItems from "../components/sections/items/schema-items";
 import SchemaLogos from "../components/sections/logos/schema-logos";
 import Navbar from "../components/sections/navbar/default";
-import Pricing from "../components/sections/pricing/default";
+import SchemaPricing from "../components/sections/pricing/schema-pricing";
 import SchemaStats from "../components/sections/stats/schema-stats";
 import { EditModeIndicator } from "../components/ui/edit-mode-indicator";
 import { LayoutLines } from "../components/ui/layout-lines";
@@ -33,12 +49,13 @@ import {
 } from "../components/ui/section-dropdown-items";
 
 export default function Home() {
-  const [sections, setSections] = useState(() => {
+  const [sections, setSections] = useState<Section[]>(() => {
     const heroSchema = createComponent("HeroSection") as HeroSectionSchema;
     const logosSchema = createComponent("LogosSection") as LogosSectionSchema;
     const itemsSchema = createComponent("ItemsSection") as ItemsSectionSchema;
     const statsSchema = createComponent("StatsSection") as StatsSectionSchema;
     const faqSchema = createComponent("FAQSection") as FAQSectionSchema;
+    const pricingSchema = createComponent("PricingSection") as PricingSectionSchema;
     const ctaSchema = createComponent("CTASection") as CTASectionSchema;
     const footerSchema = createComponent("FooterSection") as FooterSectionSchema;
 
@@ -222,11 +239,109 @@ export default function Home() {
       },
       {
         type: "FAQSection",
-        schema: faqSchema,
+        schema: {
+          ...faqSchema,
+          variants: {
+            finance: {
+              title: {
+                type: "text",
+                value: {
+                  en: "Enterprise FAQ",
+                  es: "Preguntas frecuentes empresariales",
+                },
+              },
+            },
+            startup: {
+              title: {
+                type: "text",
+                value: {
+                  en: "Startup FAQ",
+                  es: "Preguntas frecuentes para startups",
+                },
+              },
+            },
+          },
+        } as FAQSectionSchema,
+      },
+      {
+        type: "PricingSection",
+        schema: {
+          ...pricingSchema,
+          variants: {
+            finance: {
+              title: {
+                type: "text",
+                value: {
+                  en: "Enterprise pricing that scales with you",
+                  es: "Precios empresariales que escalan contigo",
+                },
+              },
+              description: {
+                type: "text",
+                value: {
+                  en: "Flexible plans designed for financial institutions of any size.",
+                  es: "Planes flexibles diseñados para instituciones financieras de cualquier tamaño.",
+                },
+              },
+            },
+            startup: {
+              title: {
+                type: "text",
+                value: {
+                  en: "Startup-friendly pricing",
+                  es: "Precios accesibles para startups",
+                },
+              },
+              description: {
+                type: "text",
+                value: {
+                  en: "Start free, scale as you grow. No hidden fees.",
+                  es: "Comienza gratis, escala a medida que creces. Sin tarifas ocultas.",
+                },
+              },
+            },
+          },
+        } as PricingSectionSchema,
       },
       {
         type: "CTASection",
-        schema: ctaSchema,
+        schema: {
+          ...ctaSchema,
+          variants: {
+            finance: {
+              heading: {
+                type: "text",
+                value: {
+                  en: "Ready to transform your financial infrastructure?",
+                  es: "¿Listo para transformar tu infraestructura financiera?",
+                },
+              },
+              description: {
+                type: "text",
+                value: {
+                  en: "Join hundreds of financial institutions already using our platform.",
+                  es: "Únete a cientos de instituciones financieras que ya usan nuestra plataforma.",
+                },
+              },
+            },
+            startup: {
+              heading: {
+                type: "text",
+                value: {
+                  en: "Ready to ship your next big thing?",
+                  es: "¿Listo para lanzar tu próximo gran proyecto?",
+                },
+              },
+              description: {
+                type: "text",
+                value: {
+                  en: "Join thousands of startups building faster with our tools.",
+                  es: "Únete a miles de startups construyendo más rápido con nuestras herramientas.",
+                },
+              },
+            },
+          },
+        } as CTASectionSchema,
       },
       {
         type: "FooterSection",
@@ -237,7 +352,7 @@ export default function Home() {
 
   const updateSectionSchema = (
     index: number,
-    schema: HeroSectionSchema | LogosSectionSchema | ItemsSectionSchema | StatsSectionSchema,
+    schema: SectionSchema,
   ) => {
     setSections((prev) =>
       prev.map((section, i) => (i === index ? { ...section, schema } : section)),
@@ -258,15 +373,8 @@ export default function Home() {
     setSections((prev) => prev.filter((_, i) => i !== index));
   };
 
-  const createSchemaByType = (type: SectionType) => {
-    const schema = createComponent(type) as
-      | HeroSectionSchema
-      | LogosSectionSchema
-      | ItemsSectionSchema
-      | StatsSectionSchema
-      | FAQSectionSchema
-      | CTASectionSchema
-      | FooterSectionSchema;
+  const createSchemaByType = (type: SectionType): Section => {
+    const schema = createComponent(type) as SectionSchema;
     return { type, schema };
   };
 
@@ -288,6 +396,7 @@ export default function Home() {
     { type: "ItemsSection", label: "Items section" },
     { type: "StatsSection", label: "Stats section" },
     { type: "FAQSection", label: "FAQ section" },
+    { type: "PricingSection", label: "Pricing section" },
     { type: "CTASection", label: "CTA section" },
     { type: "FooterSection", label: "Footer section" },
   ];
@@ -377,6 +486,15 @@ export default function Home() {
                 sectionControls={sectionControls}
               />
             );
+          case "PricingSection":
+            return (
+              <SchemaPricing
+                key={section.schema.id}
+                schema={section.schema as PricingSectionSchema}
+                onUpdate={(schema) => updateSectionSchema(index, schema)}
+                sectionControls={sectionControls}
+              />
+            );
           case "CTASection":
             return (
               <SchemaCTA
@@ -399,8 +517,6 @@ export default function Home() {
             return null;
         }
       })}
-      <Pricing />
-      
     </main>
   );
 }
