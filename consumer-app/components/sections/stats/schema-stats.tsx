@@ -11,7 +11,6 @@ import {
   getLocalizedValue,
   useCatalyst,
   useVariantHandling,
-  VariantSelector,
 } from "catalyst";
 
 import { Button } from "../../ui/button";
@@ -26,10 +25,8 @@ import {
   SheetHeader,
   SheetTitle,
 } from "../../ui/sheet";
-import {
-  type SectionControls,
-  SectionDropdownItems,
-} from "../../ui/section-dropdown-items";
+import { type SectionControls } from "../../ui/section-controls";
+import SectionEditBar from "../../ui/section-edit-bar";
 
 // Consistent edit-mode styling for all editable items
 const EDIT_CLASS =
@@ -214,7 +211,6 @@ export default function SchemaStats({
   className,
   sectionControls,
 }: SchemaStatsProps) {
-  const { isEditMode } = useCatalyst();
   const { displaySchema, editingVariant, setEditingVariant, updateField } =
     useVariantHandling({ schema });
 
@@ -227,24 +223,16 @@ export default function SchemaStats({
   };
 
   const hasVariants = schema.variants && Object.keys(schema.variants).length > 0;
-  const showVariantSelector = isEditMode && (hasVariants || !!sectionControls);
 
   return (
     <Section className={className}>
-      {showVariantSelector && (
-        <div className="container mx-auto max-w-[960px] flex justify-end mb-4">
-          <VariantSelector
-            variants={schema.variants}
-            currentVariant={editingVariant}
-            onVariantChange={setEditingVariant}
-            extraItems={
-              sectionControls ? (
-                <SectionDropdownItems controls={sectionControls} />
-              ) : null
-            }
-          />
-        </div>
-      )}
+      <SectionEditBar
+        sectionType={schema.type}
+        controls={sectionControls}
+        variants={hasVariants ? schema.variants : undefined}
+        currentVariant={editingVariant}
+        onVariantChange={setEditingVariant}
+      />
       <div className="container mx-auto max-w-[960px]">
         {fields.stats.value.length > 0 && (
           <div className="grid grid-cols-2 gap-12 sm:grid-cols-4">

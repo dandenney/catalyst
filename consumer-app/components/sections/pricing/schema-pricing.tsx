@@ -14,7 +14,6 @@ import {
   useCatalyst,
   useEditableLink,
   useVariantHandling,
-  VariantSelector,
 } from "catalyst";
 
 import { Button } from "../../ui/button";
@@ -23,10 +22,8 @@ import { Label } from "../../ui/label";
 import { Popover, PopoverContent, PopoverTrigger } from "../../ui/popover";
 import { pricingColumnVariants } from "../../ui/pricing-column";
 import { Section } from "../../ui/section";
-import {
-  type SectionControls,
-  SectionDropdownItems,
-} from "../../ui/section-dropdown-items";
+import { type SectionControls } from "../../ui/section-controls";
+import SectionEditBar from "../../ui/section-edit-bar";
 
 const EDIT_CLASS =
   "cursor-pointer outline-1 outline-dashed outline-primary/50 outline-offset-2";
@@ -306,7 +303,6 @@ export default function SchemaPricing({
   className,
   sectionControls,
 }: SchemaPricingProps) {
-  const { isEditMode } = useCatalyst();
   const { displaySchema, editingVariant, setEditingVariant, updateField } =
     useVariantHandling({ schema });
 
@@ -328,24 +324,16 @@ export default function SchemaPricing({
 
   const hasVariants =
     schema.variants && Object.keys(schema.variants).length > 0;
-  const showVariantSelector = isEditMode && (hasVariants || !!sectionControls);
 
   return (
     <Section className={cn(className)}>
-      {showVariantSelector && (
-        <div className="max-w-container mx-auto flex justify-end mb-4">
-          <VariantSelector
-            variants={schema.variants}
-            currentVariant={editingVariant}
-            onVariantChange={setEditingVariant}
-            extraItems={
-              sectionControls ? (
-                <SectionDropdownItems controls={sectionControls} />
-              ) : null
-            }
-          />
-        </div>
-      )}
+      <SectionEditBar
+        sectionType={schema.type}
+        controls={sectionControls}
+        variants={hasVariants ? schema.variants : undefined}
+        currentVariant={editingVariant}
+        onVariantChange={setEditingVariant}
+      />
       <div className="mx-auto flex max-w-6xl flex-col items-center gap-12">
         <div className="flex flex-col items-center gap-4 px-4 text-center sm:gap-8">
           <EditableText

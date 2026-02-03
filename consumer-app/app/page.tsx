@@ -11,10 +11,6 @@ import {
   type FooterSectionSchema,
   type PricingSectionSchema,
   createComponent,
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
 } from "catalyst";
 
 type SectionSchema =
@@ -46,7 +42,7 @@ import { LayoutLines } from "../components/ui/layout-lines";
 import {
   type SectionControls,
   type SectionType,
-} from "../components/ui/section-dropdown-items";
+} from "../components/ui/section-controls";
 
 export default function Home() {
   const [sections, setSections] = useState<Section[]>(() => {
@@ -401,35 +397,22 @@ export default function Home() {
     { type: "FooterSection", label: "Footer section" },
   ];
 
+  const handleAddSection = (type: SectionType) => {
+    if (sections.length === 0) {
+      addFirstSection(type);
+    } else {
+      addSectionAfter(sections.length - 1, type);
+    }
+  };
+
   return (
     <main className="bg-background text-foreground min-h-screen w-full">
       <LayoutLines />
-      <EditModeIndicator />
+      <EditModeIndicator
+        addSectionOptions={addSectionOptions}
+        onAddSection={handleAddSection}
+      />
       <Navbar />
-      {sections.length === 0 && (
-        <div className="max-w-container mx-auto flex justify-center py-16">
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <button
-                type="button"
-                className="inline-flex items-center gap-2 rounded-md border border-border/60 bg-background/80 px-4 py-2 text-sm font-medium text-foreground shadow-sm backdrop-blur"
-              >
-                Add section
-              </button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="center">
-              {addSectionOptions.map((option) => (
-                <DropdownMenuItem
-                  key={option.type}
-                  onClick={() => addFirstSection(option.type)}
-                >
-                  {option.label}
-                </DropdownMenuItem>
-              ))}
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </div>
-      )}
       {sections.map((section, index) => {
         const sectionControls: SectionControls = {
           canMoveUp: index > 0,
@@ -437,7 +420,6 @@ export default function Home() {
           onMoveUp: () => moveSection(index, index - 1),
           onMoveDown: () => moveSection(index, index + 1),
           onRemove: () => removeSection(index),
-          onAddSection: (type) => addSectionAfter(index, type),
         };
 
         switch (section.type) {

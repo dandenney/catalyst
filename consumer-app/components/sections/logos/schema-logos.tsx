@@ -12,7 +12,6 @@ import {
   getLocalizedValue,
   useCatalyst,
   useVariantHandling,
-  VariantSelector,
 } from "catalyst";
 
 import Figma from "../../logos/figma";
@@ -26,10 +25,8 @@ import { Input } from "../../ui/input";
 import { Label } from "../../ui/label";
 import { Popover, PopoverContent, PopoverTrigger } from "../../ui/popover";
 import { Section } from "../../ui/section";
-import {
-  type SectionControls,
-  SectionDropdownItems,
-} from "../../ui/section-dropdown-items";
+import { type SectionControls } from "../../ui/section-controls";
+import SectionEditBar from "../../ui/section-edit-bar";
 
 // Consistent edit-mode styling for all editable items
 const EDIT_CLASS = "cursor-pointer outline-1 outline-dashed outline-primary/50 outline-offset-2";
@@ -208,7 +205,6 @@ export default function SchemaLogos({
   className,
   sectionControls,
 }: SchemaLogosProps) {
-  const { isEditMode } = useCatalyst();
   const { displaySchema, editingVariant, setEditingVariant, updateField } =
     useVariantHandling({ schema });
 
@@ -229,24 +225,16 @@ export default function SchemaLogos({
   };
 
   const hasVariants = schema.variants && Object.keys(schema.variants).length > 0;
-  const showVariantSelector = isEditMode && (hasVariants || !!sectionControls);
 
   return (
     <Section className={className}>
-      {showVariantSelector && (
-        <div className="max-w-container mx-auto flex justify-end mb-4">
-          <VariantSelector
-            variants={schema.variants}
-            currentVariant={editingVariant}
-            onVariantChange={setEditingVariant}
-            extraItems={
-              sectionControls ? (
-                <SectionDropdownItems controls={sectionControls} />
-              ) : null
-            }
-          />
-        </div>
-      )}
+      <SectionEditBar
+        sectionType={schema.type}
+        controls={sectionControls}
+        variants={hasVariants ? schema.variants : undefined}
+        currentVariant={editingVariant}
+        onVariantChange={setEditingVariant}
+      />
       <div className="max-w-container mx-auto flex flex-col items-center gap-8 text-center">
         <div className="flex flex-col items-center gap-6">
           <Badge variant="outline" className="border-brand/30 text-brand">

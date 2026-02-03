@@ -13,7 +13,6 @@ import {
   getLocalizedValue,
   useCatalyst,
   useVariantHandling,
-  VariantSelector,
 } from "catalyst";
 
 import { Button } from "../../ui/button";
@@ -22,10 +21,8 @@ import { Input } from "../../ui/input";
 import { Item, ItemDescription, ItemIcon, ItemTitle } from "../../ui/item";
 import { Label } from "../../ui/label";
 import { Section } from "../../ui/section";
-import {
-  type SectionControls,
-  SectionDropdownItems,
-} from "../../ui/section-dropdown-items";
+import { type SectionControls } from "../../ui/section-controls";
+import SectionEditBar from "../../ui/section-edit-bar";
 import {
   Sheet,
   SheetContent,
@@ -171,7 +168,6 @@ export default function SchemaItems({
   className,
   sectionControls,
 }: SchemaItemsProps) {
-  const { isEditMode } = useCatalyst();
   const { displaySchema, editingVariant, setEditingVariant, updateField } =
     useVariantHandling({ schema });
 
@@ -188,24 +184,16 @@ export default function SchemaItems({
   };
 
   const hasVariants = schema.variants && Object.keys(schema.variants).length > 0;
-  const showVariantSelector = isEditMode && (hasVariants || !!sectionControls);
 
   return (
     <Section className={className}>
-      {showVariantSelector && (
-        <div className="max-w-container mx-auto flex justify-end mb-4">
-          <VariantSelector
-            variants={schema.variants}
-            currentVariant={editingVariant}
-            onVariantChange={setEditingVariant}
-            extraItems={
-              sectionControls ? (
-                <SectionDropdownItems controls={sectionControls} />
-              ) : null
-            }
-          />
-        </div>
-      )}
+      <SectionEditBar
+        sectionType={schema.type}
+        controls={sectionControls}
+        variants={hasVariants ? schema.variants : undefined}
+        currentVariant={editingVariant}
+        onVariantChange={setEditingVariant}
+      />
       <div className="max-w-container mx-auto flex flex-col items-center gap-6 sm:gap-20">
         <EditableText
           content={fields.title.value}
