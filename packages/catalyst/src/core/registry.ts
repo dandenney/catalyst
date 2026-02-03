@@ -3,7 +3,7 @@
  * Central registry of all available components for the page builder
  */
 
-import { ComponentSchema, HeroBannerSchema, FeatureListSchema, CTASectionSchema, HeroSectionSchema, LogosSectionSchema, ItemsSectionSchema, StatsSectionSchema, FAQSectionSchema } from './types';
+import { ComponentSchema, HeroBannerSchema, FeatureListSchema, CTASectionSchema, HeroSectionSchema, LogosSectionSchema, ItemsSectionSchema, StatsSectionSchema, FAQSectionSchema, FooterSectionSchema } from './types';
 
 export interface ComponentMetadata {
   type: string;
@@ -389,6 +389,69 @@ function createDefaultFAQSection(): FAQSectionSchema {
 }
 
 /**
+ * Creates a default FooterSection component
+ */
+function createDefaultFooterSection(): FooterSectionSchema {
+  return {
+    id: `footer-${Date.now()}`,
+    type: 'FooterSection',
+    fields: {
+      brandName: {
+        type: 'text',
+        value: { en: 'Launch UI' },
+      },
+      brandLogo: {
+        type: 'image',
+        src: '/favicon.svg',
+        alt: { en: 'Launch UI logo' },
+      },
+      columns: {
+        type: 'list',
+        value: [
+          {
+            type: 'footerColumn',
+            title: { en: 'Product' },
+            links: [
+              { text: { en: 'Changelog' }, href: { en: '/' } },
+              { text: { en: 'Documentation' }, href: { en: '/' } },
+            ],
+          },
+          {
+            type: 'footerColumn',
+            title: { en: 'Company' },
+            links: [
+              { text: { en: 'About' }, href: { en: '/' } },
+              { text: { en: 'Careers' }, href: { en: '/' } },
+              { text: { en: 'Blog' }, href: { en: '/' } },
+            ],
+          },
+          {
+            type: 'footerColumn',
+            title: { en: 'Contact' },
+            links: [
+              { text: { en: 'Discord' }, href: { en: '/' } },
+              { text: { en: 'Twitter' }, href: { en: '/' } },
+              { text: { en: 'Github' }, href: { en: '/' } },
+            ],
+          },
+        ],
+      },
+      policies: {
+        type: 'list',
+        value: [
+          { text: { en: 'Privacy Policy' }, href: { en: '/' } },
+          { text: { en: 'Terms of Service' }, href: { en: '/' } },
+        ],
+      },
+      copyright: {
+        type: 'text',
+        value: { en: '© 2025 Launch UI. All rights reserved' },
+      },
+    },
+  };
+}
+
+/**
  * Registry of all available components
  */
 export const COMPONENT_REGISTRY: Record<string, ComponentMetadata> = {
@@ -463,6 +526,15 @@ export const COMPONENT_REGISTRY: Record<string, ComponentMetadata> = {
     icon: '❓',
     thumbnail: '/component-previews/FAQSection.png',
     createDefault: createDefaultFAQSection,
+  },
+  FooterSection: {
+    type: 'FooterSection',
+    label: 'Footer',
+    description: 'Footer with columns and policies',
+    category: 'layout',
+    icon: '🔻',
+    thumbnail: '/component-previews/FooterSection.png',
+    createDefault: createDefaultFooterSection,
   },
 };
 

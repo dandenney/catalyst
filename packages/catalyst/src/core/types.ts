@@ -177,6 +177,28 @@ export interface StatsSectionSchema extends ComponentSchema {
   };
 }
 
+export interface FooterLinkItem {
+  text: LocalizedContent;
+  href: LocalizedContent;
+}
+
+export interface FooterColumnField {
+  type: 'footerColumn';
+  title: LocalizedContent;
+  links: FooterLinkItem[];
+}
+
+export interface FooterSectionSchema extends ComponentSchema {
+  type: 'FooterSection';
+  fields: {
+    brandName: TextField;
+    brandLogo: ImageField;
+    columns: ListField<FooterColumnField>;
+    policies: ListField<FooterLinkItem>;
+    copyright: TextField;
+  };
+}
+
 export interface FAQSectionSchema extends ComponentSchema {
   type: 'FAQSection';
   fields: {
