@@ -11,7 +11,6 @@ import {
   type LocalizedContent,
   useCatalyst,
   useVariantHandling,
-  VariantSelector,
 } from "catalyst";
 
 import {
@@ -21,10 +20,8 @@ import {
   FooterContent,
 } from "../../ui/footer";
 import { ModeToggle } from "../../ui/mode-toggle";
-import {
-  type SectionControls,
-  SectionDropdownItems,
-} from "../../ui/section-dropdown-items";
+import { type SectionControls } from "../../ui/section-controls";
+import SectionEditBar from "../../ui/section-edit-bar";
 
 const EDIT_CLASS =
   "cursor-pointer outline-1 outline-dashed outline-primary/50 outline-offset-2";
@@ -44,7 +41,6 @@ export default function SchemaFooter({
   className,
   sectionControls,
 }: SchemaFooterProps) {
-  const { isEditMode } = useCatalyst();
   const { displaySchema, editingVariant, setEditingVariant, updateField } =
     useVariantHandling({ schema });
 
@@ -103,24 +99,16 @@ export default function SchemaFooter({
   };
 
   const hasVariants = schema.variants && Object.keys(schema.variants).length > 0;
-  const showVariantSelector = isEditMode && (hasVariants || !!sectionControls);
 
   return (
     <footer className={cn("bg-background w-full px-4", className)}>
-      {showVariantSelector && (
-        <div className="max-w-container mx-auto flex justify-end mb-4">
-          <VariantSelector
-            variants={schema.variants}
-            currentVariant={editingVariant}
-            onVariantChange={setEditingVariant}
-            extraItems={
-              sectionControls ? (
-                <SectionDropdownItems controls={sectionControls} />
-              ) : null
-            }
-          />
-        </div>
-      )}
+      <SectionEditBar
+        sectionType={schema.type}
+        controls={sectionControls}
+        variants={hasVariants ? schema.variants : undefined}
+        currentVariant={editingVariant}
+        onVariantChange={setEditingVariant}
+      />
       <div className="max-w-container mx-auto">
         <Footer>
           <FooterContent>
