@@ -8,6 +8,7 @@ import {
   type LogosSectionSchema,
   type ItemsSectionSchema,
   type StatsSectionSchema,
+  type FooterSectionSchema,
   createComponent,
   DropdownMenu,
   DropdownMenuContent,
@@ -17,7 +18,7 @@ import {
 
 import SchemaCTA from "../components/sections/cta/schema-cta";
 import SchemaFAQ from "../components/sections/faq/schema-faq";
-import Footer from "../components/sections/footer/default";
+import SchemaFooter from "../components/sections/footer/schema-footer";
 import SchemaHero from "../components/sections/hero/schema-hero";
 import SchemaItems from "../components/sections/items/schema-items";
 import SchemaLogos from "../components/sections/logos/schema-logos";
@@ -39,6 +40,7 @@ export default function Home() {
     const statsSchema = createComponent("StatsSection") as StatsSectionSchema;
     const faqSchema = createComponent("FAQSection") as FAQSectionSchema;
     const ctaSchema = createComponent("CTASection") as CTASectionSchema;
+    const footerSchema = createComponent("FooterSection") as FooterSectionSchema;
 
     return [
       {
@@ -226,6 +228,10 @@ export default function Home() {
         type: "CTASection",
         schema: ctaSchema,
       },
+      {
+        type: "FooterSection",
+        schema: footerSchema,
+      },
     ];
   });
 
@@ -259,7 +265,8 @@ export default function Home() {
       | ItemsSectionSchema
       | StatsSectionSchema
       | FAQSectionSchema
-      | CTASectionSchema;
+      | CTASectionSchema
+      | FooterSectionSchema;
     return { type, schema };
   };
 
@@ -282,6 +289,7 @@ export default function Home() {
     { type: "StatsSection", label: "Stats section" },
     { type: "FAQSection", label: "FAQ section" },
     { type: "CTASection", label: "CTA section" },
+    { type: "FooterSection", label: "Footer section" },
   ];
 
   return (
@@ -378,13 +386,21 @@ export default function Home() {
                 sectionControls={sectionControls}
               />
             );
+          case "FooterSection":
+            return (
+              <SchemaFooter
+                key={section.schema.id}
+                schema={section.schema as FooterSectionSchema}
+                onUpdate={(schema) => updateSectionSchema(index, schema)}
+                sectionControls={sectionControls}
+              />
+            );
           default:
             return null;
         }
       })}
       <Pricing />
       
-      <Footer />
     </main>
   );
 }
