@@ -40,6 +40,7 @@ export interface PricingColumnProps
     href: string;
   };
   features: string[];
+  ctaRender?: ReactNode;
 }
 
 export function PricingColumn({
@@ -52,6 +53,7 @@ export function PricingColumn({
   priceNote,
   cta,
   features,
+  ctaRender,
   variant,
   className,
   ...props
@@ -117,9 +119,11 @@ export function PricingColumn({
             </div>
           )}
         </section>
-        <Button variant={cta.variant} size="lg" asChild>
-          <Link href={cta.href}>{cta.label}</Link>
-        </Button>
+        {ctaRender ?? (
+          <Button variant={cta.variant} size="lg" asChild>
+            <Link href={cta.href}>{cta.label}</Link>
+          </Button>
+        )}
         <p className="text-muted-foreground min-h-[40px] max-w-[220px] text-sm">
           {priceNote}
         </p>

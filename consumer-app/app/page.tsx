@@ -9,6 +9,7 @@ import {
   type ItemsSectionSchema,
   type StatsSectionSchema,
   type FooterSectionSchema,
+  type PricingSectionSchema,
   createComponent,
   DropdownMenu,
   DropdownMenuContent,
@@ -23,7 +24,7 @@ import SchemaHero from "../components/sections/hero/schema-hero";
 import SchemaItems from "../components/sections/items/schema-items";
 import SchemaLogos from "../components/sections/logos/schema-logos";
 import Navbar from "../components/sections/navbar/default";
-import Pricing from "../components/sections/pricing/default";
+import SchemaPricing from "../components/sections/pricing/schema-pricing";
 import SchemaStats from "../components/sections/stats/schema-stats";
 import { EditModeIndicator } from "../components/ui/edit-mode-indicator";
 import { LayoutLines } from "../components/ui/layout-lines";
@@ -41,6 +42,7 @@ export default function Home() {
     const faqSchema = createComponent("FAQSection") as FAQSectionSchema;
     const ctaSchema = createComponent("CTASection") as CTASectionSchema;
     const footerSchema = createComponent("FooterSection") as FooterSectionSchema;
+    const pricingSchema = createComponent("PricingSection") as PricingSectionSchema;
 
     return [
       {
@@ -225,6 +227,10 @@ export default function Home() {
         schema: faqSchema,
       },
       {
+        type: "PricingSection",
+        schema: pricingSchema,
+      },
+      {
         type: "CTASection",
         schema: ctaSchema,
       },
@@ -266,7 +272,8 @@ export default function Home() {
       | StatsSectionSchema
       | FAQSectionSchema
       | CTASectionSchema
-      | FooterSectionSchema;
+      | FooterSectionSchema
+      | PricingSectionSchema;
     return { type, schema };
   };
 
@@ -288,6 +295,7 @@ export default function Home() {
     { type: "ItemsSection", label: "Items section" },
     { type: "StatsSection", label: "Stats section" },
     { type: "FAQSection", label: "FAQ section" },
+    { type: "PricingSection", label: "Pricing section" },
     { type: "CTASection", label: "CTA section" },
     { type: "FooterSection", label: "Footer section" },
   ];
@@ -377,6 +385,15 @@ export default function Home() {
                 sectionControls={sectionControls}
               />
             );
+          case "PricingSection":
+            return (
+              <SchemaPricing
+                key={section.schema.id}
+                schema={section.schema as PricingSectionSchema}
+                onUpdate={(schema) => updateSectionSchema(index, schema)}
+                sectionControls={sectionControls}
+              />
+            );
           case "CTASection":
             return (
               <SchemaCTA
@@ -399,8 +416,6 @@ export default function Home() {
             return null;
         }
       })}
-      <Pricing />
-      
     </main>
   );
 }
