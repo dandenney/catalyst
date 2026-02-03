@@ -1,13 +1,16 @@
 "use client";
 
+import { CircleCheckBig, User, Users } from "lucide-react";
+import { useState } from "react";
+
 import { cn } from "@/lib/utils";
 
 import {
   EditableText,
-  type LocalizedContent,
-  type PricingSectionSchema,
-  type PricingPlanField,
   getLocalizedValue,
+  type LocalizedContent,
+  type PricingPlanField,
+  type PricingSectionSchema,
   useCatalyst,
   useEditableLink,
   useVariantHandling,
@@ -18,7 +21,7 @@ import { Button } from "../../ui/button";
 import { Input } from "../../ui/input";
 import { Label } from "../../ui/label";
 import { Popover, PopoverContent, PopoverTrigger } from "../../ui/popover";
-import { PricingColumn } from "../../ui/pricing-column";
+import { pricingColumnVariants } from "../../ui/pricing-column";
 import { Section } from "../../ui/section";
 import {
   type SectionControls,
@@ -37,89 +40,263 @@ interface SchemaPricingProps {
   sectionControls?: SectionControls;
 }
 
-function EditablePlanCTA({
-  plan,
-  onUpdate,
-}: {
+interface EditablePricingPlanProps {
   plan: PricingPlanField;
-  onUpdate: (data: PricingPlanField) => void;
-}) {
-  const link = useEditableLink({
-    href: plan.cta.href,
-    text: plan.cta.text,
-    onUpdate: ({ href, text }) =>
-      onUpdate({
+  index: number;
+  onUpdate: (index: number, plan: PricingPlanField) => void;
+  hideOnMobile?: boolean;
+}
+
+function EditablePricingPlan({
+  plan,
+  index,
+  onUpdate,
+  hideOnMobile,
+}: EditablePricingPlanProps) {
+  const { isEditMode, locale } = useCatalyst();
+  const [isPriceOpen, setIsPriceOpen] = useState(false);
+  const [editPrice, setEditPrice] = useState(plan.price.toString());
+
+  // Use useEditableLink for the button
+  const button = useEditableLink({
+    href: plan.ctaHref,
+    text: plan.ctaLabel,
+    onUpdate: ({ href, text }) => {
+      onUpdate(index, {
         ...plan,
-        cta: { ...plan.cta, href, text },
-      }),
+        ctaLabel: text,
+        ctaHref: href,
+      });
+    },
     editClassName: EDIT_CLASS,
     editingClassName: EDITING_CLASS,
   });
 
+  const handlePriceSave = () => {
+    onUpdate(index, {
+      ...plan,
+      price: parseFloat(editPrice) || 0,
+    });
+    setIsPriceOpen(false);
+  };
+
+  const handlePriceCancel = () => {
+    setEditPrice(plan.price.toString());
+    setIsPriceOpen(false);
+  };
+
+  const handlePriceKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) {
+      handlePriceSave();
+    } else if (e.key === "Escape") {
+      handlePriceCancel();
+    }
+  };
+
+  const handleNameUpdate = (content: LocalizedContent) => {
+    onUpdate(index, { ...plan, name: content });
+  };
+
+  const handleDescriptionUpdate = (content: LocalizedContent) => {
+    onUpdate(index, { ...plan, description: content });
+  };
+
+  const handlePriceNoteUpdate = (content: LocalizedContent) => {
+    onUpdate(index, { ...plan, priceNote: content });
+  };
+
+  const handleFeatureUpdate = (featureIndex: number, content: LocalizedContent) => {
+    const newFeatures = [...plan.features];
+    newFeatures[featureIndex] = content;
+    onUpdate(index, { ...plan, features: newFeatures });
+  };
+
+  const planIcon = index === 1 ? <User className="size-4" /> : index === 2 ? <Users className="size-4" /> : null;
+
   return (
-    <Popover
-      open={link.isOpen}
-      onOpenChange={(open) => link.isEditMode && link.setIsOpen(open)}
+    <div
+      className={cn(
+        pricingColumnVariants({ variant: plan.variant }),
+        hideOnMobile && "hidden lg:flex"
+      )}
     >
-      <PopoverTrigger asChild>
-        <Button
-          variant={plan.cta.variant as "default" | "glow" | "glow-brand"}
-          asChild
-        >
-          <a
-            href={link.isEditMode ? undefined : link.displayHref}
-            onClick={link.handleClick}
-            className={cn(link.editModeClassName)}
-            title={link.isEditMode ? "Click to edit CTA" : undefined}
-          >
-            {link.displayText}
-          </a>
-        </Button>
-      </PopoverTrigger>
-      <PopoverContent className="w-80" onKeyDown={link.handleKeyDown}>
-        <div className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor={`plan-cta-text-${plan.name.en}`}>
-              Button Text ({link.locale.toUpperCase()})
-            </Label>
-            <Input
-              id={`plan-cta-text-${plan.name.en}`}
-              type="text"
-              value={link.editText}
-              onChange={(event) => link.setEditText(event.target.value)}
-              placeholder="Get started"
-              autoFocus
+      <hr
+        className={cn(
+          "via-foreground/60 absolute top-0 left-[10%] h-[1px] w-[80%] border-0 bg-linear-to-r from-transparent to-transparent",
+          plan.variant === "glow-brand" && "via-brand"
+        )}
+      />
+      <div className="flex flex-col gap-7">
+        <header className="flex flex-col gap-2">
+          <h2 className="flex items-center gap-2 font-bold">
+            {planIcon && (
+              <div className="text-muted-foreground flex items-center gap-2">
+                {planIcon}
+              </div>
+            )}
+            <EditableText
+              content={plan.name}
+              onUpdate={handleNameUpdate}
+              as="span"
+              editClassName={EDIT_CLASS}
+              editingClassName={EDITING_CLASS}
             />
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor={`plan-cta-url-${plan.name.en}`}>
-              URL ({link.locale.toUpperCase()})
-            </Label>
-            <Input
-              id={`plan-cta-url-${plan.name.en}`}
-              type="text"
-              value={link.editHref}
-              onChange={(event) => link.setEditHref(event.target.value)}
-              placeholder="https://example.com"
-            />
-          </div>
-
-          <div className="flex gap-2 justify-end">
-            <Button variant="outline" size="sm" onClick={link.handleCancel}>
-              Cancel
+          </h2>
+          <EditableText
+            content={plan.description}
+            onUpdate={handleDescriptionUpdate}
+            as="p"
+            className="text-muted-foreground max-w-[220px] text-sm"
+            editClassName={EDIT_CLASS}
+            editingClassName={EDITING_CLASS}
+          />
+        </header>
+        <section className="flex flex-col gap-3">
+          <Popover open={isPriceOpen} onOpenChange={setIsPriceOpen}>
+            <PopoverTrigger asChild>
+              <div
+                className={cn(
+                  "flex items-center gap-3 lg:flex-col lg:items-start xl:flex-row xl:items-center",
+                  isEditMode && EDIT_CLASS
+                )}
+                role={isEditMode ? "button" : undefined}
+                tabIndex={isEditMode ? 0 : undefined}
+              >
+                <div className="flex flex-col gap-1">
+                  <div className="flex items-baseline gap-1">
+                    <span className="text-muted-foreground text-2xl font-bold">
+                      $
+                    </span>
+                    <span className="text-6xl font-bold">{plan.price}</span>
+                  </div>
+                </div>
+                <div className="flex min-h-[40px] flex-col">
+                  {plan.price > 0 && (
+                    <>
+                      <span className="text-sm">one-time payment</span>
+                      <span className="text-muted-foreground text-sm">
+                        plus local taxes
+                      </span>
+                    </>
+                  )}
+                </div>
+              </div>
+            </PopoverTrigger>
+            {isEditMode && (
+              <PopoverContent className="w-80" onKeyDown={handlePriceKeyDown}>
+                <div className="space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor={`price-${index}`}>Price</Label>
+                    <Input
+                      id={`price-${index}`}
+                      type="number"
+                      value={editPrice}
+                      onChange={(e) => setEditPrice(e.target.value)}
+                      placeholder="99"
+                      autoFocus
+                    />
+                  </div>
+                  <div className="flex gap-2 justify-end">
+                    <Button variant="outline" size="sm" onClick={handlePriceCancel}>
+                      Cancel
+                    </Button>
+                    <Button size="sm" onClick={handlePriceSave}>
+                      Save
+                    </Button>
+                  </div>
+                  <p className="text-xs text-muted-foreground">
+                    Cmd+Enter to save, Esc to cancel
+                  </p>
+                </div>
+              </PopoverContent>
+            )}
+          </Popover>
+        </section>
+        <Popover open={button.isOpen} onOpenChange={(open) => button.setIsOpen(open)}>
+          <PopoverTrigger asChild>
+            <Button
+              variant={plan.ctaVariant}
+              size="lg"
+              asChild
+            >
+              <a
+                href={button.isEditMode ? undefined : button.displayHref}
+                onClick={button.handleClick}
+                className={cn(button.editModeClassName)}
+                title={button.isEditMode ? "Click to edit button" : undefined}
+              >
+                {button.displayText}
+              </a>
             </Button>
-            <Button size="sm" onClick={link.handleSave}>
-              Save
-            </Button>
-          </div>
-
-          <p className="text-xs text-muted-foreground">
-            Cmd+Enter to save, Esc to cancel
-          </p>
-        </div>
-      </PopoverContent>
-    </Popover>
+          </PopoverTrigger>
+          <PopoverContent className="w-80" onKeyDown={button.handleKeyDown}>
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor={`cta-label-${index}`}>
+                  Button Text ({locale.toUpperCase()})
+                </Label>
+                <Input
+                  id={`cta-label-${index}`}
+                  type="text"
+                  value={button.editText}
+                  onChange={(e) => button.setEditText(e.target.value)}
+                  placeholder="Get started"
+                  autoFocus
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor={`cta-href-${index}`}>
+                  URL ({locale.toUpperCase()})
+                </Label>
+                <Input
+                  id={`cta-href-${index}`}
+                  type="text"
+                  value={button.editHref}
+                  onChange={(e) => button.setEditHref(e.target.value)}
+                  placeholder="/signup"
+                />
+              </div>
+              <div className="flex gap-2 justify-end">
+                <Button variant="outline" size="sm" onClick={button.handleCancel}>
+                  Cancel
+                </Button>
+                <Button size="sm" onClick={button.handleSave}>
+                  Save
+                </Button>
+              </div>
+              <p className="text-xs text-muted-foreground">
+                Cmd+Enter to save, Esc to cancel
+              </p>
+            </div>
+          </PopoverContent>
+        </Popover>
+        <EditableText
+          content={plan.priceNote}
+          onUpdate={handlePriceNoteUpdate}
+          as="p"
+          className="text-muted-foreground min-h-[40px] max-w-[220px] text-sm"
+          editClassName={EDIT_CLASS}
+          editingClassName={EDITING_CLASS}
+        />
+        <hr className="border-input" />
+      </div>
+      <div>
+        <ul className="flex flex-col gap-2">
+          {plan.features.map((feature, featureIndex) => (
+            <li key={featureIndex} className="flex items-center gap-2 text-sm">
+              <CircleCheckBig className="text-muted-foreground size-4 shrink-0" />
+              <EditableText
+                content={feature}
+                onUpdate={(content) => handleFeatureUpdate(featureIndex, content)}
+                as="span"
+                editClassName={EDIT_CLASS}
+                editingClassName={EDITING_CLASS}
+              />
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
   );
 }
 
@@ -129,7 +306,7 @@ export default function SchemaPricing({
   className,
   sectionControls,
 }: SchemaPricingProps) {
-  const { isEditMode, locale } = useCatalyst();
+  const { isEditMode } = useCatalyst();
   const { displaySchema, editingVariant, setEditingVariant, updateField } =
     useVariantHandling({ schema });
 
@@ -149,7 +326,8 @@ export default function SchemaPricing({
     updateField("plans", nextPlans, onUpdate);
   };
 
-  const hasVariants = schema.variants && Object.keys(schema.variants).length > 0;
+  const hasVariants =
+    schema.variants && Object.keys(schema.variants).length > 0;
   const showVariantSelector = isEditMode && (hasVariants || !!sectionControls);
 
   return (
@@ -189,36 +367,15 @@ export default function SchemaPricing({
         </div>
         {fields.plans.value.length > 0 && (
           <div className="max-w-container mx-auto grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
-            {fields.plans.value.map((plan, index) => {
-              const ctaContent = {
-                variant: plan.cta.variant as "default" | "glow" | "glow-brand",
-                label: plan.cta.text[locale] ?? plan.cta.text.en,
-                href: plan.cta.href[locale] ?? plan.cta.href.en,
-              };
-
-              return (
-                <PricingColumn
-                  key={`${getLocalizedValue(plan.name, locale)}-${index}`}
-                  name={getLocalizedValue(plan.name, locale)}
-                  description={getLocalizedValue(plan.description, locale)}
-                  price={Number(getLocalizedValue(plan.price, locale))}
-                  priceNote={getLocalizedValue(plan.priceNote, locale)}
-                  cta={ctaContent}
-                  features={plan.features.map((feature) =>
-                    getLocalizedValue(feature, locale),
-                  )}
-                  variant={plan.cta.variant as "default" | "glow" | "glow-brand"}
-                  ctaRender={
-                    isEditMode ? (
-                      <EditablePlanCTA
-                        plan={plan}
-                        onUpdate={(updated) => handlePlanUpdate(index, updated)}
-                      />
-                    ) : undefined
-                  }
-                />
-              );
-            })}
+            {fields.plans.value.map((plan, index) => (
+              <EditablePricingPlan
+                key={index}
+                plan={plan}
+                index={index}
+                onUpdate={handlePlanUpdate}
+                hideOnMobile={index === 0}
+              />
+            ))}
           </div>
         )}
       </div>

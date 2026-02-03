@@ -105,7 +105,7 @@ export default function SchemaCTA({
         <div className="flex justify-center gap-4">
           <Popover
             open={button.isOpen}
-            onOpenChange={(open) => button.isEditMode && button.setIsOpen(open)}
+            onOpenChange={(open) => button.setIsOpen(open)}
           >
             <PopoverTrigger asChild>
               <Button size="lg" asChild>

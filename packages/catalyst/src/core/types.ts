@@ -96,7 +96,21 @@ export interface FAQItemField {
   answer: LocalizedContent;
 }
 
-export type Field = TextField | RichTextField | ImageField | ListField | BadgeField | ButtonField | MockupField | LogoItemField | IconField | ItemField | StatItemField | FAQItemField;
+export interface PricingPlanField {
+  type: 'pricingPlan';
+  name: LocalizedContent;
+  description: LocalizedContent;
+  price: number;
+  originalPrice?: number;
+  priceNote: LocalizedContent;
+  ctaLabel: LocalizedContent;
+  ctaHref: LocalizedContent;
+  ctaVariant: 'default' | 'glow';
+  features: LocalizedContent[];
+  variant?: 'default' | 'glow' | 'glow-brand';
+}
+
+export type Field = TextField | RichTextField | ImageField | ListField | BadgeField | ButtonField | MockupField | LogoItemField | IconField | ItemField | StatItemField | FAQItemField | PricingPlanField;
 
 // Component schema base
 export interface ComponentSchema {
@@ -205,16 +219,6 @@ export interface FAQSectionSchema extends ComponentSchema {
     title: TextField;
     items: ListField<FAQItemField>;
   };
-}
-
-export interface PricingPlanField {
-  type: 'pricingPlan';
-  name: LocalizedContent;
-  description: LocalizedContent;
-  price: LocalizedContent;
-  priceNote: LocalizedContent;
-  cta: ButtonField;
-  features: LocalizedContent[];
 }
 
 export interface PricingSectionSchema extends ComponentSchema {
