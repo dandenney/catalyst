@@ -1,0 +1,92 @@
+{
+  "id": "home-page",
+  "slug": "home",
+  "metadata": {
+    "title": {
+      "en": "Home",
+      "es": "Inicio"
+    },
+    "description": {
+      "en": "Welcome to our platform",
+      "es": "Bienvenido a nuestra plataforma"
+    }
+  },
+  "components": [
+    {
+      "id": "cta-section-1",
+      "type": "CTASection",
+      "fields": {
+        "heading": {
+          "type": "text",
+          "value": {
+            "en": "Ready to end this?",
+            "es": "¿Listo para comenzar?"
+          }
+        },
+        "description": {
+          "type": "text",
+          "value": {
+            "en": "Join thousands of developers building with our platform.",
+            "es": "Únete a miles de desarrolladores construyendo con nuestra plataforma."
+          }
+        },
+        "buttonText": {
+          "type": "text",
+          "value": {
+            "en": "Get Started",
+            "es": "Comenzar"
+          }
+        },
+        "buttonUrl": {
+          "type": "text",
+          "value": {
+            "en": "/signup",
+            "es": "/registro"
+          }
+        },
+        "image": {
+          "type": "image",
+          "src": "",
+          "alt": {
+            "en": "",
+            "es": ""
+          }
+        }
+      },
+      "variants": {
+        "finance": {
+          "heading": {
+            "type": "text",
+            "value": {
+              "en": "Ready to transform your financial infrastructures?",
+              "es": "¿Listo para transformar tu infraestructura financiera?"
+            }
+          },
+          "description": {
+            "type": "text",
+            "value": {
+              "en": "Join hundreds of financial institutions already using our platform.",
+              "es": "Únete a cientos de instituciones financieras que ya usan nuestra plataforma."
+            }
+          }
+        },
+        "startup": {
+          "heading": {
+            "type": "text",
+            "value": {
+              "en": "Ready to ship your next big thing?",
+              "es": "¿Listo para lanzar tu próximo gran proyecto?"
+            }
+          },
+          "description": {
+            "type": "text",
+            "value": {
+              "en": "Join thousands of startups building faster with our tools.",
+              "es": "Únete a miles de startups construyendo más rápido con nuestras herramientas."
+            }
+          }
+        }
+      }
+    }
+  ]
+}

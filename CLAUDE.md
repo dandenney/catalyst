@@ -30,7 +30,7 @@ pnpm -F consumer-app dev  # Run only consumer app
     └── components/        # Example component implementations
 ```
 
-**Key Principle:** Catalyst provides infrastructure; consumers provide component rendering. The framework uses a **registry pattern** where consumer apps register their own React components.
+**Key Principle:** Catalyst provides infrastructure; consumers provide component rendering. Components are rendered via direct imports and a switch statement in the consumer app.
 
 ## Import Patterns
 
@@ -38,7 +38,7 @@ pnpm -F consumer-app dev  # Run only consumer app
 // Client-side imports
 import {
   ComponentSchema, PageSchema, LocalizedContent, Locale,
-  CatalystProvider, useCatalyst, ComponentRenderer,
+  CatalystProvider, useCatalyst, createComponent,
   EditableText, EditableImage, EditableLink,
   useVariantHandling, useEditableLink,
   Popover, PopoverTrigger, PopoverContent, Button, Input, Label,
@@ -54,9 +54,21 @@ import 'catalyst/styles.css';
 ## Core Concepts
 
 ### Component Registry
-- Components registered via `CatalystProvider` with `components` prop
-- `ComponentRenderer` looks up `schema.type` in registry to render
-- Consumer defines React components; catalyst provides the wiring
+- `COMPONENT_REGISTRY` in `packages/catalyst/src/core/registry.ts` defines component metadata and `createDefault` factories
+- Used by `createComponent(type)` to instantiate new schemas with default values
+- **Not used for rendering** - consumer apps render components via direct imports and switch statements in `page.tsx`
+
+### Adding/Removing Components in Consumer App
+To add a component to the page:
+1. Import the schema component in `consumer-app/app/page.tsx`
+2. Add a case to the switch statement that renders components
+3. Add to `addSectionOptions` array if it should appear in the "Add Section" menu
+
+To remove a component from the page:
+1. Remove its case from the switch statement in `page.tsx`
+2. Remove from `addSectionOptions` array
+3. Remove from the `SectionType` union
+4. Optionally remove from `COMPONENT_REGISTRY` if it shouldn't be creatable via `createComponent()`
 
 ### Editable Components
 All support `editClassName` and `editingClassName` props for custom edit-mode styling:
@@ -92,8 +104,9 @@ const link = useEditableLink({ href, text, onUpdate, editClassName, editingClass
 | Purpose | Location |
 |---------|----------|
 | Core types | `packages/catalyst/src/core/types.ts` |
-| Component registry | `packages/catalyst/src/core/registry.ts` |
+| Component registry (for `createComponent()`) | `packages/catalyst/src/core/registry.ts` |
 | Context/Provider | `packages/catalyst/src/react/CatalystContext.tsx` |
+| Page rendering & switch statement | `consumer-app/app/page.tsx` |
 | Variant handling | `packages/catalyst/src/react/useVariantHandling.ts` |
 | Editable link hook | `packages/catalyst/src/react/useEditableLink.ts` |
 | Hooks exports | `packages/catalyst/src/react/hooks.ts` |
@@ -247,24 +260,31 @@ export default function SchemaMySection({ schema, onUpdate, className }: SchemaM
 
 ### Step 4: Update Page to Use Schema Component (`consumer-app/app/page.tsx`)
 
-```typescript
-"use client";
+1. Import the schema type and component
+2. Add to the `SectionSchema` union type
+3. Add a case in the switch statement
+4. Add to `addSectionOptions` array
 
-import { useState } from "react";
-import { type MySectionSchema, createComponent } from "catalyst";
+```typescript
+// Add import
 import SchemaMySection from "../components/sections/my-section/schema-my-section";
 
-export default function Home() {
-  const [mySectionSchema, setMySectionSchema] = useState<MySectionSchema>(
-    () => createComponent("MySection") as MySectionSchema
+// Add to SectionSchema union
+type SectionSchema = ... | MySectionSchema;
+
+// Add case in switch statement
+case "MySection":
+  return (
+    <SchemaMySection
+      key={section.schema.id}
+      schema={section.schema as MySectionSchema}
+      onUpdate={(schema) => updateSectionSchema(index, schema)}
+      sectionControls={sectionControls}
+    />
   );
 
-  return (
-    <main>
-      <SchemaMySection schema={mySectionSchema} onUpdate={setMySectionSchema} />
-    </main>
-  );
-}
+// Add to addSectionOptions array
+{ type: "MySection", label: "My Section" },
 ```
 
 ### Checklist for Editable Components
@@ -277,5 +297,7 @@ export default function Home() {
 - [ ] Schema component includes `VariantSelector` when in edit mode
 - [ ] All text fields use `EditableText` with edit styling classes
 - [ ] Custom fields have popover editors with consumer-app UI components
-- [ ] Page uses `useState` with `createComponent()` initializer
+- [ ] Added to `SectionSchema` union in `page.tsx`
+- [ ] Added case in switch statement in `page.tsx`
+- [ ] Added to `addSectionOptions` array in `page.tsx`
 - [ ] Build passes (`pnpm build`)
