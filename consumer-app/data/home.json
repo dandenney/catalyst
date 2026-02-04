@@ -26,14 +26,14 @@
         "description": {
           "type": "text",
           "value": {
-            "en": "Join thousands of developers building with our platform.",
+            "en": "Join thousands of developers building with our platforms.",
             "es": "Únete a miles de desarrolladores construyendo con nuestra plataforma."
           }
         },
         "buttonText": {
           "type": "text",
           "value": {
-            "en": "Get Started",
+            "en": "Get Started, yo",
             "es": "Comenzar"
           }
         },

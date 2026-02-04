@@ -52,13 +52,30 @@ export default function SchemaCTA({
     updateField("description", content, onUpdate);
   };
 
+  const handleButtonUpdate = ({
+    href,
+    text,
+  }: {
+    href: LocalizedContent;
+    text: LocalizedContent;
+  }) => {
+    if (!onUpdate) return;
+
+    const updatedSchema: CTASectionSchema = {
+      ...schema,
+      fields: {
+        ...schema.fields,
+        buttonText: { ...schema.fields.buttonText, value: text },
+        buttonUrl: { ...schema.fields.buttonUrl, value: href },
+      },
+    };
+    onUpdate(updatedSchema);
+  };
+
   const button = useEditableLink({
     href: fields.buttonUrl.value,
     text: fields.buttonText.value,
-    onUpdate: ({ href, text }) => {
-      updateField("buttonText", text, onUpdate);
-      updateField("buttonUrl", href, onUpdate);
-    },
+    onUpdate: handleButtonUpdate,
     editClassName: EDIT_CLASS,
     editingClassName: EDITING_CLASS,
   });

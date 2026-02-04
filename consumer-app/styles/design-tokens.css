@@ -1,0 +1,699 @@
+/**
+ * Design Tokens - Tailwind Integration
+ *
+ * This file provides:
+ * 1. Primitive color values as CSS custom properties
+ * 2. Theme-aware semantic variables (--wf-*) for light/dark modes
+ * 3. Custom utilities matching Figma naming (text-main, bg-main, etc.)
+ * 4. Semantic colors in Tailwind theme (error, success, warning, etc.)
+ *
+ * Figma naming convention:
+ *   text/main    → .text-main
+ *   background/secondary → .bg-secondary
+ *   error/darker → text-error-darker, bg-error-darker (via Tailwind)
+ */
+
+/* =============================================================================
+   PRIMITIVE COLORS
+   Base hex values - these don't change between themes
+   ============================================================================= */
+
+:root {
+  /* Blues */
+  --primitive-blue: #5EB1FF;
+  --primitive-blue-dark: #257DFE;
+  --primitive-blue-dark-text: #0065D1;
+  --primitive-blue-light: #72E5FE;
+
+  /* Greens */
+  --primitive-green: #03EF62;
+  --primitive-green-dark: #00C74E;
+  --primitive-green-dark-text: #008031;
+  --primitive-green-light: #65FF8F;
+
+  /* Greys */
+  --primitive-grey: #E8E8EE;
+  --primitive-grey-dark: #848492;
+  --primitive-grey-dark-text: #595D78;
+  --primitive-grey-light: #EFEFF5;
+  --primitive-grey-medium: #E1E1E8;
+  --primitive-grey-subtle: #F7F7FC;
+
+  /* Navy */
+  --primitive-navy: #05192D;
+  --primitive-navy-dark: #000820;
+  --primitive-navy-light: #213147;
+  --primitive-navy-medium: #13253A;
+  --primitive-navy-subtle-text-on-dark: #9BA3AB;
+  --primitive-navy-subtle-text-on-light: #5D6A77;
+
+  /* Orange */
+  --primitive-orange: #FF931E;
+  --primitive-orange-dark: #D87300;
+  --primitive-orange-dark-text: #A85200;
+  --primitive-orange-light: #FFBC4B;
+
+  /* Pink */
+  --primitive-pink: #FF80B4;
+  --primitive-pink-dark: #DC4D8B;
+  --primitive-pink-dark-text: #BF3072;
+  --primitive-pink-light: #FF95CF;
+
+  /* Purple */
+  --primitive-purple: #7933FF;
+  --primitive-purple-dark: #5646A5;
+  --primitive-purple-dark-text: #5646A5;
+  --primitive-purple-light: #B08EFF;
+
+  /* Red */
+  --primitive-red: #DD3400;
+  --primitive-red-dark: #BE2705;
+  --primitive-red-dark-text: #C01100;
+  --primitive-red-light: #FF6752;
+
+  /* White */
+  --primitive-white: #FFFFFF;
+
+  /* Yellow */
+  --primitive-yellow: #FCCE0D;
+  --primitive-yellow-dark: #CFA600;
+  --primitive-yellow-dark-text: #926904;
+  --primitive-yellow-light: #FFEC3C;
+
+  /* Alpha variants - computed from primitives */
+  --primitive-grey-6: rgba(232, 232, 238, 0.06);
+  --primitive-grey-10: rgba(232, 232, 238, 0.10);
+  --primitive-grey-15: rgba(232, 232, 238, 0.15);
+  --primitive-grey-20: rgba(232, 232, 238, 0.20);
+  --primitive-grey-30: rgba(232, 232, 238, 0.30);
+  --primitive-grey-60: rgba(232, 232, 238, 0.60);
+
+  --primitive-white-6: rgba(255, 255, 255, 0.06);
+  --primitive-white-10: rgba(255, 255, 255, 0.10);
+  --primitive-white-15: rgba(255, 255, 255, 0.15);
+  --primitive-white-20: rgba(255, 255, 255, 0.20);
+  --primitive-white-30: rgba(255, 255, 255, 0.30);
+  --primitive-white-60: rgba(255, 255, 255, 0.60);
+
+  --primitive-navy-10: rgba(5, 25, 45, 0.10);
+  --primitive-navy-70: rgba(5, 25, 45, 0.70);
+
+  --primitive-blue-12: rgba(37, 125, 254, 0.12);
+  --primitive-blue-15: rgba(37, 125, 254, 0.15);
+  --primitive-blue-20: rgba(94, 177, 255, 0.20);
+
+  --primitive-green-10: rgba(3, 239, 98, 0.10);
+  --primitive-green-20: rgba(3, 239, 98, 0.20);
+  --primitive-green-light-20: rgba(101, 255, 143, 0.20);
+
+  --primitive-red-10: rgba(221, 52, 0, 0.10);
+  --primitive-red-18: rgba(221, 52, 0, 0.18);
+  --primitive-red-20: rgba(221, 52, 0, 0.20);
+  --primitive-red-dark-16: rgba(190, 39, 5, 0.16);
+
+  --primitive-orange-16: rgba(255, 147, 30, 0.16);
+  --primitive-orange-20: rgba(255, 147, 30, 0.20);
+
+  --primitive-purple-10: rgba(121, 51, 255, 0.10);
+  --primitive-purple-18: rgba(121, 51, 255, 0.18);
+  --primitive-purple-20: rgba(121, 51, 255, 0.20);
+
+  --primitive-pink-light-18: rgba(255, 149, 207, 0.18);
+  --primitive-pink-dark-20: rgba(220, 77, 139, 0.20);
+
+  --primitive-yellow-18: rgba(252, 206, 13, 0.18);
+  --primitive-yellow-light-20: rgba(255, 236, 60, 0.20);
+}
+
+/* =============================================================================
+   LIGHT THEME (Default)
+   ============================================================================= */
+
+:root {
+  color-scheme: light;
+
+  /* Background */
+  --wf-bg--active: var(--primitive-grey-10);
+  --wf-bg--contrast: var(--primitive-white);
+  --wf-bg--contrast-inverse: var(--primitive-navy);
+  --wf-bg--focus: var(--primitive-grey-6);
+  --wf-bg--hover: var(--primitive-grey-6);
+  --wf-bg--hover-strong: var(--primitive-grey-10);
+  --wf-bg--hover-strong-inverse: var(--primitive-white-20);
+  --wf-bg--main: var(--primitive-grey-subtle);
+  --wf-bg--overlay: var(--primitive-navy-70);
+  --wf-bg--secondary: var(--primitive-grey-light);
+  --wf-bg--tertiary: var(--primitive-grey);
+  --wf-bg--transparent: var(--primitive-grey-10);
+  --wf-bg--transparent-inverse: var(--primitive-white-20);
+
+  /* Text */
+  --wf-text--inverse: var(--primitive-white);
+  --wf-text--inverse-subtle: var(--primitive-navy-subtle-text-on-dark);
+  --wf-text--link: var(--primitive-blue-dark-text);
+  --wf-text--main: var(--primitive-navy);
+  --wf-text--secondary: var(--primitive-navy-light);
+  --wf-text--subtle: var(--primitive-navy-subtle-text-on-light);
+
+  /* Border */
+  --wf-border-color--focus-outline: var(--primitive-blue-dark);
+  --wf-border-color--interactive: var(--primitive-grey-60);
+  --wf-border-color--main: var(--primitive-grey-15);
+  --wf-border-color--strong: var(--primitive-grey-30);
+
+  /* Box Shadow */
+  --wf-box-shadow--thin: 0px 0px 2px 0px rgba(48, 57, 105, 0.3);
+  --wf-box-shadow--medium: 0px 1px 4px -1px rgba(48, 57, 105, 0.3);
+  --wf-box-shadow--thick: 0px 3px 5px -1px rgba(48, 57, 105, 0.3);
+  --wf-box-shadow--xthick: 0px 8px 12px -4px rgba(48, 57, 105, 0.3);
+
+  /* Brand */
+  --wf-brand--darker: var(--primitive-green-dark);
+  --wf-brand--lighter: var(--primitive-green-light);
+  --wf-brand--main: var(--primitive-green);
+  --wf-brand--text: var(--primitive-navy);
+  --wf-brand--text-on-color: var(--primitive-navy);
+  --wf-brand--text-subtle: var(--primitive-grey-60);
+
+  /* Error */
+  --wf-error--darker: var(--primitive-red-dark);
+  --wf-error--lighter: var(--primitive-red-light);
+  --wf-error--main: var(--primitive-red);
+  --wf-error--text: var(--primitive-red-dark-text);
+  --wf-error--text-on-color: var(--primitive-white);
+  --wf-error--transparent: var(--primitive-red-10);
+
+  /* Success */
+  --wf-success--darker: var(--primitive-green-dark);
+  --wf-success--lighter: var(--primitive-green-light);
+  --wf-success--main: var(--primitive-green);
+  --wf-success--text: var(--primitive-green-dark-text);
+  --wf-success--text-on-color: var(--primitive-navy);
+  --wf-success--transparent: var(--primitive-green-10);
+
+  /* Warning */
+  --wf-warning--darker: var(--primitive-orange-dark);
+  --wf-warning--lighter: var(--primitive-orange-light);
+  --wf-warning--main: var(--primitive-orange);
+  --wf-warning--text: var(--primitive-orange-dark-text);
+  --wf-warning--text-on-color: var(--primitive-navy);
+  --wf-warning--transparent: var(--primitive-orange-20);
+
+  /* Info */
+  --wf-info--darker: var(--primitive-blue-dark);
+  --wf-info--lighter: var(--primitive-blue-light);
+  --wf-info--main: var(--primitive-blue);
+  --wf-info--text: var(--primitive-blue-dark-text);
+  --wf-info--text-on-color: var(--primitive-navy);
+  --wf-info--transparent: var(--primitive-blue-20);
+
+  /* Upgrade */
+  --wf-upgrade--darker: var(--primitive-purple-dark);
+  --wf-upgrade--lighter: var(--primitive-purple-light);
+  --wf-upgrade--main: var(--primitive-purple);
+  --wf-upgrade--text: var(--primitive-purple-dark-text);
+  --wf-upgrade--text-on-color: var(--primitive-white);
+  --wf-upgrade--transparent: var(--primitive-purple-10);
+
+  /* Blue */
+  --wf-blue--darker: var(--primitive-blue-dark);
+  --wf-blue--lighter: var(--primitive-blue-light);
+  --wf-blue--main: var(--primitive-blue);
+  --wf-blue--text: var(--primitive-blue-dark-text);
+  --wf-blue--text-on-color: var(--primitive-navy);
+  --wf-blue--transparent: var(--primitive-blue-12);
+
+  /* Green */
+  --wf-green--darker: var(--primitive-green-dark);
+  --wf-green--lighter: var(--primitive-green-light);
+  --wf-green--main: var(--primitive-green);
+  --wf-green--text: var(--primitive-green-dark-text);
+  --wf-green--text-on-color: var(--primitive-navy);
+  --wf-green--transparent: var(--primitive-green-light-20);
+
+  /* Grey */
+  --wf-grey--darker: var(--primitive-grey-medium);
+  --wf-grey--lighter: var(--primitive-grey-light);
+  --wf-grey--main: var(--primitive-grey);
+  --wf-grey--subtler: var(--primitive-grey-subtle);
+  --wf-grey--text: var(--primitive-grey-dark);
+  --wf-grey--text-on-color: var(--primitive-navy);
+  --wf-grey--transparent: var(--primitive-grey-10);
+
+  /* Navy */
+  --wf-navy--darker: var(--primitive-navy-dark);
+  --wf-navy--lighter: var(--primitive-navy-medium);
+  --wf-navy--main: var(--primitive-navy);
+  --wf-navy--subtler: var(--primitive-navy-light);
+  --wf-navy--text: var(--primitive-navy);
+  --wf-navy--text-on-color: var(--primitive-white);
+  --wf-navy--transparent: var(--primitive-navy-10);
+
+  /* Orange */
+  --wf-orange--darker: var(--primitive-orange-dark);
+  --wf-orange--lighter: var(--primitive-orange-light);
+  --wf-orange--main: var(--primitive-orange);
+  --wf-orange--text: var(--primitive-orange-dark-text);
+  --wf-orange--text-on-color: var(--primitive-navy);
+  --wf-orange--transparent: var(--primitive-orange-20);
+
+  /* Pink */
+  --wf-pink--darker: var(--primitive-pink-dark);
+  --wf-pink--lighter: var(--primitive-pink-light);
+  --wf-pink--main: var(--primitive-pink);
+  --wf-pink--text: var(--primitive-pink-dark-text);
+  --wf-pink--text-on-color: var(--primitive-navy);
+  --wf-pink--transparent: var(--primitive-pink-light-18);
+
+  /* Purple */
+  --wf-purple--darker: var(--primitive-purple-dark);
+  --wf-purple--lighter: var(--primitive-purple-light);
+  --wf-purple--main: var(--primitive-purple);
+  --wf-purple--text: var(--primitive-purple-dark-text);
+  --wf-purple--text-on-color: var(--primitive-white);
+  --wf-purple--transparent: var(--primitive-purple-18);
+
+  /* Red */
+  --wf-red--darker: var(--primitive-red-dark);
+  --wf-red--lighter: var(--primitive-red-light);
+  --wf-red--main: var(--primitive-red);
+  --wf-red--text: var(--primitive-red-dark-text);
+  --wf-red--text-on-color: var(--primitive-white);
+  --wf-red--transparent: var(--primitive-red-18);
+
+  /* White */
+  --wf-white--main: var(--primitive-white);
+  --wf-white--text: var(--primitive-white);
+  --wf-white--text-on-color: var(--primitive-navy);
+  --wf-white--transparent: var(--primitive-white-20);
+
+  /* Yellow */
+  --wf-yellow--darker: var(--primitive-yellow-dark);
+  --wf-yellow--lighter: var(--primitive-yellow-light);
+  --wf-yellow--main: var(--primitive-yellow);
+  --wf-yellow--text: var(--primitive-yellow-dark-text);
+  --wf-yellow--text-on-color: var(--primitive-navy);
+  --wf-yellow--transparent: var(--primitive-yellow-light-20);
+
+  /* Transparent Grey */
+  --wf-transparent-grey--darker: var(--primitive-grey-30);
+  --wf-transparent-grey--lighter: var(--primitive-grey-15);
+  --wf-transparent-grey--main: var(--primitive-grey-20);
+  --wf-transparent-grey--subtler: var(--primitive-grey-10);
+  --wf-transparent-grey--text: var(--primitive-grey-dark-text);
+  --wf-transparent-grey--text-on-color: var(--primitive-navy);
+}
+
+/* =============================================================================
+   DARK THEME
+   ============================================================================= */
+
+[data-theme="dark"],
+.dark {
+  color-scheme: dark;
+
+  /* Background */
+  --wf-bg--active: var(--primitive-white-10);
+  --wf-bg--contrast: var(--primitive-navy-light);
+  --wf-bg--contrast-inverse: var(--primitive-white);
+  --wf-bg--focus: var(--primitive-white-6);
+  --wf-bg--hover: var(--primitive-white-6);
+  --wf-bg--hover-strong: var(--primitive-white-20);
+  --wf-bg--hover-strong-inverse: var(--primitive-grey-10);
+  --wf-bg--main: var(--primitive-navy);
+  --wf-bg--overlay: var(--primitive-navy-70);
+  --wf-bg--secondary: var(--primitive-navy-medium);
+  --wf-bg--tertiary: var(--primitive-navy-dark);
+  --wf-bg--transparent: var(--primitive-white-20);
+  --wf-bg--transparent-inverse: var(--primitive-grey-10);
+
+  /* Text */
+  --wf-text--inverse: var(--primitive-navy);
+  --wf-text--inverse-subtle: var(--primitive-navy-subtle-text-on-light);
+  --wf-text--link: var(--primitive-blue);
+  --wf-text--main: var(--primitive-grey-light);
+  --wf-text--secondary: var(--primitive-grey-medium);
+  --wf-text--subtle: var(--primitive-navy-subtle-text-on-dark);
+
+  /* Border */
+  --wf-border-color--focus-outline: var(--primitive-blue-dark);
+  --wf-border-color--interactive: var(--primitive-white-60);
+  --wf-border-color--main: var(--primitive-white-15);
+  --wf-border-color--strong: var(--primitive-white-30);
+
+  /* Box Shadow */
+  --wf-box-shadow--thin: 0px 0px 3px 0px rgba(0, 8, 32, 0.8);
+  --wf-box-shadow--medium: 0px 3px 10px -1px rgba(0, 8, 32, 0.8);
+  --wf-box-shadow--thick: 0px 5px 15px -1px rgba(0, 8, 32, 0.8);
+  --wf-box-shadow--xthick: 0px 8px 20px -4px rgba(0, 8, 32, 0.8);
+
+  /* Brand */
+  --wf-brand--text: var(--primitive-white);
+  --wf-brand--text-subtle: var(--primitive-white-60);
+
+  /* Error */
+  --wf-error--text: var(--primitive-red-light);
+  --wf-error--transparent: var(--primitive-red-20);
+
+  /* Success */
+  --wf-success--text: var(--primitive-green);
+  --wf-success--transparent: var(--primitive-green-20);
+
+  /* Warning */
+  --wf-warning--text: var(--primitive-orange);
+
+  /* Info */
+  --wf-info--text: var(--primitive-blue);
+
+  /* Upgrade */
+  --wf-upgrade--text: var(--primitive-purple-light);
+  --wf-upgrade--transparent: var(--primitive-purple-20);
+
+  /* Blue */
+  --wf-blue--text: var(--primitive-blue);
+  --wf-blue--transparent: var(--primitive-blue-15);
+
+  /* Green */
+  --wf-green--text: var(--primitive-green);
+
+  /* Grey */
+  --wf-grey--text: var(--primitive-grey-subtle);
+  --wf-grey--transparent: var(--primitive-white-10);
+
+  /* Navy */
+  --wf-navy--text: var(--primitive-navy-light);
+
+  /* Orange */
+  --wf-orange--text: var(--primitive-orange);
+  --wf-orange--transparent: var(--primitive-orange-16);
+
+  /* Pink */
+  --wf-pink--text: var(--primitive-pink);
+  --wf-pink--transparent: var(--primitive-pink-dark-20);
+
+  /* Purple */
+  --wf-purple--text: var(--primitive-purple-light);
+
+  /* Red */
+  --wf-red--text: var(--primitive-red-light);
+  --wf-red--transparent: var(--primitive-red-dark-16);
+
+  /* Yellow */
+  --wf-yellow--text: var(--primitive-yellow);
+  --wf-yellow--transparent: var(--primitive-yellow-18);
+
+  /* Transparent Grey */
+  --wf-transparent-grey--darker: var(--primitive-white-30);
+  --wf-transparent-grey--lighter: var(--primitive-white-15);
+  --wf-transparent-grey--main: var(--primitive-white-20);
+  --wf-transparent-grey--subtler: var(--primitive-white-10);
+  --wf-transparent-grey--text: var(--primitive-grey-medium);
+  --wf-transparent-grey--text-on-color: var(--primitive-white);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]):not(.light) {
+    color-scheme: dark;
+
+    /* Background */
+    --wf-bg--active: var(--primitive-white-10);
+    --wf-bg--contrast: var(--primitive-navy-light);
+    --wf-bg--contrast-inverse: var(--primitive-white);
+    --wf-bg--focus: var(--primitive-white-6);
+    --wf-bg--hover: var(--primitive-white-6);
+    --wf-bg--hover-strong: var(--primitive-white-20);
+    --wf-bg--hover-strong-inverse: var(--primitive-grey-10);
+    --wf-bg--main: var(--primitive-navy);
+    --wf-bg--overlay: var(--primitive-navy-70);
+    --wf-bg--secondary: var(--primitive-navy-medium);
+    --wf-bg--tertiary: var(--primitive-navy-dark);
+    --wf-bg--transparent: var(--primitive-white-20);
+    --wf-bg--transparent-inverse: var(--primitive-grey-10);
+
+    /* Text */
+    --wf-text--inverse: var(--primitive-navy);
+    --wf-text--inverse-subtle: var(--primitive-navy-subtle-text-on-light);
+    --wf-text--link: var(--primitive-blue);
+    --wf-text--main: var(--primitive-grey-light);
+    --wf-text--secondary: var(--primitive-grey-medium);
+    --wf-text--subtle: var(--primitive-navy-subtle-text-on-dark);
+
+    /* Border */
+    --wf-border-color--interactive: var(--primitive-white-60);
+    --wf-border-color--main: var(--primitive-white-15);
+    --wf-border-color--strong: var(--primitive-white-30);
+
+    /* Box Shadow */
+    --wf-box-shadow--thin: 0px 0px 3px 0px rgba(0, 8, 32, 0.8);
+    --wf-box-shadow--medium: 0px 3px 10px -1px rgba(0, 8, 32, 0.8);
+    --wf-box-shadow--thick: 0px 5px 15px -1px rgba(0, 8, 32, 0.8);
+    --wf-box-shadow--xthick: 0px 8px 20px -4px rgba(0, 8, 32, 0.8);
+
+    /* Brand */
+    --wf-brand--text: var(--primitive-white);
+    --wf-brand--text-subtle: var(--primitive-white-60);
+
+    /* Semantic colors - text variants for dark mode */
+    --wf-error--text: var(--primitive-red-light);
+    --wf-error--transparent: var(--primitive-red-20);
+    --wf-success--text: var(--primitive-green);
+    --wf-success--transparent: var(--primitive-green-20);
+    --wf-warning--text: var(--primitive-orange);
+    --wf-info--text: var(--primitive-blue);
+    --wf-upgrade--text: var(--primitive-purple-light);
+    --wf-upgrade--transparent: var(--primitive-purple-20);
+
+    /* Raw colors - text variants for dark mode */
+    --wf-blue--text: var(--primitive-blue);
+    --wf-blue--transparent: var(--primitive-blue-15);
+    --wf-green--text: var(--primitive-green);
+    --wf-grey--text: var(--primitive-grey-subtle);
+    --wf-grey--transparent: var(--primitive-white-10);
+    --wf-navy--text: var(--primitive-navy-light);
+    --wf-orange--text: var(--primitive-orange);
+    --wf-orange--transparent: var(--primitive-orange-16);
+    --wf-pink--text: var(--primitive-pink);
+    --wf-pink--transparent: var(--primitive-pink-dark-20);
+    --wf-purple--text: var(--primitive-purple-light);
+    --wf-red--text: var(--primitive-red-light);
+    --wf-red--transparent: var(--primitive-red-dark-16);
+    --wf-yellow--text: var(--primitive-yellow);
+    --wf-yellow--transparent: var(--primitive-yellow-18);
+
+    /* Transparent Grey */
+    --wf-transparent-grey--darker: var(--primitive-white-30);
+    --wf-transparent-grey--lighter: var(--primitive-white-15);
+    --wf-transparent-grey--main: var(--primitive-white-20);
+    --wf-transparent-grey--subtler: var(--primitive-white-10);
+    --wf-transparent-grey--text: var(--primitive-grey-medium);
+    --wf-transparent-grey--text-on-color: var(--primitive-white);
+  }
+}
+
+/* =============================================================================
+   CUSTOM UTILITIES - Purpose-specific colors
+   These match Figma naming: text/main → .text-main
+   ============================================================================= */
+
+@layer utilities {
+  /* -------------------------------------------------------------------------
+     Text colors (Figma: text/*)
+     Usage: class="text-main" or class="text-subtle"
+     ------------------------------------------------------------------------- */
+  .text-main { color: var(--wf-text--main); }
+  .text-secondary { color: var(--wf-text--secondary); }
+  .text-subtle { color: var(--wf-text--subtle); }
+  .text-inverse { color: var(--wf-text--inverse); }
+  .text-inverse-subtle { color: var(--wf-text--inverse-subtle); }
+  .text-link { color: var(--wf-text--link); }
+
+  /* -------------------------------------------------------------------------
+     Background colors (Figma: background/*)
+     Usage: class="bg-main" or class="bg-secondary"
+     ------------------------------------------------------------------------- */
+  .bg-main { background-color: var(--wf-bg--main); }
+  .bg-secondary { background-color: var(--wf-bg--secondary); }
+  .bg-tertiary { background-color: var(--wf-bg--tertiary); }
+  .bg-contrast { background-color: var(--wf-bg--contrast); }
+  .bg-contrast-inverse { background-color: var(--wf-bg--contrast-inverse); }
+  .bg-active { background-color: var(--wf-bg--active); }
+  .bg-focus { background-color: var(--wf-bg--focus); }
+  .bg-hover { background-color: var(--wf-bg--hover); }
+  .bg-hover-strong { background-color: var(--wf-bg--hover-strong); }
+  .bg-hover-strong-inverse { background-color: var(--wf-bg--hover-strong-inverse); }
+  .bg-overlay { background-color: var(--wf-bg--overlay); }
+  .bg-transparent { background-color: var(--wf-bg--transparent); }
+  .bg-transparent-inverse { background-color: var(--wf-bg--transparent-inverse); }
+
+  /* -------------------------------------------------------------------------
+     Border colors (Figma: border/*)
+     Usage: class="border-main" or class="border-strong"
+     ------------------------------------------------------------------------- */
+  .border-main { border-color: var(--wf-border-color--main); }
+  .border-strong { border-color: var(--wf-border-color--strong); }
+  .border-interactive { border-color: var(--wf-border-color--interactive); }
+  .border-focus-outline { border-color: var(--wf-border-color--focus-outline); }
+
+  /* Outline variants */
+  .outline-main { outline-color: var(--wf-border-color--main); }
+  .outline-strong { outline-color: var(--wf-border-color--strong); }
+  .outline-focus { outline-color: var(--wf-border-color--focus-outline); }
+
+  /* Ring variants */
+  .ring-main { --tw-ring-color: var(--wf-border-color--main); }
+  .ring-strong { --tw-ring-color: var(--wf-border-color--strong); }
+  .ring-focus { --tw-ring-color: var(--wf-border-color--focus-outline); }
+
+  /* -------------------------------------------------------------------------
+     Box Shadow utilities (Figma: boxShadow/*)
+     Usage: class="shadow-thin" or class="shadow-thick"
+     ------------------------------------------------------------------------- */
+  .shadow-thin { box-shadow: var(--wf-box-shadow--thin); }
+  .shadow-medium { box-shadow: var(--wf-box-shadow--medium); }
+  .shadow-thick { box-shadow: var(--wf-box-shadow--thick); }
+  .shadow-xthick { box-shadow: var(--wf-box-shadow--xthick); }
+}
+
+/* =============================================================================
+   TAILWIND THEME EXTENSION
+   Semantic colors that work with any Tailwind utility
+   Usage: text-error, bg-error-lighter, border-success, etc.
+   ============================================================================= */
+
+@theme inline {
+  /* Semantic: Error */
+  --color-error: var(--wf-error--main);
+  --color-error-darker: var(--wf-error--darker);
+  --color-error-lighter: var(--wf-error--lighter);
+  --color-error-text: var(--wf-error--text);
+  --color-error-text-on-color: var(--wf-error--text-on-color);
+  --color-error-transparent: var(--wf-error--transparent);
+
+  /* Semantic: Success */
+  --color-success: var(--wf-success--main);
+  --color-success-darker: var(--wf-success--darker);
+  --color-success-lighter: var(--wf-success--lighter);
+  --color-success-text: var(--wf-success--text);
+  --color-success-text-on-color: var(--wf-success--text-on-color);
+  --color-success-transparent: var(--wf-success--transparent);
+
+  /* Semantic: Warning */
+  --color-warning: var(--wf-warning--main);
+  --color-warning-darker: var(--wf-warning--darker);
+  --color-warning-lighter: var(--wf-warning--lighter);
+  --color-warning-text: var(--wf-warning--text);
+  --color-warning-text-on-color: var(--wf-warning--text-on-color);
+  --color-warning-transparent: var(--wf-warning--transparent);
+
+  /* Semantic: Info */
+  --color-info: var(--wf-info--main);
+  --color-info-darker: var(--wf-info--darker);
+  --color-info-lighter: var(--wf-info--lighter);
+  --color-info-text: var(--wf-info--text);
+  --color-info-text-on-color: var(--wf-info--text-on-color);
+  --color-info-transparent: var(--wf-info--transparent);
+
+  /* Semantic: Brand */
+  --color-brand: var(--wf-brand--main);
+  --color-brand-darker: var(--wf-brand--darker);
+  --color-brand-lighter: var(--wf-brand--lighter);
+  --color-brand-text: var(--wf-brand--text);
+  --color-brand-text-on-color: var(--wf-brand--text-on-color);
+  --color-brand-text-subtle: var(--wf-brand--text-subtle);
+
+  /* Semantic: Upgrade */
+  --color-upgrade: var(--wf-upgrade--main);
+  --color-upgrade-darker: var(--wf-upgrade--darker);
+  --color-upgrade-lighter: var(--wf-upgrade--lighter);
+  --color-upgrade-text: var(--wf-upgrade--text);
+  --color-upgrade-text-on-color: var(--wf-upgrade--text-on-color);
+  --color-upgrade-transparent: var(--wf-upgrade--transparent);
+
+  /* Raw: Blue */
+  --color-blue: var(--wf-blue--main);
+  --color-blue-darker: var(--wf-blue--darker);
+  --color-blue-lighter: var(--wf-blue--lighter);
+  --color-blue-text: var(--wf-blue--text);
+  --color-blue-text-on-color: var(--wf-blue--text-on-color);
+  --color-blue-transparent: var(--wf-blue--transparent);
+
+  /* Raw: Green */
+  --color-green: var(--wf-green--main);
+  --color-green-darker: var(--wf-green--darker);
+  --color-green-lighter: var(--wf-green--lighter);
+  --color-green-text: var(--wf-green--text);
+  --color-green-text-on-color: var(--wf-green--text-on-color);
+  --color-green-transparent: var(--wf-green--transparent);
+
+  /* Raw: Grey */
+  --color-grey: var(--wf-grey--main);
+  --color-grey-darker: var(--wf-grey--darker);
+  --color-grey-lighter: var(--wf-grey--lighter);
+  --color-grey-subtler: var(--wf-grey--subtler);
+  --color-grey-text: var(--wf-grey--text);
+  --color-grey-text-on-color: var(--wf-grey--text-on-color);
+  --color-grey-transparent: var(--wf-grey--transparent);
+
+  /* Raw: Navy */
+  --color-navy: var(--wf-navy--main);
+  --color-navy-darker: var(--wf-navy--darker);
+  --color-navy-lighter: var(--wf-navy--lighter);
+  --color-navy-subtler: var(--wf-navy--subtler);
+  --color-navy-text: var(--wf-navy--text);
+  --color-navy-text-on-color: var(--wf-navy--text-on-color);
+  --color-navy-transparent: var(--wf-navy--transparent);
+
+  /* Raw: Orange */
+  --color-orange: var(--wf-orange--main);
+  --color-orange-darker: var(--wf-orange--darker);
+  --color-orange-lighter: var(--wf-orange--lighter);
+  --color-orange-text: var(--wf-orange--text);
+  --color-orange-text-on-color: var(--wf-orange--text-on-color);
+  --color-orange-transparent: var(--wf-orange--transparent);
+
+  /* Raw: Pink */
+  --color-pink: var(--wf-pink--main);
+  --color-pink-darker: var(--wf-pink--darker);
+  --color-pink-lighter: var(--wf-pink--lighter);
+  --color-pink-text: var(--wf-pink--text);
+  --color-pink-text-on-color: var(--wf-pink--text-on-color);
+  --color-pink-transparent: var(--wf-pink--transparent);
+
+  /* Raw: Purple */
+  --color-purple: var(--wf-purple--main);
+  --color-purple-darker: var(--wf-purple--darker);
+  --color-purple-lighter: var(--wf-purple--lighter);
+  --color-purple-text: var(--wf-purple--text);
+  --color-purple-text-on-color: var(--wf-purple--text-on-color);
+  --color-purple-transparent: var(--wf-purple--transparent);
+
+  /* Raw: Red */
+  --color-red: var(--wf-red--main);
+  --color-red-darker: var(--wf-red--darker);
+  --color-red-lighter: var(--wf-red--lighter);
+  --color-red-text: var(--wf-red--text);
+  --color-red-text-on-color: var(--wf-red--text-on-color);
+  --color-red-transparent: var(--wf-red--transparent);
+
+  /* Raw: White */
+  --color-white: var(--wf-white--main);
+  --color-white-text: var(--wf-white--text);
+  --color-white-text-on-color: var(--wf-white--text-on-color);
+  --color-white-transparent: var(--wf-white--transparent);
+
+  /* Raw: Yellow */
+  --color-yellow: var(--wf-yellow--main);
+  --color-yellow-darker: var(--wf-yellow--darker);
+  --color-yellow-lighter: var(--wf-yellow--lighter);
+  --color-yellow-text: var(--wf-yellow--text);
+  --color-yellow-text-on-color: var(--wf-yellow--text-on-color);
+  --color-yellow-transparent: var(--wf-yellow--transparent);
+
+  /* Transparent Grey */
+  --color-transparent-grey: var(--wf-transparent-grey--main);
+  --color-transparent-grey-darker: var(--wf-transparent-grey--darker);
+  --color-transparent-grey-lighter: var(--wf-transparent-grey--lighter);
+  --color-transparent-grey-subtler: var(--wf-transparent-grey--subtler);
+  --color-transparent-grey-text: var(--wf-transparent-grey--text);
+  --color-transparent-grey-text-on-color: var(--wf-transparent-grey--text-on-color);
+}
