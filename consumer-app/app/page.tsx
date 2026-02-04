@@ -1,11 +1,11 @@
 "use client";
 
-import { useState, useEffect, useCallback, useRef } from "react";
 import {
+  createComponent,
   type CTASectionSchema,
   type PageSchema,
-  createComponent,
 } from "catalyst";
+import { useCallback, useEffect, useRef,useState } from "react";
 
 type SectionSchema = CTASectionSchema;
 

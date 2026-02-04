@@ -1,11 +1,11 @@
 "use client";
 
+import { useCatalyst } from "catalyst";
 import { Plus } from "lucide-react";
 import { useState } from "react";
 
-import { useCatalyst } from "catalyst";
-
 import { Button } from "./button";
+import { type SectionType } from "./section-controls";
 import {
   Sheet,
   SheetContent,
@@ -14,7 +14,6 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "./sheet";
-import { type SectionType } from "./section-controls";
 
 interface AddSectionOption {
   type: SectionType;

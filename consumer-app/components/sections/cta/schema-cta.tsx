@@ -1,15 +1,15 @@
 "use client";
 
-import { cn } from "@/lib/utils";
-
 import {
-  EditableText,
   type CTASectionSchema,
+  EditableText,
   type LocalizedContent,
   useCatalyst,
   useEditableLink,
   useVariantHandling,
 } from "catalyst";
+
+import { cn } from "@/lib/utils";
 
 import { Button } from "../../ui/button";
 import Glow from "../../ui/glow";

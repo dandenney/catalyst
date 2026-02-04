@@ -1,8 +1,7 @@
 "use client";
 
-import { Pencil } from "lucide-react";
-
 import { useCatalyst } from "catalyst";
+import { Pencil } from "lucide-react";
 
 import { type SectionControls } from "./section-controls";
 import SectionEditSheet from "./section-edit-sheet";

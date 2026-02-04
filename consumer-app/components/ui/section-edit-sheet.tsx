@@ -1,11 +1,11 @@
 "use client";
 
-import { ArrowDown, ArrowUp, Pencil } from "lucide-react";
-import { useState, type ReactNode } from "react";
-
 import { useCatalyst } from "catalyst";
+import { ArrowDown, ArrowUp, Pencil } from "lucide-react";
+import { type ReactNode,useState } from "react";
 
 import { Button } from "./button";
+import { type SectionControls } from "./section-controls";
 import {
   Sheet,
   SheetContent,
@@ -15,7 +15,6 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "./sheet";
-import { type SectionControls } from "./section-controls";
 
 interface SectionEditSheetProps {
   sectionType: string;
@@ -58,7 +57,6 @@ export default function SectionEditSheet({
   if (variantKeys.includes(baseValue)) {
     baseValue = "__base_default__";
   }
-  const selectOptions = [baseValue, ...variantKeys];
   const selectedVariant = currentVariant ?? baseValue;
 
   return (
