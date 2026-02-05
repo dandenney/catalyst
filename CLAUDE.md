@@ -227,8 +227,8 @@ We use a **two-file separation pattern** to keep display logic separate from edi
 
 ```
 components/sections/[name]/
-  [name].tsx           # Pure display - accepts resolved strings
-  editable-[name].tsx  # Edit wrapper - handles all edit infrastructure
+  [name].tsx           # Pure display - accepts ReactNode slots
+  editable-[name].tsx  # Edit wrapper - injects editable components into slots
 ```
 
 ### Step 1: Define Schema Types (`packages/catalyst/src/core/types.ts`)
@@ -290,25 +290,29 @@ MySection: {
 ### Step 3a: Create Pure Display Component (`consumer-app/components/sections/[name]/[name].tsx`)
 
 **This component has ZERO knowledge of edit mode, localization, or schemas.**
+**Uses ReactNode slots so edit mode can inject editable components.**
 
 ```typescript
+import { type ReactNode } from "react";
 import { cn } from "@/lib/utils";
 import { Section } from "../../ui/section";
 
 interface MySectionProps {
-  title: string;        // Resolved string, not LocalizedContent
-  subtitle: string;
+  title: ReactNode;       // String or EditableText
+  subtitle: ReactNode;    // String or EditableText
   className?: string;
+  editBar?: ReactNode;    // SectionEditBar in edit mode
 }
 
 /**
  * Pure display component.
- * Accepts resolved strings - no edit mode awareness.
- * For editable version, use EditableMySection.
+ * Accepts ReactNode slots - layout is defined once here.
+ * EditableMySection injects editable components into slots.
  */
-export function MySection({ title, subtitle, className }: MySectionProps) {
+export function MySection({ title, subtitle, className, editBar }: MySectionProps) {
   return (
     <Section className={cn("group relative", className)}>
+      {editBar}
       <h2>{title}</h2>
       <p>{subtitle}</p>
     </Section>
@@ -318,7 +322,8 @@ export function MySection({ title, subtitle, className }: MySectionProps) {
 
 ### Step 3b: Create Editable Wrapper (`consumer-app/components/sections/[name]/editable-[name].tsx`)
 
-**This component contains ALL edit infrastructure.**
+**This component injects editable elements into the pure component's slots.**
+**Both view and edit mode render through the same pure component.**
 
 ```typescript
 "use client";
@@ -332,8 +337,6 @@ import {
   useVariantHandling,
 } from "catalyst";
 
-import { cn } from "@/lib/utils";
-import { Section } from "../../ui/section";
 import { type SectionControls } from "../../ui/section-controls";
 import SectionEditBar from "../../ui/section-edit-bar";
 import { MySection } from "./my-section";
@@ -360,17 +363,20 @@ export function EditableMySection({
 
   const { fields } = displaySchema;
 
-  // Handlers (defined before any hooks that use them)
+  // ─────────────────────────────────────────────────────────────────
+  // Handlers
+  // ─────────────────────────────────────────────────────────────────
+
   const handleTitleUpdate = (content: LocalizedContent) => {
     updateField("title", content, onUpdate);
   };
 
   // All hooks must be called before conditional returns
-  // (add useEditableLink etc. here if needed)
 
   // ─────────────────────────────────────────────────────────────────
-  // View Mode - render pure display component
+  // View Mode - pass strings to slots
   // ─────────────────────────────────────────────────────────────────
+
   if (!isEditMode) {
     return (
       <MySection
@@ -382,27 +388,31 @@ export function EditableMySection({
   }
 
   // ─────────────────────────────────────────────────────────────────
-  // Edit Mode - full editing UI
+  // Edit Mode - pass editable components to same slots
   // ─────────────────────────────────────────────────────────────────
-  return (
-    <Section className={cn("group relative", className)}>
-      <SectionEditBar
-        sectionType={schema.type}
-        controls={sectionControls}
-        variants={schema.variants}
-        currentVariant={editingVariant}
-        onVariantChange={setEditingVariant}
-      />
 
-      <EditableText
-        content={fields.title.value}
-        onUpdate={handleTitleUpdate}
-        as="h2"
-        editClassName={EDIT_CLASS}
-        editingClassName={EDITING_CLASS}
-      />
-      {/* ... rest of edit UI */}
-    </Section>
+  return (
+    <MySection
+      className={className}
+      editBar={
+        <SectionEditBar
+          sectionType={schema.type}
+          controls={sectionControls}
+          variants={schema.variants}
+          currentVariant={editingVariant}
+          onVariantChange={setEditingVariant}
+        />
+      }
+      title={
+        <EditableText
+          content={fields.title.value}
+          onUpdate={handleTitleUpdate}
+          editClassName={EDIT_CLASS}
+          editingClassName={EDITING_CLASS}
+        />
+      }
+      subtitle={/* EditableText for subtitle */}
+    />
   );
 }
 ```
@@ -437,12 +447,13 @@ case "MySection":
 - [ ] Field union updated if new field type added
 - [ ] `createDefault` function in `registry.ts`
 - [ ] Added to `COMPONENT_REGISTRY`
-- [ ] **Pure display component** (`[name].tsx`) accepts resolved strings only
-- [ ] **Editable wrapper** (`editable-[name].tsx`) contains all edit logic
+- [ ] **Pure display component** (`[name].tsx`) uses ReactNode slots
+- [ ] Pure component has `editBar` slot for section chrome
+- [ ] **Editable wrapper** (`editable-[name].tsx`) injects into slots
+- [ ] Both view and edit mode render through pure component
 - [ ] Editable wrapper uses `useVariantHandling` hook
-- [ ] Editable wrapper renders pure component in view mode
 - [ ] All hooks called before conditional return (React rules)
-- [ ] Edit mode uses `EditableText` with styling classes
+- [ ] Edit mode passes `EditableText` to slots
 - [ ] Custom fields have popover editors with consumer-app UI
 - [ ] Added to `SectionSchema` union in `page.tsx`
 - [ ] Added case in switch statement in `page.tsx`

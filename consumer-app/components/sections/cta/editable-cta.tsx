@@ -13,11 +13,9 @@ import {
 import { cn } from "@/lib/utils";
 
 import { Button } from "../../ui/button";
-import Glow from "../../ui/glow";
 import { Input } from "../../ui/input";
 import { Label } from "../../ui/label";
 import { Popover, PopoverContent, PopoverTrigger } from "../../ui/popover";
-import { Section } from "../../ui/section";
 import { type SectionControls } from "../../ui/section-controls";
 import SectionEditBar from "../../ui/section-edit-bar";
 import { CTA } from "./cta";
@@ -37,8 +35,8 @@ interface EditableCTAProps {
 
 /**
  * Editable wrapper for CTA component.
- * Handles all edit mode logic: variant handling, inline editing, popovers.
- * In view mode, renders the pure CTA component.
+ * Injects editable elements into CTA's slots.
+ * Layout is defined in CTA - this component only handles edit logic.
  */
 export function EditableCTA({
   schema,
@@ -53,7 +51,7 @@ export function EditableCTA({
   const { fields } = displaySchema;
 
   // ─────────────────────────────────────────────────────────────────────────────
-  // Handlers (defined before hooks that depend on them)
+  // Handlers
   // ─────────────────────────────────────────────────────────────────────────────
 
   const handleHeadingUpdate = (content: LocalizedContent) => {
@@ -64,7 +62,7 @@ export function EditableCTA({
     updateField("description", content, onUpdate);
   };
 
-  const handleButtonUpdate = ({
+  const handleLinkUpdate = ({
     href,
     text,
   }: {
@@ -77,24 +75,24 @@ export function EditableCTA({
       ...schema,
       fields: {
         ...schema.fields,
-        buttonText: { ...schema.fields.buttonText, value: text },
-        buttonUrl: { ...schema.fields.buttonUrl, value: href },
+        linkText: { ...schema.fields.linkText, value: text },
+        linkUrl: { ...schema.fields.linkUrl, value: href },
       },
     };
     onUpdate(updatedSchema);
   };
 
   // All hooks must be called before any conditional returns
-  const button = useEditableLink({
-    href: fields.buttonUrl.value,
-    text: fields.buttonText.value,
-    onUpdate: handleButtonUpdate,
+  const link = useEditableLink({
+    href: fields.linkUrl.value,
+    text: fields.linkText.value,
+    onUpdate: handleLinkUpdate,
     editClassName: EDIT_CLASS,
     editingClassName: EDITING_CLASS,
   });
 
   // ─────────────────────────────────────────────────────────────────────────────
-  // View Mode - Render pure display component
+  // View Mode - Pass strings to CTA slots
   // ─────────────────────────────────────────────────────────────────────────────
 
   if (!isEditMode) {
@@ -102,109 +100,108 @@ export function EditableCTA({
       <CTA
         heading={getLocalizedValue(fields.heading.value, locale)}
         description={getLocalizedValue(fields.description.value, locale)}
-        buttonText={getLocalizedValue(fields.buttonText.value, locale)}
-        buttonHref={getLocalizedValue(fields.buttonUrl.value, locale)}
+        link={
+          <a
+            href={getLocalizedValue(fields.linkUrl.value, locale)}
+            className="font-semibold text-blue-lighter"
+          >
+            {getLocalizedValue(fields.linkText.value, locale)}
+          </a>
+        }
         className={className}
       />
     );
   }
 
   // ─────────────────────────────────────────────────────────────────────────────
-  // Edit Mode - Full editing UI
+  // Edit Mode - Pass editable components to CTA slots
   // ─────────────────────────────────────────────────────────────────────────────
 
   return (
-    <Section className={cn("group relative overflow-hidden", className)}>
-      <SectionEditBar
-        sectionType={schema.type}
-        controls={sectionControls}
-        variants={schema.variants}
-        currentVariant={editingVariant}
-        onVariantChange={setEditingVariant}
-      />
-      <div className="max-w-container relative z-10 mx-auto flex flex-col items-center gap-6 text-center sm:gap-8">
+    <CTA
+      className={className}
+      editBar={
+        <SectionEditBar
+          sectionType={schema.type}
+          controls={sectionControls}
+          variants={schema.variants}
+          currentVariant={editingVariant}
+          onVariantChange={setEditingVariant}
+        />
+      }
+      heading={
         <EditableText
           content={fields.heading.value}
           onUpdate={handleHeadingUpdate}
-          as="h2"
-          className="max-w-[640px] text-3xl leading-tight font-semibold sm:text-5xl sm:leading-tight"
           editClassName={EDIT_CLASS}
           editingClassName={EDITING_CLASS}
         />
+      }
+      description={
         <EditableText
           content={fields.description.value}
           onUpdate={handleDescriptionUpdate}
-          as="p"
-          className="text-muted-foreground max-w-[640px] text-base sm:text-lg"
           editClassName={EDIT_CLASS}
           editingClassName={EDITING_CLASS}
         />
-        <div className="flex justify-center gap-4">
-          <Popover
-            open={button.isOpen}
-            onOpenChange={(open) => button.setIsOpen(open)}
-          >
-            <PopoverTrigger asChild>
-              <Button size="lg" asChild>
-                <a
-                  href={button.isEditMode ? undefined : button.displayHref}
-                  onClick={button.handleClick}
-                  className={cn(button.editModeClassName)}
-                  title={button.isEditMode ? "Click to edit button" : undefined}
-                >
-                  {button.displayText}
-                </a>
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent className="w-80" onKeyDown={button.handleKeyDown}>
-              <div className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="cta-button-text">
-                    Button Text ({locale.toUpperCase()})
-                  </Label>
-                  <Input
-                    id="cta-button-text"
-                    type="text"
-                    value={button.editText}
-                    onChange={(event) => button.setEditText(event.target.value)}
-                    placeholder="Get Started"
-                    autoFocus
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="cta-button-url">
-                    URL ({locale.toUpperCase()})
-                  </Label>
-                  <Input
-                    id="cta-button-url"
-                    type="text"
-                    value={button.editHref}
-                    onChange={(event) => button.setEditHref(event.target.value)}
-                    placeholder="https://example.com"
-                  />
-                </div>
-
-                <div className="flex gap-2 justify-end">
-                  <Button variant="outline" size="sm" onClick={button.handleCancel}>
-                    Cancel
-                  </Button>
-                  <Button size="sm" onClick={button.handleSave}>
-                    Save
-                  </Button>
-                </div>
-
-                <p className="text-xs text-muted-foreground">
-                  Cmd+Enter to save, Esc to cancel
-                </p>
+      }
+      link={
+        <Popover open={link.isOpen} onOpenChange={(open) => link.setIsOpen(open)}>
+          <PopoverTrigger asChild>
+            <a
+              href={undefined}
+              onClick={link.handleClick}
+              className={cn("font-semibold text-blue-lighter", link.editModeClassName)}
+              title="Click to edit link"
+            >
+              {link.displayText}
+            </a>
+          </PopoverTrigger>
+          <PopoverContent className="w-80" onKeyDown={link.handleKeyDown}>
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="cta-link-text">
+                  Link Text ({locale.toUpperCase()})
+                </Label>
+                <Input
+                  id="cta-link-text"
+                  type="text"
+                  value={link.editText}
+                  onChange={(event) => link.setEditText(event.target.value)}
+                  placeholder="Learn more"
+                  autoFocus
+                />
               </div>
-            </PopoverContent>
-          </Popover>
-        </div>
-      </div>
-      <div className="pointer-events-none absolute top-0 left-0 h-full w-full translate-y-[1rem] opacity-80 transition-all duration-500 ease-in-out group-hover:translate-y-[-2rem] group-hover:opacity-100">
-        <Glow variant="bottom" />
-      </div>
-    </Section>
+
+              <div className="space-y-2">
+                <Label htmlFor="cta-link-url">
+                  URL ({locale.toUpperCase()})
+                </Label>
+                <Input
+                  id="cta-link-url"
+                  type="text"
+                  value={link.editHref}
+                  onChange={(event) => link.setEditHref(event.target.value)}
+                  placeholder="https://example.com"
+                />
+              </div>
+
+              <div className="flex gap-2 justify-end">
+                <Button variant="outline" size="sm" onClick={link.handleCancel}>
+                  Cancel
+                </Button>
+                <Button size="sm" onClick={link.handleSave}>
+                  Save
+                </Button>
+              </div>
+
+              <p className="text-xs text-muted-foreground">
+                Cmd+Enter to save, Esc to cancel
+              </p>
+            </div>
+          </PopoverContent>
+        </Popover>
+      }
+    />
   );
 }

@@ -150,8 +150,8 @@ export interface CTASectionSchema extends ComponentSchema {
   fields: {
     heading: TextField;
     description: TextField;
-    buttonText: TextField;
-    buttonUrl: TextField;
+    linkText: TextField;
+    linkUrl: TextField;
     image: ImageField;
   };
 }

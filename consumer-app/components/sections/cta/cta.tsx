@@ -1,46 +1,46 @@
+import { type ReactNode } from "react";
+
 import { cn } from "@/lib/utils";
 
-import { Button } from "../../ui/button";
-import Glow from "../../ui/glow";
 import { Section } from "../../ui/section";
 
 interface CTAProps {
-  heading: string;
-  description: string;
-  buttonText: string;
-  buttonHref: string;
+  /** Heading content - accepts string or ReactNode (e.g., EditableText) */
+  heading: ReactNode;
+  /** Description content - accepts string or ReactNode */
+  description: ReactNode;
+  /** Link element - accepts full anchor or editable link wrapper */
+  link: ReactNode;
   className?: string;
+  /** Slot for edit chrome (e.g., SectionEditBar) - rendered before content */
+  editBar?: ReactNode;
 }
 
 /**
  * Pure display component for CTA section.
- * Accepts resolved strings - no edit mode awareness, no localization logic.
- * For editable version, use EditableCTA.
+ * Accepts ReactNode for content slots, enabling both static strings and editable components.
+ * Layout is defined here once - EditableCTA injects editable elements into slots.
  */
 export function CTA({
   heading,
   description,
-  buttonText,
-  buttonHref,
+  link,
   className,
+  editBar,
 }: CTAProps) {
   return (
-    <Section className={cn("group relative overflow-hidden", className)}>
-      <div className="max-w-container relative z-10 mx-auto flex flex-col items-center gap-6 text-center sm:gap-8">
-        <h2 className="max-w-[640px] text-3xl leading-tight font-semibold sm:text-5xl sm:leading-tight">
+    <Section className={cn("bg-upgrade-main group", className)}>
+      {editBar}
+      <div className="max-w-container mx-auto sm:flex sm:gap-8">
+        <h2 className="max-w-[288px] flex-shrink-0 text-2xl leading-tight font-semibold sm:leading-tight">
           {heading}
         </h2>
-        <p className="text-muted-foreground max-w-[640px] text-base sm:text-lg">
-          {description}
-        </p>
-        <div className="flex justify-center gap-4">
-          <Button size="lg" asChild>
-            <a href={buttonHref}>{buttonText}</a>
-          </Button>
+        <div>
+          <p className="mb-2 text-main text-base">
+            {description}
+          </p>
+          {link}
         </div>
-      </div>
-      <div className="pointer-events-none absolute top-0 left-0 h-full w-full translate-y-[1rem] opacity-80 transition-all duration-500 ease-in-out group-hover:translate-y-[-2rem] group-hover:opacity-100">
-        <Glow variant="bottom" />
       </div>
     </Section>
   );

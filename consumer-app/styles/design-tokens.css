@@ -524,6 +524,7 @@
   .bg-overlay { background-color: var(--wf-bg--overlay); }
   .bg-transparent { background-color: var(--wf-bg--transparent); }
   .bg-transparent-inverse { background-color: var(--wf-bg--transparent-inverse); }
+  .bg-upgrade-main { background-color: var(--wf-upgrade--main); }
 
   /* -------------------------------------------------------------------------
      Border colors (Figma: border/*)

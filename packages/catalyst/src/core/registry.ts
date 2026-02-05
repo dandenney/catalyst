@@ -89,11 +89,11 @@ function createDefaultCTASection(): CTASectionSchema {
         type: 'text',
         value: { en: 'Join thousands of users who are already using our platform.' },
       },
-      buttonText: {
+      linkText: {
         type: 'text',
         value: { en: 'Get Started' },
       },
-      buttonUrl: {
+      linkUrl: {
         type: 'text',
         value: { en: '/signup' },
       },

@@ -34,26 +34,28 @@ components/sections/[name]/
 
 ### Pure Display Component (`[name].tsx`)
 
-- Accepts **resolved strings** as props (not LocalizedContent, not schemas)
+- Accepts **ReactNode** for content slots (can be strings or editable components)
 - Has **zero knowledge** of edit mode, localization, or variants
 - Contains only visual structure and styling
 - Can be used standalone for static pages or previews
 - Designers and non-edit-aware code can understand it easily
+- Optional `editBar` slot for section-level edit chrome
 
 ```tsx
 interface CTAProps {
-  heading: string;
-  description: string;
-  buttonText: string;
-  buttonHref: string;
+  heading: ReactNode;      // String or EditableText
+  description: ReactNode;  // String or EditableText
+  link: ReactNode;         // Anchor or editable link wrapper
+  editBar?: ReactNode;     // SectionEditBar in edit mode
 }
 
-export function CTA({ heading, description, buttonText, buttonHref }: CTAProps) {
+export function CTA({ heading, description, link, editBar }: CTAProps) {
   return (
     <Section>
+      {editBar}
       <h2>{heading}</h2>
       <p>{description}</p>
-      <Button><a href={buttonHref}>{buttonText}</a></Button>
+      {link}
     </Section>
   );
 }
@@ -67,8 +69,7 @@ export function CTA({ heading, description, buttonText, buttonHref }: CTAProps) 
   - `useCatalyst` for edit mode and locale
   - Field update handlers
   - `useEditableLink` and similar hooks
-- In **view mode**: renders the pure component with resolved values
-- In **edit mode**: renders full edit UI with EditableText, popovers, etc.
+- **Both modes render through the pure component** - only the slot contents differ
 
 ```tsx
 export function EditableCTA({ schema, onUpdate, sectionControls }: EditableCTAProps) {
@@ -76,26 +77,27 @@ export function EditableCTA({ schema, onUpdate, sectionControls }: EditableCTAPr
   const { displaySchema, ... } = useVariantHandling({ schema });
 
   // Hooks must be called before conditional return
-  const button = useEditableLink({ ... });
+  const link = useEditableLink({ ... });
 
-  // View mode: pure component
+  // View mode: pass resolved strings to slots
   if (!isEditMode) {
     return (
       <CTA
         heading={getLocalizedValue(fields.heading.value, locale)}
         description={getLocalizedValue(fields.description.value, locale)}
-        ...
+        link={<a href={...}>{...}</a>}
       />
     );
   }
 
-  // Edit mode: full edit UI
+  // Edit mode: pass editable components to same slots
   return (
-    <Section>
-      <SectionEditBar ... />
-      <EditableText ... />
-      ...
-    </Section>
+    <CTA
+      editBar={<SectionEditBar ... />}
+      heading={<EditableText content={fields.heading.value} ... />}
+      description={<EditableText content={fields.description.value} ... />}
+      link={<Popover>...</Popover>}
+    />
   );
 }
 ```
@@ -109,12 +111,16 @@ export function EditableCTA({ schema, onUpdate, sectionControls }: EditableCTAPr
 - **Reusable display** - Pure components can be used for static pages, previews, or email templates
 - **Testable** - Pure components are trivial to test with simple props
 - **Customizable edit UIs** - Consumer apps can create different editable wrappers while keeping the same display
+- **Single source of truth for layout** - Using ReactNode slots means both view and edit mode use the same component structure
 
 ### Negative
 
-- **Some structural duplication** - Edit mode must replicate the visual structure to wrap elements with EditableText
 - **More files** - Two files per component instead of one
 - **Hook ordering constraint** - All hooks must be called before the view-mode early return
+
+### Mitigated
+
+- **~~Structural duplication~~** - Originally edit mode duplicated layout. Now using ReactNode slots, both modes render through the pure component
 
 ### Neutral
 

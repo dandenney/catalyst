@@ -19,25 +19,25 @@
         "heading": {
           "type": "text",
           "value": {
-            "en": "Ready to go?",
+            "en": "What if I go really long with this? How long can I go? ",
             "es": "¿Listo para comenzar?"
           }
         },
         "description": {
           "type": "text",
           "value": {
-            "en": "Join thousands of developers building with our platforms.",
+            "en": "Go beyond off-the-shelf courses. With DataCamp, you can create private learning tracks, projects, and assessments tailored to your products, data, and workflows.",
             "es": "Únete a miles de desarrolladores construyendo con nuestra plataforma."
           }
         },
-        "buttonText": {
+        "linkText": {
           "type": "text",
           "value": {
             "en": "Get Started",
             "es": "Comenzar"
           }
         },
-        "buttonUrl": {
+        "linkUrl": {
           "type": "text",
           "value": {
             "en": "/signup",
