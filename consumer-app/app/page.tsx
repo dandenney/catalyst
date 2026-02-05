@@ -14,7 +14,7 @@ interface Section {
   schema: SectionSchema;
 }
 
-import SchemaCTA from "../components/sections/cta/schema-cta";
+import { EditableCTA } from "../components/sections/cta/editable-cta";
 import { EditModeIndicator } from "../components/ui/edit-mode-indicator";
 import { LayoutLines } from "../components/ui/layout-lines";
 import {
@@ -198,7 +198,7 @@ export default function Home() {
         switch (section.type) {
           case "CTASection":
             return (
-              <SchemaCTA
+              <EditableCTA
                 key={section.schema.id}
                 schema={section.schema as CTASectionSchema}
                 onUpdate={(schema) => updateSectionSchema(index, schema)}

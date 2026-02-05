@@ -19,7 +19,7 @@
         "heading": {
           "type": "text",
           "value": {
-            "en": "Ready to end this?",
+            "en": "Ready to go?",
             "es": "¿Listo para comenzar?"
           }
         },
@@ -33,7 +33,7 @@
         "buttonText": {
           "type": "text",
           "value": {
-            "en": "Get Started, yo",
+            "en": "Get Started",
             "es": "Comenzar"
           }
         },

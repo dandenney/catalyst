@@ -3,6 +3,7 @@
 import {
   type CTASectionSchema,
   EditableText,
+  getLocalizedValue,
   type LocalizedContent,
   useCatalyst,
   useEditableLink,
@@ -19,30 +20,41 @@ import { Popover, PopoverContent, PopoverTrigger } from "../../ui/popover";
 import { Section } from "../../ui/section";
 import { type SectionControls } from "../../ui/section-controls";
 import SectionEditBar from "../../ui/section-edit-bar";
+import { CTA } from "./cta";
 
+// Edit mode styling
 const EDIT_CLASS =
   "cursor-pointer outline-1 outline-dashed outline-primary/50 outline-offset-2";
 const EDITING_CLASS =
   "outline-2 outline-solid outline-primary outline-offset-2";
 
-interface SchemaCTAProps {
+interface EditableCTAProps {
   schema: CTASectionSchema;
   onUpdate?: (schema: CTASectionSchema) => void;
   className?: string;
   sectionControls?: SectionControls;
 }
 
-export default function SchemaCTA({
+/**
+ * Editable wrapper for CTA component.
+ * Handles all edit mode logic: variant handling, inline editing, popovers.
+ * In view mode, renders the pure CTA component.
+ */
+export function EditableCTA({
   schema,
   onUpdate,
   className,
   sectionControls,
-}: SchemaCTAProps) {
-  const { locale } = useCatalyst();
+}: EditableCTAProps) {
+  const { isEditMode, locale } = useCatalyst();
   const { displaySchema, editingVariant, setEditingVariant, updateField } =
     useVariantHandling({ schema });
 
   const { fields } = displaySchema;
+
+  // ─────────────────────────────────────────────────────────────────────────────
+  // Handlers (defined before hooks that depend on them)
+  // ─────────────────────────────────────────────────────────────────────────────
 
   const handleHeadingUpdate = (content: LocalizedContent) => {
     updateField("heading", content, onUpdate);
@@ -72,6 +84,7 @@ export default function SchemaCTA({
     onUpdate(updatedSchema);
   };
 
+  // All hooks must be called before any conditional returns
   const button = useEditableLink({
     href: fields.buttonUrl.value,
     text: fields.buttonText.value,
@@ -79,6 +92,26 @@ export default function SchemaCTA({
     editClassName: EDIT_CLASS,
     editingClassName: EDITING_CLASS,
   });
+
+  // ─────────────────────────────────────────────────────────────────────────────
+  // View Mode - Render pure display component
+  // ─────────────────────────────────────────────────────────────────────────────
+
+  if (!isEditMode) {
+    return (
+      <CTA
+        heading={getLocalizedValue(fields.heading.value, locale)}
+        description={getLocalizedValue(fields.description.value, locale)}
+        buttonText={getLocalizedValue(fields.buttonText.value, locale)}
+        buttonHref={getLocalizedValue(fields.buttonUrl.value, locale)}
+        className={className}
+      />
+    );
+  }
+
+  // ─────────────────────────────────────────────────────────────────────────────
+  // Edit Mode - Full editing UI
+  // ─────────────────────────────────────────────────────────────────────────────
 
   return (
     <Section className={cn("group relative overflow-hidden", className)}>
