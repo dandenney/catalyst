@@ -93,11 +93,33 @@ const link = useEditableLink({ href, text, onUpdate, editClassName, editingClass
 - `LocalizedContent` type: `{ en: string; es?: string }` (en required as fallback)
 - `getLocalizedValue(content, locale)` resolves with fallback
 - `Locale` type: `'en' | 'es'`
+- **Page-wide language toggle** in edit mode indicator bar switches locale for all components
+- Editable components update only the current locale's value
 
 ### Variants/Personalization
-- `useVariantHandling({ schema })` handles variant selection and field updates
+Variants enable per-component personalization for different audience segments.
+
+**Key Concept:** Language is page-wide, variants are per-component.
+
+| Scope | Edit Mode | View Mode |
+|-------|-----------|-----------|
+| Language | Toggle in bottom bar affects all components | `?lang=es` URL param |
+| Variants | Each component's edit sheet has variant selector | `?segment=premium` applies to all components |
+
+**Hook:** `useVariantHandling({ schema })`
 - Returns: `displaySchema`, `editingVariant`, `setEditingVariant`, `updateField`
-- Variants keyed by segment (e.g., 'premium')
+- In edit mode: shows variant being edited (or base)
+- In view mode: applies personalization based on `?segment=` param
+
+**Creating Variants:**
+1. Click "Edit [Section]" button on any component
+2. In the sheet, click "Add variant" under Personalization Variants
+3. Enter variant name (e.g., "premium", "finance", "startup")
+4. Edit fields - changes only affect that variant
+
+**Viewing Variants:**
+- `?segment=finance` - All components with a "finance" variant show personalized content
+- Components without that variant show base content
 
 ## Key Files
 
@@ -107,9 +129,13 @@ const link = useEditableLink({ href, text, onUpdate, editClassName, editingClass
 | Component registry (for `createComponent()`) | `packages/catalyst/src/core/registry.ts` |
 | Context/Provider | `packages/catalyst/src/react/CatalystContext.tsx` |
 | Page rendering & switch statement | `consumer-app/app/page.tsx` |
-| Variant handling | `packages/catalyst/src/react/useVariantHandling.ts` |
+| Variant handling hook | `packages/catalyst/src/react/useVariantHandling.ts` |
 | Editable link hook | `packages/catalyst/src/react/useEditableLink.ts` |
 | Hooks exports | `packages/catalyst/src/react/hooks.ts` |
+| Language toggle | `consumer-app/components/ui/language-toggle.tsx` |
+| Edit mode indicator (with language toggle) | `consumer-app/components/ui/edit-mode-indicator.tsx` |
+| Section edit sheet (with variant controls) | `consumer-app/components/ui/section-edit-sheet.tsx` |
+| URL param handling | `consumer-app/components/contexts/catalyst-wrapper.tsx` |
 
 ## Consumer App Patterns
 
@@ -129,9 +155,15 @@ For edit popovers with proper theming, use consumer-app's shadcn components (Pop
 ### URL Parameters
 | Param | Effect |
 |-------|--------|
-| `?edit=true` | Enable edit mode |
-| `?lang=es` | Switch to Spanish |
-| `?segment=premium` | Apply personalization variant |
+| `?edit=true` | Enable edit mode (shows edit bars, language toggle, editable outlines) |
+| `?lang=es` | Switch to Spanish (page-wide, also controllable via toggle in edit mode) |
+| `?segment=premium` | Apply personalization variant to all components that have it |
+
+**Common combinations:**
+- `?edit=true` - Edit base English content
+- `?edit=true&lang=es` - Edit Spanish content
+- `?segment=finance` - View finance variant (English)
+- `?segment=finance&lang=es` - View finance variant in Spanish
 
 ## Making a Component Editable (Complete Pattern)
 
@@ -195,7 +227,7 @@ MySection: {
 
 ### Step 3: Create Schema Component (`consumer-app/components/sections/[name]/schema-[name].tsx`)
 
-**IMPORTANT:** Always include variant support using `useVariantHandling` and `VariantSelector`.
+**IMPORTANT:** Always include variant support using `useVariantHandling` and pass variant props to `SectionEditBar`.
 
 ```typescript
 "use client";
@@ -204,10 +236,13 @@ import {
   EditableText,
   type LocalizedContent,
   type MySectionSchema,
-  useCatalyst,
   useVariantHandling,
-  VariantSelector,
 } from "catalyst";
+
+import { cn } from "@/lib/utils";
+import { Section } from "../../ui/section";
+import { type SectionControls } from "../../ui/section-controls";
+import SectionEditBar from "../../ui/section-edit-bar";
 
 // Edit mode styling constants
 const EDIT_CLASS = "cursor-pointer outline-1 outline-dashed outline-primary/50 outline-offset-2";
@@ -217,11 +252,15 @@ interface SchemaMySectionProps {
   schema: MySectionSchema;
   onUpdate?: (schema: MySectionSchema) => void;
   className?: string;
+  sectionControls?: SectionControls;
 }
 
-export default function SchemaMySection({ schema, onUpdate, className }: SchemaMySectionProps) {
-  const { isEditMode } = useCatalyst();
-
+export default function SchemaMySection({
+  schema,
+  onUpdate,
+  className,
+  sectionControls,
+}: SchemaMySectionProps) {
   // ALWAYS use useVariantHandling for variant support
   const { displaySchema, editingVariant, setEditingVariant, updateField } =
     useVariantHandling({ schema });
@@ -233,17 +272,15 @@ export default function SchemaMySection({ schema, onUpdate, className }: SchemaM
   };
 
   return (
-    <Section className={className}>
-      {/* ALWAYS include VariantSelector in edit mode */}
-      {isEditMode && schema.variants && Object.keys(schema.variants).length > 0 && (
-        <div className="flex justify-end mb-4">
-          <VariantSelector
-            variants={schema.variants}
-            currentVariant={editingVariant}
-            onVariantChange={setEditingVariant}
-          />
-        </div>
-      )}
+    <Section className={cn("group relative", className)}>
+      {/* SectionEditBar handles variant selection via sheet UI */}
+      <SectionEditBar
+        sectionType={schema.type}
+        controls={sectionControls}
+        variants={schema.variants}
+        currentVariant={editingVariant}
+        onVariantChange={setEditingVariant}
+      />
 
       <EditableText
         content={fields.title.value}
@@ -262,7 +299,7 @@ export default function SchemaMySection({ schema, onUpdate, className }: SchemaM
 
 1. Import the schema type and component
 2. Add to the `SectionSchema` union type
-3. Add a case in the switch statement
+3. Add a case in the switch statement (include `sectionControls` for move/remove functionality)
 4. Add to `addSectionOptions` array
 
 ```typescript
@@ -272,7 +309,7 @@ import SchemaMySection from "../components/sections/my-section/schema-my-section
 // Add to SectionSchema union
 type SectionSchema = ... | MySectionSchema;
 
-// Add case in switch statement
+// Add case in switch statement (sectionControls is built in the map loop)
 case "MySection":
   return (
     <SchemaMySection
@@ -294,9 +331,10 @@ case "MySection":
 - [ ] `createDefault` function in `registry.ts`
 - [ ] Added to `COMPONENT_REGISTRY`
 - [ ] Schema component uses `useVariantHandling` hook
-- [ ] Schema component includes `VariantSelector` when in edit mode
+- [ ] Schema component passes variant props to `SectionEditBar`
 - [ ] All text fields use `EditableText` with edit styling classes
 - [ ] Custom fields have popover editors with consumer-app UI components
+- [ ] Component accepts `sectionControls` prop and passes to `SectionEditBar`
 - [ ] Added to `SectionSchema` union in `page.tsx`
 - [ ] Added case in switch statement in `page.tsx`
 - [ ] Added to `addSectionOptions` array in `page.tsx`
