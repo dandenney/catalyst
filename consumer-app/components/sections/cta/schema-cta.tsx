@@ -80,14 +80,12 @@ export default function SchemaCTA({
     editingClassName: EDITING_CLASS,
   });
 
-  const hasVariants = schema.variants && Object.keys(schema.variants).length > 0;
-
   return (
     <Section className={cn("group relative overflow-hidden", className)}>
       <SectionEditBar
         sectionType={schema.type}
         controls={sectionControls}
-        variants={hasVariants ? schema.variants : undefined}
+        variants={schema.variants}
         currentVariant={editingVariant}
         onVariantChange={setEditingVariant}
       />
