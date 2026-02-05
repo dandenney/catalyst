@@ -136,8 +136,64 @@ Variants enable per-component personalization for different audience segments.
 | Edit mode indicator (with language toggle) | `consumer-app/components/ui/edit-mode-indicator.tsx` |
 | Section edit sheet (with variant controls) | `consumer-app/components/ui/section-edit-sheet.tsx` |
 | URL param handling | `consumer-app/components/contexts/catalyst-wrapper.tsx` |
+| **Example: CTA pure display** | `consumer-app/components/sections/cta/cta.tsx` |
+| **Example: CTA editable wrapper** | `consumer-app/components/sections/cta/editable-cta.tsx` |
+| Component separation ADR | `docs/adr/001-component-separation-pattern.md` |
 
 ## Consumer App Patterns
+
+### Editable Wrapper Structure
+
+Use visual separators to organize editable wrapper files. This makes it easy to scan and find sections when opening a file cold.
+
+```typescript
+export function EditableMySection({ schema, onUpdate, ... }: Props) {
+  const { isEditMode, locale } = useCatalyst();
+  const { displaySchema, ... } = useVariantHandling({ schema });
+
+  const { fields } = displaySchema;
+
+  // ─────────────────────────────────────────────────────────────────
+  // Handlers
+  // ─────────────────────────────────────────────────────────────────
+
+  const handleTitleUpdate = (content: LocalizedContent) => { ... };
+
+  // All hooks must be called before conditional returns
+  const button = useEditableLink({ ... });
+
+  // ─────────────────────────────────────────────────────────────────
+  // View Mode
+  // ─────────────────────────────────────────────────────────────────
+
+  if (!isEditMode) {
+    return (
+      <MySection
+        title={getLocalizedValue(fields.title.value, locale)}
+        ...
+      />
+    );
+  }
+
+  // ─────────────────────────────────────────────────────────────────
+  // Edit Mode
+  // ─────────────────────────────────────────────────────────────────
+
+  return (
+    <Section>
+      <SectionEditBar ... />
+      <EditableText ... />
+      ...
+    </Section>
+  );
+}
+```
+
+The structure is always:
+1. **Top:** Context hooks, variant handling, field destructuring
+2. **Handlers:** Update functions (before hooks that reference them)
+3. **View Mode:** Early return with pure display component
+4. **Edit Mode:** Full editing UI
 
 ### Edit Mode Styling
 For visible edit outlines in consumer apps, pass custom classes to editable components:
@@ -167,7 +223,13 @@ For edit popovers with proper theming, use consumer-app's shadcn components (Pop
 
 ## Making a Component Editable (Complete Pattern)
 
-When asked to make a component editable, follow this complete pattern:
+We use a **two-file separation pattern** to keep display logic separate from edit logic. See [ADR 001](docs/adr/001-component-separation-pattern.md) for rationale.
+
+```
+components/sections/[name]/
+  [name].tsx           # Pure display - accepts resolved strings
+  editable-[name].tsx  # Edit wrapper - handles all edit infrastructure
+```
 
 ### Step 1: Define Schema Types (`packages/catalyst/src/core/types.ts`)
 
@@ -225,17 +287,48 @@ MySection: {
 },
 ```
 
-### Step 3: Create Schema Component (`consumer-app/components/sections/[name]/schema-[name].tsx`)
+### Step 3a: Create Pure Display Component (`consumer-app/components/sections/[name]/[name].tsx`)
 
-**IMPORTANT:** Always include variant support using `useVariantHandling` and pass variant props to `SectionEditBar`.
+**This component has ZERO knowledge of edit mode, localization, or schemas.**
+
+```typescript
+import { cn } from "@/lib/utils";
+import { Section } from "../../ui/section";
+
+interface MySectionProps {
+  title: string;        // Resolved string, not LocalizedContent
+  subtitle: string;
+  className?: string;
+}
+
+/**
+ * Pure display component.
+ * Accepts resolved strings - no edit mode awareness.
+ * For editable version, use EditableMySection.
+ */
+export function MySection({ title, subtitle, className }: MySectionProps) {
+  return (
+    <Section className={cn("group relative", className)}>
+      <h2>{title}</h2>
+      <p>{subtitle}</p>
+    </Section>
+  );
+}
+```
+
+### Step 3b: Create Editable Wrapper (`consumer-app/components/sections/[name]/editable-[name].tsx`)
+
+**This component contains ALL edit infrastructure.**
 
 ```typescript
 "use client";
 
 import {
   EditableText,
+  getLocalizedValue,
   type LocalizedContent,
   type MySectionSchema,
+  useCatalyst,
   useVariantHandling,
 } from "catalyst";
 
@@ -243,37 +336,56 @@ import { cn } from "@/lib/utils";
 import { Section } from "../../ui/section";
 import { type SectionControls } from "../../ui/section-controls";
 import SectionEditBar from "../../ui/section-edit-bar";
+import { MySection } from "./my-section";
 
-// Edit mode styling constants
 const EDIT_CLASS = "cursor-pointer outline-1 outline-dashed outline-primary/50 outline-offset-2";
 const EDITING_CLASS = "outline-2 outline-solid outline-primary outline-offset-2";
 
-interface SchemaMySectionProps {
+interface EditableMySectionProps {
   schema: MySectionSchema;
   onUpdate?: (schema: MySectionSchema) => void;
   className?: string;
   sectionControls?: SectionControls;
 }
 
-export default function SchemaMySection({
+export function EditableMySection({
   schema,
   onUpdate,
   className,
   sectionControls,
-}: SchemaMySectionProps) {
-  // ALWAYS use useVariantHandling for variant support
+}: EditableMySectionProps) {
+  const { isEditMode, locale } = useCatalyst();
   const { displaySchema, editingVariant, setEditingVariant, updateField } =
     useVariantHandling({ schema });
 
   const { fields } = displaySchema;
 
+  // Handlers (defined before any hooks that use them)
   const handleTitleUpdate = (content: LocalizedContent) => {
     updateField("title", content, onUpdate);
   };
 
+  // All hooks must be called before conditional returns
+  // (add useEditableLink etc. here if needed)
+
+  // ─────────────────────────────────────────────────────────────────
+  // View Mode - render pure display component
+  // ─────────────────────────────────────────────────────────────────
+  if (!isEditMode) {
+    return (
+      <MySection
+        title={getLocalizedValue(fields.title.value, locale)}
+        subtitle={getLocalizedValue(fields.subtitle.value, locale)}
+        className={className}
+      />
+    );
+  }
+
+  // ─────────────────────────────────────────────────────────────────
+  // Edit Mode - full editing UI
+  // ─────────────────────────────────────────────────────────────────
   return (
     <Section className={cn("group relative", className)}>
-      {/* SectionEditBar handles variant selection via sheet UI */}
       <SectionEditBar
         sectionType={schema.type}
         controls={sectionControls}
@@ -289,30 +401,25 @@ export default function SchemaMySection({
         editClassName={EDIT_CLASS}
         editingClassName={EDITING_CLASS}
       />
-      {/* ... rest of component */}
+      {/* ... rest of edit UI */}
     </Section>
   );
 }
 ```
 
-### Step 4: Update Page to Use Schema Component (`consumer-app/app/page.tsx`)
-
-1. Import the schema type and component
-2. Add to the `SectionSchema` union type
-3. Add a case in the switch statement (include `sectionControls` for move/remove functionality)
-4. Add to `addSectionOptions` array
+### Step 4: Update Page to Use Editable Component (`consumer-app/app/page.tsx`)
 
 ```typescript
-// Add import
-import SchemaMySection from "../components/sections/my-section/schema-my-section";
+// Add import (note: EditableMySection, not MySection)
+import { EditableMySection } from "../components/sections/my-section/editable-my-section";
 
 // Add to SectionSchema union
 type SectionSchema = ... | MySectionSchema;
 
-// Add case in switch statement (sectionControls is built in the map loop)
+// Add case in switch statement
 case "MySection":
   return (
-    <SchemaMySection
+    <EditableMySection
       key={section.schema.id}
       schema={section.schema as MySectionSchema}
       onUpdate={(schema) => updateSectionSchema(index, schema)}
@@ -330,11 +437,13 @@ case "MySection":
 - [ ] Field union updated if new field type added
 - [ ] `createDefault` function in `registry.ts`
 - [ ] Added to `COMPONENT_REGISTRY`
-- [ ] Schema component uses `useVariantHandling` hook
-- [ ] Schema component passes variant props to `SectionEditBar`
-- [ ] All text fields use `EditableText` with edit styling classes
-- [ ] Custom fields have popover editors with consumer-app UI components
-- [ ] Component accepts `sectionControls` prop and passes to `SectionEditBar`
+- [ ] **Pure display component** (`[name].tsx`) accepts resolved strings only
+- [ ] **Editable wrapper** (`editable-[name].tsx`) contains all edit logic
+- [ ] Editable wrapper uses `useVariantHandling` hook
+- [ ] Editable wrapper renders pure component in view mode
+- [ ] All hooks called before conditional return (React rules)
+- [ ] Edit mode uses `EditableText` with styling classes
+- [ ] Custom fields have popover editors with consumer-app UI
 - [ ] Added to `SectionSchema` union in `page.tsx`
 - [ ] Added case in switch statement in `page.tsx`
 - [ ] Added to `addSectionOptions` array in `page.tsx`
