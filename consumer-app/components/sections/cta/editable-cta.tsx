@@ -3,7 +3,10 @@
 import {
   type CTASectionSchema,
   EditableText,
+  type FieldToggleConfig,
+  getDisabledFields,
   getLocalizedValue,
+  isFieldEnabled,
   type LocalizedContent,
   useCatalyst,
   useEditableLink,
@@ -26,6 +29,13 @@ const EDIT_CLASS =
 const EDITING_CLASS =
   "outline-2 outline-solid outline-primary outline-offset-2";
 
+// Field toggle configuration for CTA
+const CTA_FIELD_TOGGLES: FieldToggleConfig[] = [
+  { key: "heading", label: "Heading" },
+  { key: "description", label: "Description" },
+  { key: "link", label: "Link" },
+];
+
 interface EditableCTAProps {
   schema: CTASectionSchema;
   onUpdate?: (schema: CTASectionSchema) => void;
@@ -44,7 +54,7 @@ export function EditableCTA({
   className,
   sectionControls,
 }: EditableCTAProps) {
-  const { isEditMode, locale } = useCatalyst();
+  const { isEditMode, locale, personalization } = useCatalyst();
   const { displaySchema, editingVariant, setEditingVariant, updateField } =
     useVariantHandling({ schema });
 
@@ -53,6 +63,49 @@ export function EditableCTA({
   // ─────────────────────────────────────────────────────────────────────────────
   // Handlers
   // ─────────────────────────────────────────────────────────────────────────────
+
+  // Resolve which disabled fields to show in the panel based on current editing context
+  const resolvedDisabledFields = getDisabledFields(schema, editingVariant);
+
+  const handleToggleField = (fieldKey: string) => {
+    if (!onUpdate) return;
+
+    const currentDisabled = [...resolvedDisabledFields];
+    const isCurrentlyDisabled = currentDisabled.includes(fieldKey);
+
+    const updatedDisabled = isCurrentlyDisabled
+      ? currentDisabled.filter((key) => key !== fieldKey)
+      : [...currentDisabled, fieldKey];
+
+    // Clean up: use undefined instead of empty arrays
+    const cleanDisabled = updatedDisabled.length > 0 ? updatedDisabled : undefined;
+
+    if (editingVariant) {
+      // Update variant-specific disabled fields
+      const updatedVariantDisabled = {
+        ...schema.variantDisabledFields,
+      };
+      if (cleanDisabled) {
+        updatedVariantDisabled[editingVariant] = cleanDisabled;
+      } else {
+        delete updatedVariantDisabled[editingVariant];
+      }
+      const updatedSchema: CTASectionSchema = {
+        ...schema,
+        variantDisabledFields: Object.keys(updatedVariantDisabled).length > 0
+          ? updatedVariantDisabled
+          : undefined,
+      };
+      onUpdate(updatedSchema);
+    } else {
+      // Update base disabled fields
+      const updatedSchema: CTASectionSchema = {
+        ...schema,
+        disabledFields: cleanDisabled,
+      };
+      onUpdate(updatedSchema);
+    }
+  };
 
   const handleHeadingUpdate = (content: LocalizedContent) => {
     updateField("heading", content, onUpdate);
@@ -95,18 +148,31 @@ export function EditableCTA({
   // View Mode - Pass strings to CTA slots
   // ─────────────────────────────────────────────────────────────────────────────
 
+  // Resolve the active variant for field visibility checks
+  const activeVariant = isEditMode ? editingVariant : personalization.segment;
+
   if (!isEditMode) {
     return (
       <CTA
-        heading={getLocalizedValue(fields.heading.value, locale)}
-        description={getLocalizedValue(fields.description.value, locale)}
+        heading={
+          isFieldEnabled(schema, "heading", activeVariant)
+            ? getLocalizedValue(fields.heading.value, locale)
+            : undefined
+        }
+        description={
+          isFieldEnabled(schema, "description", activeVariant)
+            ? getLocalizedValue(fields.description.value, locale)
+            : undefined
+        }
         link={
-          <a
-            href={getLocalizedValue(fields.linkUrl.value, locale)}
-            className="font-semibold text-blue-lighter"
-          >
-            {getLocalizedValue(fields.linkText.value, locale)}
-          </a>
+          isFieldEnabled(schema, "link", activeVariant) ? (
+            <a
+              href={getLocalizedValue(fields.linkUrl.value, locale)}
+              className="font-semibold text-blue-lighter"
+            >
+              {getLocalizedValue(fields.linkText.value, locale)}
+            </a>
+          ) : undefined
         }
         className={className}
       />
@@ -127,80 +193,89 @@ export function EditableCTA({
           variants={schema.variants}
           currentVariant={editingVariant}
           onVariantChange={setEditingVariant}
+          fieldToggles={CTA_FIELD_TOGGLES}
+          disabledFields={resolvedDisabledFields}
+          onToggleField={handleToggleField}
         />
       }
       heading={
-        <EditableText
-          content={fields.heading.value}
-          onUpdate={handleHeadingUpdate}
-          editClassName={EDIT_CLASS}
-          editingClassName={EDITING_CLASS}
-        />
+        isFieldEnabled(schema, "heading", activeVariant) ? (
+          <EditableText
+            content={fields.heading.value}
+            onUpdate={handleHeadingUpdate}
+            editClassName={EDIT_CLASS}
+            editingClassName={EDITING_CLASS}
+          />
+        ) : undefined
       }
       description={
-        <EditableText
-          content={fields.description.value}
-          onUpdate={handleDescriptionUpdate}
-          editClassName={EDIT_CLASS}
-          editingClassName={EDITING_CLASS}
-        />
+        isFieldEnabled(schema, "description", activeVariant) ? (
+          <EditableText
+            content={fields.description.value}
+            onUpdate={handleDescriptionUpdate}
+            editClassName={EDIT_CLASS}
+            editingClassName={EDITING_CLASS}
+          />
+        ) : undefined
       }
       link={
-        <Popover open={link.isOpen} onOpenChange={(open) => link.setIsOpen(open)}>
-          <PopoverTrigger asChild>
-            <a
-              href={undefined}
-              onClick={link.handleClick}
-              className={cn("font-semibold text-blue-lighter", link.editModeClassName)}
-              title="Click to edit link"
-            >
-              {link.displayText}
-            </a>
-          </PopoverTrigger>
-          <PopoverContent className="w-80" onKeyDown={link.handleKeyDown}>
-            <div className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="cta-link-text">
-                  Link Text ({locale.toUpperCase()})
-                </Label>
-                <Input
-                  id="cta-link-text"
-                  type="text"
-                  value={link.editText}
-                  onChange={(event) => link.setEditText(event.target.value)}
-                  placeholder="Learn more"
-                  autoFocus
-                />
-              </div>
+        isFieldEnabled(schema, "link", activeVariant) ? (
+          <Popover open={link.isOpen} onOpenChange={(open) => link.setIsOpen(open)}>
+            <PopoverTrigger asChild>
+              <a
+                href={undefined}
+                onClick={link.handleClick}
+                className={cn("font-semibold text-blue-lighter", link.editModeClassName)}
+                title="Click to edit link"
+              >
+                {link.displayText}
+              </a>
+            </PopoverTrigger>
+            <PopoverContent className="w-80" onKeyDown={link.handleKeyDown}>
+              <div className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="cta-link-text">
+                    Link Text ({locale.toUpperCase()})
+                  </Label>
+                  <Input
+                    id="cta-link-text"
+                    type="text"
+                    value={link.editText}
+                    onChange={(event) => link.setEditText(event.target.value)}
+                    placeholder="Learn more"
+                    autoFocus
+                  />
+                </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="cta-link-url">
-                  URL ({locale.toUpperCase()})
-                </Label>
-                <Input
-                  id="cta-link-url"
-                  type="text"
-                  value={link.editHref}
-                  onChange={(event) => link.setEditHref(event.target.value)}
-                  placeholder="https://example.com"
-                />
-              </div>
+                <div className="space-y-2">
+                  <Label htmlFor="cta-link-url">
+                    URL ({locale.toUpperCase()})
+                  </Label>
+                  <Input
+                    id="cta-link-url"
+                    type="text"
+                    value={link.editHref}
+                    onChange={(event) => link.setEditHref(event.target.value)}
+                    placeholder="https://example.com"
+                  />
+                </div>
 
-              <div className="flex gap-2 justify-end">
-                <Button variant="outline" size="sm" onClick={link.handleCancel}>
-                  Cancel
-                </Button>
-                <Button size="sm" onClick={link.handleSave}>
-                  Save
-                </Button>
-              </div>
+                <div className="flex gap-2 justify-end">
+                  <Button variant="outline" size="sm" onClick={link.handleCancel}>
+                    Cancel
+                  </Button>
+                  <Button size="sm" onClick={link.handleSave}>
+                    Save
+                  </Button>
+                </div>
 
-              <p className="text-xs text-muted-foreground">
-                Cmd+Enter to save, Esc to cancel
-              </p>
-            </div>
-          </PopoverContent>
-        </Popover>
+                <p className="text-xs text-muted-foreground">
+                  Cmd+Enter to save, Esc to cancel
+                </p>
+              </div>
+            </PopoverContent>
+          </Popover>
+        ) : undefined
       }
     />
   );

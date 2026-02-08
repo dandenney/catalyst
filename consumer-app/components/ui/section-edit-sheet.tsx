@@ -1,12 +1,14 @@
 "use client";
 
-import { useCatalyst } from "catalyst";
-import { ArrowDown, ArrowUp, Pencil, Plus, Users } from "lucide-react";
+import { type FieldToggleConfig, useCatalyst } from "catalyst";
+import { ArrowDown, ArrowUp, Pencil, Plus, ToggleLeft, Users } from "lucide-react";
 import { type ReactNode, useState } from "react";
 
 import { Button } from "./button";
 import { Input } from "./input";
+import { Label } from "./label";
 import { type SectionControls } from "./section-controls";
+import { Switch } from "./switch";
 import {
   Sheet,
   SheetContent,
@@ -24,6 +26,9 @@ interface SectionEditSheetProps {
   currentVariant?: string | null;
   onVariantChange?: (variant: string | null) => void;
   trigger?: ReactNode;
+  fieldToggles?: FieldToggleConfig[];
+  disabledFields?: string[];
+  onToggleField?: (fieldKey: string) => void;
 }
 
 export default function SectionEditSheet({
@@ -33,6 +38,9 @@ export default function SectionEditSheet({
   currentVariant,
   onVariantChange,
   trigger,
+  fieldToggles,
+  disabledFields,
+  onToggleField,
 }: SectionEditSheetProps) {
   const { isEditMode } = useCatalyst();
   const [isOpen, setIsOpen] = useState(false);
@@ -186,6 +194,42 @@ export default function SectionEditSheet({
                 {currentVariant
                   ? `Editing "${currentVariant}" variant. Changes only affect this variant.`
                   : "Editing base content. Create variants for personalized experiences."}
+              </p>
+            </div>
+          )}
+
+          {/* Content Toggles */}
+          {fieldToggles && fieldToggles.length > 0 && onToggleField && (
+            <div className="space-y-3">
+              <div className="flex items-center gap-2 text-muted-foreground text-xs font-semibold uppercase tracking-wide">
+                <ToggleLeft className="size-3.5" />
+                Content
+              </div>
+              <div className="space-y-3">
+                {fieldToggles.map((toggle) => {
+                  const isEnabled = !disabledFields?.includes(toggle.key);
+                  return (
+                    <div
+                      key={toggle.key}
+                      className="flex items-center justify-between"
+                    >
+                      <Label
+                        htmlFor={`toggle-${toggle.key}`}
+                        className="cursor-pointer text-sm font-medium"
+                      >
+                        {toggle.label}
+                      </Label>
+                      <Switch
+                        id={`toggle-${toggle.key}`}
+                        checked={isEnabled}
+                        onCheckedChange={() => onToggleField(toggle.key)}
+                      />
+                    </div>
+                  );
+                })}
+              </div>
+              <p className="text-xs text-muted-foreground">
+                Toggle fields on or off. Hidden field content is preserved.
               </p>
             </div>
           )}

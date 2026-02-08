@@ -119,6 +119,10 @@ export interface ComponentSchema {
   fields: Record<string, Field>;
   // Personalization variants
   variants?: Record<string, Partial<Record<string, Field>>>;
+  // Fields that are currently hidden (content preserved)
+  disabledFields?: string[];
+  // Per-variant disabled field overrides (falls back to disabledFields if not set)
+  variantDisabledFields?: Record<string, string[]>;
 }
 
 // Specific component schemas

@@ -5,12 +5,12 @@ import { cn } from "@/lib/utils";
 import { Section } from "../../ui/section";
 
 interface CTAProps {
-  /** Heading content - accepts string or ReactNode (e.g., EditableText) */
-  heading: ReactNode;
-  /** Description content - accepts string or ReactNode */
-  description: ReactNode;
-  /** Link element - accepts full anchor or editable link wrapper */
-  link: ReactNode;
+  /** Heading content - accepts string or ReactNode (e.g., EditableText). Omit to hide. */
+  heading?: ReactNode;
+  /** Description content - accepts string or ReactNode. Omit to hide. */
+  description?: ReactNode;
+  /** Link element - accepts full anchor or editable link wrapper. Omit to hide. */
+  link?: ReactNode;
   className?: string;
   /** Slot for edit chrome (e.g., SectionEditBar) - rendered before content */
   editBar?: ReactNode;
@@ -32,15 +32,21 @@ export function CTA({
     <Section className={cn("bg-upgrade-main group", className)}>
       {editBar}
       <div className="max-w-container mx-auto sm:flex sm:gap-8">
-        <h2 className="max-w-[288px] flex-shrink-0 text-2xl leading-tight font-semibold sm:leading-tight">
-          {heading}
-        </h2>
-        <div>
-          <p className="mb-2 text-main text-base">
-            {description}
-          </p>
-          {link}
-        </div>
+        {heading && (
+          <h2 className="max-w-[288px] flex-shrink-0 text-2xl leading-tight font-semibold sm:leading-tight">
+            {heading}
+          </h2>
+        )}
+        {(description || link) && (
+          <div>
+            {description && (
+              <p className="mb-2 text-main text-base">
+                {description}
+              </p>
+            )}
+            {link}
+          </div>
+        )}
       </div>
     </Section>
   );

@@ -42,6 +42,53 @@ export function applyPersonalization(
 }
 
 /**
+ * Configuration for a toggleable field in the edit sheet.
+ * Declared by each editable component to specify which fields can be toggled.
+ */
+export interface FieldToggleConfig {
+  /** The field key in the schema (e.g., 'heading', 'link') */
+  key: string;
+  /** Human-readable label for the toggle switch (e.g., 'Heading') */
+  label: string;
+}
+
+/**
+ * Check if a field is enabled (not in the disabledFields array).
+ * When a variant is specified, checks variantDisabledFields first,
+ * falling back to base disabledFields if the variant doesn't specify its own.
+ */
+export function isFieldEnabled(
+  schema: ComponentSchema,
+  fieldKey: string,
+  variant?: string | null
+): boolean {
+  if (variant) {
+    const variantDisabled = schema.variantDisabledFields?.[variant];
+    if (variantDisabled) {
+      return !variantDisabled.includes(fieldKey);
+    }
+  }
+  return !schema.disabledFields?.includes(fieldKey);
+}
+
+/**
+ * Get the resolved disabled fields array for a given variant context.
+ * Returns the variant-specific array if it exists, otherwise the base array.
+ */
+export function getDisabledFields(
+  schema: ComponentSchema,
+  variant?: string | null
+): string[] {
+  if (variant) {
+    const variantDisabled = schema.variantDisabledFields?.[variant];
+    if (variantDisabled) {
+      return variantDisabled;
+    }
+  }
+  return schema.disabledFields ?? [];
+}
+
+/**
  * Update a localized field value
  */
 export function updateLocalizedField(
