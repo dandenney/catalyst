@@ -29,6 +29,7 @@ interface SectionEditSheetProps {
   fieldToggles?: FieldToggleConfig[];
   disabledFields?: string[];
   onToggleField?: (fieldKey: string) => void;
+  settingsPanel?: ReactNode;
 }
 
 export default function SectionEditSheet({
@@ -41,6 +42,7 @@ export default function SectionEditSheet({
   fieldToggles,
   disabledFields,
   onToggleField,
+  settingsPanel,
 }: SectionEditSheetProps) {
   const { isEditMode } = useCatalyst();
   const [isOpen, setIsOpen] = useState(false);
@@ -233,6 +235,9 @@ export default function SectionEditSheet({
               </p>
             </div>
           )}
+
+          {/* Settings Panel (component-specific) */}
+          {settingsPanel}
 
           {/* Section Order Controls */}
           <div className="space-y-3">

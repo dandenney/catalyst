@@ -2,6 +2,7 @@
 
 import {
   type CTASectionSchema,
+  EditableImage,
   EditableText,
   type FieldToggleConfig,
   getDisabledFields,
@@ -31,6 +32,7 @@ const EDITING_CLASS =
 
 // Field toggle configuration for CTA
 const CTA_FIELD_TOGGLES: FieldToggleConfig[] = [
+  { key: "image", label: "Image" },
   { key: "heading", label: "Heading" },
   { key: "description", label: "Description" },
   { key: "link", label: "Link" },
@@ -115,6 +117,18 @@ export function EditableCTA({
     updateField("description", content, onUpdate);
   };
 
+  const handleImageUpdate = (data: { src: string; alt: LocalizedContent }) => {
+    if (!onUpdate) return;
+    const updatedSchema: CTASectionSchema = {
+      ...schema,
+      fields: {
+        ...schema.fields,
+        image: { ...schema.fields.image, src: data.src, alt: data.alt },
+      },
+    };
+    onUpdate(updatedSchema);
+  };
+
   const handleLinkUpdate = ({
     href,
     text,
@@ -154,6 +168,15 @@ export function EditableCTA({
   if (!isEditMode) {
     return (
       <CTA
+        image={
+          isFieldEnabled(schema, "image", activeVariant) ? (
+            <img
+              src={fields.image.src}
+              alt={getLocalizedValue(fields.image.alt, locale)}
+              className="w-full rounded"
+            />
+          ) : undefined
+        }
         heading={
           isFieldEnabled(schema, "heading", activeVariant)
             ? getLocalizedValue(fields.heading.value, locale)
@@ -197,6 +220,16 @@ export function EditableCTA({
           disabledFields={resolvedDisabledFields}
           onToggleField={handleToggleField}
         />
+      }
+      image={
+        isFieldEnabled(schema, "image", activeVariant) ? (
+          <EditableImage
+            src={fields.image.src}
+            alt={fields.image.alt}
+            onUpdate={handleImageUpdate}
+            className="w-full rounded"
+          />
+        ) : undefined
       }
       heading={
         isFieldEnabled(schema, "heading", activeVariant) ? (

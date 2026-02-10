@@ -1,19 +1,21 @@
 "use client";
 
 import {
+  type CardGridSectionSchema,
   createComponent,
   type CTASectionSchema,
   type PageSchema,
 } from "catalyst";
 import { useCallback, useEffect, useRef,useState } from "react";
 
-type SectionSchema = CTASectionSchema;
+type SectionSchema = CTASectionSchema | CardGridSectionSchema;
 
 interface Section {
   type: string;
   schema: SectionSchema;
 }
 
+import { EditableCardGrid } from "../components/sections/card-grid/editable-card-grid";
 import { EditableCTA } from "../components/sections/cta/editable-cta";
 import { EditModeIndicator } from "../components/ui/edit-mode-indicator";
 import { LayoutLines } from "../components/ui/layout-lines";
@@ -161,6 +163,7 @@ export default function Home() {
 
   const addSectionOptions: Array<{ type: SectionType; label: string }> = [
     { type: "CTASection", label: "CTA section" },
+    { type: "CardGridSection", label: "Card Grid" },
   ];
 
   const handleAddSection = (type: SectionType) => {
@@ -201,6 +204,15 @@ export default function Home() {
               <EditableCTA
                 key={section.schema.id}
                 schema={section.schema as CTASectionSchema}
+                onUpdate={(schema) => updateSectionSchema(index, schema)}
+                sectionControls={sectionControls}
+              />
+            );
+          case "CardGridSection":
+            return (
+              <EditableCardGrid
+                key={section.schema.id}
+                schema={section.schema as CardGridSectionSchema}
                 onUpdate={(schema) => updateSectionSchema(index, schema)}
                 sectionControls={sectionControls}
               />

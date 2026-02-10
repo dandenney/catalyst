@@ -110,7 +110,17 @@ export interface PricingPlanField {
   variant?: 'default' | 'glow' | 'glow-brand';
 }
 
-export type Field = TextField | RichTextField | ImageField | ListField | BadgeField | ButtonField | MockupField | LogoItemField | IconField | ItemField | StatItemField | FAQItemField | PricingPlanField;
+export interface CardItemField {
+  type: 'cardItem';
+  image: ImageField;
+  title: LocalizedContent;
+  description: LocalizedContent;
+  linkText: LocalizedContent;
+  linkUrl: LocalizedContent;
+  openInNewWindow?: boolean;
+}
+
+export type Field = TextField | RichTextField | ImageField | ListField | BadgeField | ButtonField | MockupField | LogoItemField | IconField | ItemField | StatItemField | FAQItemField | PricingPlanField | CardItemField;
 
 // Component schema base
 export interface ComponentSchema {
@@ -123,6 +133,8 @@ export interface ComponentSchema {
   disabledFields?: string[];
   // Per-variant disabled field overrides (falls back to disabledFields if not set)
   variantDisabledFields?: Record<string, string[]>;
+  // Non-content configuration (not localized, not variant-overridden)
+  settings?: Record<string, unknown>;
 }
 
 // Specific component schemas
@@ -231,6 +243,21 @@ export interface PricingSectionSchema extends ComponentSchema {
     title: TextField;
     description: TextField;
     plans: ListField<PricingPlanField>;
+  };
+}
+
+export interface CardGridSectionSchema extends ComponentSchema {
+  type: 'CardGridSection';
+  fields: {
+    heading: TextField;
+    subtitle: TextField;
+    cards: ListField<CardItemField>;
+  };
+  settings: {
+    maxPerRow: 2 | 3 | 4;
+    imageMode: 'natural' | 'squared';
+    ctaStyle: 'link' | 'button';
+    theme: 'light' | 'dark';
   };
 }
 
