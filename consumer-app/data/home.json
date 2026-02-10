@@ -87,6 +87,124 @@
           }
         }
       }
+    },
+    {
+      "id": "card-grid-1770691637844",
+      "type": "CardGridSection",
+      "fields": {
+        "heading": {
+          "type": "text",
+          "value": {
+            "en": "Explore our resources, yo"
+          }
+        },
+        "subtitle": {
+          "type": "text",
+          "value": {
+            "en": "Curated content to help you get the most out of our platform."
+          }
+        },
+        "cards": {
+          "type": "list",
+          "value": [
+            {
+              "type": "cardItem",
+              "image": {
+                "type": "image",
+                "src": "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=600&h=400&fit=crop",
+                "alt": {
+                  "en": "Getting started guide"
+                }
+              },
+              "title": {
+                "en": "Getting Started Guide"
+              },
+              "description": {
+                "en": "Learn the basics and set up your first project in minutes."
+              },
+              "linkText": {
+                "en": "Read the guide"
+              },
+              "linkUrl": {
+                "en": "/docs/getting-started"
+              }
+            },
+            {
+              "type": "cardItem",
+              "image": {
+                "type": "image",
+                "src": "https://images.unsplash.com/photo-1551434678-e076c223a692?w=600&h=400&fit=crop",
+                "alt": {
+                  "en": "Best practices"
+                }
+              },
+              "title": {
+                "en": "Best Practices"
+              },
+              "description": {
+                "en": "Tips and patterns from teams who have shipped great products."
+              },
+              "linkText": {
+                "en": "Learn more"
+              },
+              "linkUrl": {
+                "en": "/docs/best-practices"
+              }
+            },
+            {
+              "type": "cardItem",
+              "image": {
+                "type": "image",
+                "src": "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=600&h=400&fit=crop",
+                "alt": {
+                  "en": "New card image"
+                }
+              },
+              "title": {
+                "en": "New Card"
+              },
+              "description": {
+                "en": "Add a description for this card."
+              },
+              "linkText": {
+                "en": "Learn more"
+              },
+              "linkUrl": {
+                "en": "#"
+              },
+              "openInNewWindow": true
+            },
+            {
+              "type": "cardItem",
+              "image": {
+                "type": "image",
+                "src": "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=600&h=400&fit=crop",
+                "alt": {
+                  "en": "New card image"
+                }
+              },
+              "title": {
+                "en": "New Card"
+              },
+              "description": {
+                "en": "Add a description for this card."
+              },
+              "linkText": {
+                "en": "Learn more"
+              },
+              "linkUrl": {
+                "en": "#"
+              }
+            }
+          ]
+        }
+      },
+      "settings": {
+        "maxPerRow": 4,
+        "imageMode": "natural",
+        "ctaStyle": "link",
+        "theme": "dark"
+      }
     }
   ]
 }
