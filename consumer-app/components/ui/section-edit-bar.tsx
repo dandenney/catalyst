@@ -2,7 +2,7 @@
 
 import { type FieldToggleConfig, useCatalyst } from "catalyst";
 import { Pencil } from "lucide-react";
-import { type ReactNode } from "react";
+import { type ReactNode, useState } from "react";
 
 import { type SectionControls } from "./section-controls";
 import SectionEditSheet from "./section-edit-sheet";
@@ -38,6 +38,7 @@ export default function SectionEditBar({
   settingsPanel,
 }: SectionEditBarProps) {
   const { isEditMode } = useCatalyst();
+  const [isOpen, setIsOpen] = useState(false);
 
   if (!isEditMode || !controls) return null;
 
@@ -47,33 +48,34 @@ export default function SectionEditBar({
     <div className="relative mb-8">
       <div className="absolute left-0 right-0 top-1/2 h-px bg-blue-500/40" />
       <div className="max-w-container mx-auto flex justify-center">
-        <SectionEditSheet
-          sectionType={sectionType}
-          controls={controls}
-          variants={variants}
-          currentVariant={currentVariant}
-          onVariantChange={onVariantChange}
-          fieldToggles={fieldToggles}
-          disabledFields={disabledFields}
-          onToggleField={onToggleField}
-          settingsPanel={settingsPanel}
-          trigger={
-            <button
-              type="button"
-              className="relative z-10 flex items-center gap-3 rounded-full bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-lg transition hover:bg-blue-500"
-              aria-label={label}
-              title={label}
-            >
-              <span className="flex flex-col items-start leading-tight">
-                <span className="font-semibold">{label}</span>
-              </span>
-              <span className="flex size-7 items-center justify-center rounded-full bg-blue-500 text-white shadow-md">
-                <Pencil className="size-4" />
-              </span>
-            </button>
-          }
-        />
+        <button
+          type="button"
+          className="relative z-10 flex items-center gap-3 rounded-full bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-lg transition hover:bg-blue-500"
+          aria-label={label}
+          title={label}
+          onClick={() => setIsOpen(true)}
+        >
+          <span className="flex flex-col items-start leading-tight">
+            <span className="font-semibold">{label}</span>
+          </span>
+          <span className="flex size-7 items-center justify-center rounded-full bg-blue-500 text-white shadow-md">
+            <Pencil className="size-4" />
+          </span>
+        </button>
       </div>
+      <SectionEditSheet
+        sectionType={sectionType}
+        controls={controls}
+        variants={variants}
+        currentVariant={currentVariant}
+        onVariantChange={onVariantChange}
+        open={isOpen}
+        onOpenChange={setIsOpen}
+        fieldToggles={fieldToggles}
+        disabledFields={disabledFields}
+        onToggleField={onToggleField}
+        settingsPanel={settingsPanel}
+      />
     </div>
   );
 }
