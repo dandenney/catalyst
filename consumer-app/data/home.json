@@ -200,8 +200,8 @@
         }
       },
       "settings": {
-        "maxPerRow": 4,
-        "imageMode": "natural",
+        "maxPerRow": 3,
+        "imageMode": "squared",
         "ctaStyle": "link",
         "theme": "dark"
       }
