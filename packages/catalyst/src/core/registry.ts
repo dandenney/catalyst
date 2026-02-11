@@ -3,7 +3,7 @@
  * Central registry of all available components for the page builder
  */
 
-import { ComponentSchema, HeroBannerSchema, FeatureListSchema, CTASectionSchema, HeroSectionSchema, LogosSectionSchema, ItemsSectionSchema, StatsSectionSchema, FAQSectionSchema, FooterSectionSchema, PricingSectionSchema } from './types';
+import { ComponentSchema, HeroBannerSchema, FeatureListSchema, CTASectionSchema, HeroSectionSchema, LogosSectionSchema, ItemsSectionSchema, StatsSectionSchema, FAQSectionSchema, FooterSectionSchema, PricingSectionSchema, CardGridSectionSchema } from './types';
 
 export interface ComponentMetadata {
   type: string;
@@ -89,11 +89,11 @@ function createDefaultCTASection(): CTASectionSchema {
         type: 'text',
         value: { en: 'Join thousands of users who are already using our platform.' },
       },
-      buttonText: {
+      linkText: {
         type: 'text',
         value: { en: 'Get Started' },
       },
-      buttonUrl: {
+      linkUrl: {
         type: 'text',
         value: { en: '/signup' },
       },
@@ -524,6 +524,74 @@ function createDefaultFooterSection(): FooterSectionSchema {
 }
 
 /**
+ * Creates a default CardGridSection component
+ */
+function createDefaultCardGrid(): CardGridSectionSchema {
+  return {
+    id: `card-grid-${Date.now()}`,
+    type: 'CardGridSection',
+    fields: {
+      heading: {
+        type: 'text',
+        value: { en: 'Explore our resources' },
+      },
+      subtitle: {
+        type: 'text',
+        value: { en: 'Curated content to help you get the most out of our platform.' },
+      },
+      cards: {
+        type: 'list',
+        value: [
+          {
+            type: 'cardItem',
+            image: {
+              type: 'image',
+              src: 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=600&h=400&fit=crop',
+              alt: { en: 'Getting started guide' },
+            },
+            title: { en: 'Getting Started Guide' },
+            description: { en: 'Learn the basics and set up your first project in minutes.' },
+            linkText: { en: 'Read the guide' },
+            linkUrl: { en: '/docs/getting-started' },
+          },
+          {
+            type: 'cardItem',
+            image: {
+              type: 'image',
+              src: 'https://images.unsplash.com/photo-1551434678-e076c223a692?w=600&h=400&fit=crop',
+              alt: { en: 'Best practices' },
+            },
+            title: { en: 'Best Practices' },
+            description: { en: 'Tips and patterns from teams who have shipped great products.' },
+            linkText: { en: 'Learn more' },
+            linkUrl: { en: '/docs/best-practices' },
+          },
+          {
+            type: 'cardItem',
+            image: {
+              type: 'image',
+              src: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=600&h=400&fit=crop',
+              alt: { en: 'Community' },
+            },
+            title: { en: 'Join the Community' },
+            description: { en: 'Connect with other developers and share your experience.' },
+            linkText: { en: 'Join now' },
+            linkUrl: { en: '/community' },
+            openInNewWindow: true,
+          },
+        ],
+      },
+    },
+    settings: {
+      maxPerRow: 3,
+      imageMode: 'natural',
+      ctaStyle: 'link',
+      theme: 'light',
+    },
+  };
+}
+
+/**
  * Registry of all available components
  */
 export const COMPONENT_REGISTRY: Record<string, ComponentMetadata> = {
@@ -616,6 +684,15 @@ export const COMPONENT_REGISTRY: Record<string, ComponentMetadata> = {
     icon: '🔻',
     thumbnail: '/component-previews/FooterSection.png',
     createDefault: createDefaultFooterSection,
+  },
+  CardGridSection: {
+    type: 'CardGridSection',
+    label: 'Card Grid',
+    description: 'Grid of cards with images, descriptions, and CTAs',
+    category: 'content',
+    icon: '🃏',
+    thumbnail: '/component-previews/CardGridSection.png',
+    createDefault: createDefaultCardGrid,
   },
 };
 

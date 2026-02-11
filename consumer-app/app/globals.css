@@ -1,5 +1,5 @@
 @import "tailwindcss";
-@import "../styles/utils.css";
+@import "../styles/globals.css";
 
 @import "tw-animate-css";
 
@@ -54,6 +54,8 @@
 
   --spacing-container: 1280px;
   --spacing-container-lg: 1536px;
+
+  --max-width-container: 1140px;
 
   --shadow-md: 0 4px 6px -1px var(--shadow), 0 2px 4px -2px var(--shadow);
   --shadow-xl: 0 20px 25px -5px var(--shadow), 0 8px 10px -6px var(--shadow);

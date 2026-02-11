@@ -1,0 +1,210 @@
+{
+  "id": "home-page",
+  "slug": "home",
+  "metadata": {
+    "title": {
+      "en": "Home",
+      "es": "Inicio"
+    },
+    "description": {
+      "en": "Welcome to our platform",
+      "es": "Bienvenido a nuestra plataforma"
+    }
+  },
+  "components": [
+    {
+      "id": "cta-section-1",
+      "type": "CTASection",
+      "fields": {
+        "heading": {
+          "type": "text",
+          "value": {
+            "en": "What if I go really long with this? How long can I go? ",
+            "es": "¿Listo para comenzar?"
+          }
+        },
+        "description": {
+          "type": "text",
+          "value": {
+            "en": "Go beyond off-the-shelf courses. With DataCamp, you can create private learning tracks, projects, and assessments tailored to your products, data, and workflows.",
+            "es": "Únete a miles de desarrolladores construyendo con nuestra plataforma."
+          }
+        },
+        "linkText": {
+          "type": "text",
+          "value": {
+            "en": "Get Started",
+            "es": "Comenzar"
+          }
+        },
+        "linkUrl": {
+          "type": "text",
+          "value": {
+            "en": "/signup",
+            "es": "/registro"
+          }
+        },
+        "image": {
+          "type": "image",
+          "src": "",
+          "alt": {
+            "en": "",
+            "es": ""
+          }
+        }
+      },
+      "variants": {
+        "finance": {
+          "heading": {
+            "type": "text",
+            "value": {
+              "en": "Ready to transform your financial infrastructures?",
+              "es": "¿Listo para transformar tu infraestructura financiera?"
+            }
+          },
+          "description": {
+            "type": "text",
+            "value": {
+              "en": "Join hundreds of financial institutions already using our platform.",
+              "es": "Únete a cientos de instituciones financieras que ya usan nuestra plataforma."
+            }
+          }
+        },
+        "startup": {
+          "heading": {
+            "type": "text",
+            "value": {
+              "en": "Ready to ship your next big thing?",
+              "es": "¿Listo para lanzar tu próximo gran proyecto?"
+            }
+          },
+          "description": {
+            "type": "text",
+            "value": {
+              "en": "Join thousands of startups building faster with our tools.",
+              "es": "Únete a miles de startups construyendo más rápido con nuestras herramientas."
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "card-grid-1770691637844",
+      "type": "CardGridSection",
+      "fields": {
+        "heading": {
+          "type": "text",
+          "value": {
+            "en": "Explore our resources, yo"
+          }
+        },
+        "subtitle": {
+          "type": "text",
+          "value": {
+            "en": "Curated content to help you get the most out of our platform."
+          }
+        },
+        "cards": {
+          "type": "list",
+          "value": [
+            {
+              "type": "cardItem",
+              "image": {
+                "type": "image",
+                "src": "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=600&h=400&fit=crop",
+                "alt": {
+                  "en": "Getting started guide"
+                }
+              },
+              "title": {
+                "en": "Getting Started Guide"
+              },
+              "description": {
+                "en": "Learn the basics and set up your first project in minutes."
+              },
+              "linkText": {
+                "en": "Read the guide"
+              },
+              "linkUrl": {
+                "en": "/docs/getting-started"
+              }
+            },
+            {
+              "type": "cardItem",
+              "image": {
+                "type": "image",
+                "src": "https://images.unsplash.com/photo-1551434678-e076c223a692?w=600&h=400&fit=crop",
+                "alt": {
+                  "en": "Best practices"
+                }
+              },
+              "title": {
+                "en": "Best Practices"
+              },
+              "description": {
+                "en": "Tips and patterns from teams who have shipped great products."
+              },
+              "linkText": {
+                "en": "Learn more"
+              },
+              "linkUrl": {
+                "en": "/docs/best-practices"
+              }
+            },
+            {
+              "type": "cardItem",
+              "image": {
+                "type": "image",
+                "src": "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=600&h=400&fit=crop",
+                "alt": {
+                  "en": "New card image"
+                }
+              },
+              "title": {
+                "en": "New Card"
+              },
+              "description": {
+                "en": "Add a description for this card."
+              },
+              "linkText": {
+                "en": "Learn more"
+              },
+              "linkUrl": {
+                "en": "#"
+              },
+              "openInNewWindow": true
+            },
+            {
+              "type": "cardItem",
+              "image": {
+                "type": "image",
+                "src": "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=600&h=400&fit=crop",
+                "alt": {
+                  "en": "New card image"
+                }
+              },
+              "title": {
+                "en": "New Card"
+              },
+              "description": {
+                "en": "Add a description for this card."
+              },
+              "linkText": {
+                "en": "Learn more"
+              },
+              "linkUrl": {
+                "en": "#"
+              }
+            }
+          ]
+        }
+      },
+      "settings": {
+        "maxPerRow": 3,
+        "imageMode": "squared",
+        "ctaStyle": "link",
+        "theme": "dark"
+      }
+    }
+  ]
+}

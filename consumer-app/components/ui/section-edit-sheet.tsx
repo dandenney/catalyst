@@ -1,11 +1,14 @@
 "use client";
 
-import { ArrowDown, ArrowUp, Pencil } from "lucide-react";
-import { useState, type ReactNode } from "react";
-
-import { useCatalyst } from "catalyst";
+import { type FieldToggleConfig, useCatalyst } from "catalyst";
+import { ArrowDown, ArrowUp, Pencil, Plus, ToggleLeft, Users } from "lucide-react";
+import { type ReactNode, useState } from "react";
 
 import { Button } from "./button";
+import { Input } from "./input";
+import { Label } from "./label";
+import { type SectionControls } from "./section-controls";
+import { Switch } from "./switch";
 import {
   Sheet,
   SheetContent,
@@ -15,7 +18,6 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "./sheet";
-import { type SectionControls } from "./section-controls";
 
 interface SectionEditSheetProps {
   sectionType: string;
@@ -24,6 +26,10 @@ interface SectionEditSheetProps {
   currentVariant?: string | null;
   onVariantChange?: (variant: string | null) => void;
   trigger?: ReactNode;
+  fieldToggles?: FieldToggleConfig[];
+  disabledFields?: string[];
+  onToggleField?: (fieldKey: string) => void;
+  settingsPanel?: ReactNode;
 }
 
 export default function SectionEditSheet({
@@ -33,9 +39,15 @@ export default function SectionEditSheet({
   currentVariant,
   onVariantChange,
   trigger,
+  fieldToggles,
+  disabledFields,
+  onToggleField,
+  settingsPanel,
 }: SectionEditSheetProps) {
   const { isEditMode } = useCatalyst();
   const [isOpen, setIsOpen] = useState(false);
+  const [isCreatingVariant, setIsCreatingVariant] = useState(false);
+  const [newVariantName, setNewVariantName] = useState("");
 
   if (!isEditMode || !controls) return null;
 
@@ -53,13 +65,18 @@ export default function SectionEditSheet({
   };
 
   const variantKeys = variants ? Object.keys(variants) : [];
-  const hasVariants = variantKeys.length > 0;
-  let baseValue = "__base__";
-  if (variantKeys.includes(baseValue)) {
-    baseValue = "__base_default__";
-  }
-  const selectOptions = [baseValue, ...variantKeys];
-  const selectedVariant = currentVariant ?? baseValue;
+
+  const handleCreateVariant = () => {
+    if (!newVariantName.trim() || !onVariantChange) return;
+    onVariantChange(newVariantName.trim());
+    setNewVariantName("");
+    setIsCreatingVariant(false);
+  };
+
+  const handleCancelCreate = () => {
+    setNewVariantName("");
+    setIsCreatingVariant(false);
+  };
 
   return (
     <Sheet open={isOpen} onOpenChange={setIsOpen}>
@@ -82,52 +99,173 @@ export default function SectionEditSheet({
           <SheetTitle>{sectionType}</SheetTitle>
           <SheetDescription>Section controls</SheetDescription>
         </SheetHeader>
-        <div className="space-y-3 py-6">
-          {hasVariants && onVariantChange && selectedVariant && (
+        <div className="space-y-6 py-6">
+          {/* Variant Section - Always visible when onVariantChange is provided */}
+          {onVariantChange && (
             <div className="space-y-3">
-              <div className="text-muted-foreground text-xs font-semibold uppercase tracking-wide">
-                Variant
+              <div className="flex items-center gap-2 text-muted-foreground text-xs font-semibold uppercase tracking-wide">
+                <Users className="size-3.5" />
+                Personalization Variants
               </div>
-              <div className="relative">
-                <select
-                  value={selectedVariant}
-                  onChange={(event) => {
-                    const value = event.target.value;
-                    onVariantChange(value === baseValue ? null : value);
-                  }}
-                  className="border-input bg-background text-foreground h-10 w-full appearance-none rounded-md border px-3 text-sm shadow-xs focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-ring"
-                >
-                  <option value={baseValue}>Default</option>
+
+              {/* Variant Selector */}
+              <div className="space-y-2">
+                <div className="flex flex-wrap gap-2">
+                  {/* Base/Default option */}
+                  <button
+                    type="button"
+                    onClick={() => onVariantChange(null)}
+                    className={`
+                      px-3 py-1.5 text-sm font-medium rounded-md transition-colors
+                      ${
+                        currentVariant === null
+                          ? "bg-primary text-primary-foreground"
+                          : "bg-muted hover:bg-muted/80 text-muted-foreground"
+                      }
+                    `}
+                  >
+                    Base
+                  </button>
+
+                  {/* Existing variants */}
                   {variantKeys.map((variant) => (
-                    <option key={variant} value={variant}>
+                    <button
+                      key={variant}
+                      type="button"
+                      onClick={() => onVariantChange(variant)}
+                      className={`
+                        px-3 py-1.5 text-sm font-medium rounded-md transition-colors
+                        ${
+                          currentVariant === variant
+                            ? "bg-amber-500 text-white"
+                            : "bg-muted hover:bg-muted/80 text-muted-foreground"
+                        }
+                      `}
+                    >
                       {variant}
-                    </option>
+                    </button>
                   ))}
-                </select>
+                </div>
+
+                {/* Create new variant */}
+                {isCreatingVariant ? (
+                  <div className="flex gap-2 mt-3">
+                    <Input
+                      type="text"
+                      value={newVariantName}
+                      onChange={(e) => setNewVariantName(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") handleCreateVariant();
+                        if (e.key === "Escape") handleCancelCreate();
+                      }}
+                      placeholder="e.g., premium, mobile, finance..."
+                      autoFocus
+                      className="flex-1"
+                    />
+                    <Button
+                      type="button"
+                      size="sm"
+                      onClick={handleCreateVariant}
+                      disabled={!newVariantName.trim()}
+                    >
+                      Add
+                    </Button>
+                    <Button
+                      type="button"
+                      size="sm"
+                      variant="ghost"
+                      onClick={handleCancelCreate}
+                    >
+                      Cancel
+                    </Button>
+                  </div>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={() => setIsCreatingVariant(true)}
+                    className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors mt-2"
+                  >
+                    <Plus className="size-3.5" />
+                    Add variant
+                  </button>
+                )}
               </div>
+
+              {/* Help text */}
+              <p className="text-xs text-muted-foreground">
+                {currentVariant
+                  ? `Editing "${currentVariant}" variant. Changes only affect this variant.`
+                  : "Editing base content. Create variants for personalized experiences."}
+              </p>
             </div>
           )}
-          <div className="flex items-center gap-2">
-            <Button
-              type="button"
-              variant="outline"
-              disabled={!controls.canMoveUp}
-              onClick={handleMoveUp}
-              className="flex-1 justify-center gap-2"
-            >
-              <ArrowUp className="size-4" />
-              Move up
-            </Button>
-            <Button
-              type="button"
-              variant="outline"
-              disabled={!controls.canMoveDown}
-              onClick={handleMoveDown}
-              className="flex-1 justify-center gap-2"
-            >
-              <ArrowDown className="size-4" />
-              Move down
-            </Button>
+
+          {/* Content Toggles */}
+          {fieldToggles && fieldToggles.length > 0 && onToggleField && (
+            <div className="space-y-3">
+              <div className="flex items-center gap-2 text-muted-foreground text-xs font-semibold uppercase tracking-wide">
+                <ToggleLeft className="size-3.5" />
+                Content
+              </div>
+              <div className="space-y-3">
+                {fieldToggles.map((toggle) => {
+                  const isEnabled = !disabledFields?.includes(toggle.key);
+                  return (
+                    <div
+                      key={toggle.key}
+                      className="flex items-center justify-between"
+                    >
+                      <Label
+                        htmlFor={`toggle-${toggle.key}`}
+                        className="cursor-pointer text-sm font-medium"
+                      >
+                        {toggle.label}
+                      </Label>
+                      <Switch
+                        id={`toggle-${toggle.key}`}
+                        checked={isEnabled}
+                        onCheckedChange={() => onToggleField(toggle.key)}
+                      />
+                    </div>
+                  );
+                })}
+              </div>
+              <p className="text-xs text-muted-foreground">
+                Toggle fields on or off. Hidden field content is preserved.
+              </p>
+            </div>
+          )}
+
+          {/* Settings Panel (component-specific) */}
+          {settingsPanel}
+
+          {/* Section Order Controls */}
+          <div className="space-y-3">
+            <div className="text-muted-foreground text-xs font-semibold uppercase tracking-wide">
+              Section Order
+            </div>
+            <div className="flex items-center gap-2">
+              <Button
+                type="button"
+                variant="outline"
+                disabled={!controls.canMoveUp}
+                onClick={handleMoveUp}
+                className="flex-1 justify-center gap-2"
+              >
+                <ArrowUp className="size-4" />
+                Move up
+              </Button>
+              <Button
+                type="button"
+                variant="outline"
+                disabled={!controls.canMoveDown}
+                onClick={handleMoveDown}
+                className="flex-1 justify-center gap-2"
+              >
+                <ArrowDown className="size-4" />
+                Move down
+              </Button>
+            </div>
           </div>
         </div>
         <div className="flex-1" />

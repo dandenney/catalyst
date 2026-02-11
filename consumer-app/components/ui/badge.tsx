@@ -1,55 +1,38 @@
-import { Slot } from "@radix-ui/react-slot";
-import { cva, type VariantProps } from "class-variance-authority";
 import * as React from "react";
 
 import { cn } from "@/lib/utils";
 
-const badgeVariants = cva(
-  "inline-flex items-center rounded-full border border-border/100 dark:border-border/20 text-xs font-semibold transition-colors focus:outline-hidden focus:ring-2 focus:ring-ring focus:ring-offset-2 gap-2",
-  {
-    variants: {
-      variant: {
-        default:
-          "border-transparent bg-primary text-primary-foreground dark:shadow-sm dark:border-transparent",
-        brand:
-          "border-transparent bg-brand text-primary-foreground dark:shadow-sm dark:border-transparent",
-        "brand-secondary":
-          "border-transparent bg-brand-foreground/20 text-brand dark:border-transparent",
-        secondary:
-          "border-transparent bg-secondary text-secondary-foreground dark:shadow-sm dark:border-transparent",
-        destructive:
-          "border-transparent bg-destructive/30 text-destructive-foreground dark:shadow-sm dark:border-transparent",
-        outline: "text-foreground",
-      },
-      size: {
-        default: "px-2.5 py-1",
-        sm: "px-1",
-      },
-    },
-    defaultVariants: {
-      variant: "default",
-      size: "default",
-    },
-  },
-);
+interface BadgeProps extends React.HTMLAttributes<HTMLSpanElement> {
+  variant?: "default" | "brand" | "secondary" | "outline";
+  size?: "sm" | "md" | "lg";
+}
 
 function Badge({
   className,
-  variant,
-  size,
-  asChild = false,
+  variant = "default",
+  size = "md",
   ...props
-}: React.ComponentProps<"span"> &
-  VariantProps<typeof badgeVariants> & { asChild?: boolean }) {
-  const Comp = asChild ? Slot : "span";
-
+}: BadgeProps) {
   return (
-    <Comp
-      data-slot="badge"
-      className={cn(badgeVariants({ variant, size }), className)}
+    <span
+      className={cn(
+        "inline-flex items-center rounded-full font-medium",
+        {
+          // Variants
+          "bg-primary text-primary-foreground": variant === "default",
+          "bg-primary/10 text-primary": variant === "brand",
+          "bg-secondary text-secondary-foreground": variant === "secondary",
+          "border border-border bg-transparent": variant === "outline",
+          // Sizes
+          "px-2 py-0.5 text-xs": size === "sm",
+          "px-2.5 py-0.5 text-sm": size === "md",
+          "px-3 py-1 text-sm": size === "lg",
+        },
+        className
+      )}
       {...props}
     />
   );
 }
 
-export { Badge, badgeVariants };
+export { Badge };

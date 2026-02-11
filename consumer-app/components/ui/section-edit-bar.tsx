@@ -1,8 +1,8 @@
 "use client";
 
+import { type FieldToggleConfig, useCatalyst } from "catalyst";
 import { Pencil } from "lucide-react";
-
-import { useCatalyst } from "catalyst";
+import { type ReactNode } from "react";
 
 import { type SectionControls } from "./section-controls";
 import SectionEditSheet from "./section-edit-sheet";
@@ -20,6 +20,10 @@ interface SectionEditBarProps {
   variants?: Record<string, unknown>;
   currentVariant?: string | null;
   onVariantChange?: (variant: string | null) => void;
+  fieldToggles?: FieldToggleConfig[];
+  disabledFields?: string[];
+  onToggleField?: (fieldKey: string) => void;
+  settingsPanel?: ReactNode;
 }
 
 export default function SectionEditBar({
@@ -28,6 +32,10 @@ export default function SectionEditBar({
   variants,
   currentVariant,
   onVariantChange,
+  fieldToggles,
+  disabledFields,
+  onToggleField,
+  settingsPanel,
 }: SectionEditBarProps) {
   const { isEditMode } = useCatalyst();
 
@@ -45,6 +53,10 @@ export default function SectionEditBar({
           variants={variants}
           currentVariant={currentVariant}
           onVariantChange={onVariantChange}
+          fieldToggles={fieldToggles}
+          disabledFields={disabledFields}
+          onToggleField={onToggleField}
+          settingsPanel={settingsPanel}
           trigger={
             <button
               type="button"
