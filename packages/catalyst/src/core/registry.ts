@@ -81,6 +81,10 @@ function createDefaultCTASection(): CTASectionSchema {
     id: `cta-${Date.now()}`,
     type: 'CTASection',
     fields: {
+      label: {
+        type: 'text',
+        value: { en: 'Get Started' },
+      },
       heading: {
         type: 'text',
         value: { en: 'Ready to get started?' },

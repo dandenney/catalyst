@@ -164,6 +164,7 @@ export interface FeatureListSchema extends ComponentSchema {
 export interface CTASectionSchema extends ComponentSchema {
   type: 'CTASection';
   fields: {
+    label: TextField;
     heading: TextField;
     description: TextField;
     linkText: TextField;

@@ -16,6 +16,13 @@
       "id": "cta-section-1",
       "type": "CTASection",
       "fields": {
+        "label": {
+          "type": "text",
+          "value": {
+            "en": "Get Started",
+            "es": "Comenzar"
+          }
+        },
         "heading": {
           "type": "text",
           "value": {
@@ -173,35 +180,13 @@
                 "en": "#"
               },
               "openInNewWindow": true
-            },
-            {
-              "type": "cardItem",
-              "image": {
-                "type": "image",
-                "src": "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=600&h=400&fit=crop",
-                "alt": {
-                  "en": "New card image"
-                }
-              },
-              "title": {
-                "en": "New Card"
-              },
-              "description": {
-                "en": "Add a description for this card."
-              },
-              "linkText": {
-                "en": "Learn more"
-              },
-              "linkUrl": {
-                "en": "#"
-              }
             }
           ]
         }
       },
       "settings": {
         "maxPerRow": 3,
-        "imageMode": "squared",
+        "imageMode": "natural",
         "ctaStyle": "link",
         "theme": "dark"
       }
