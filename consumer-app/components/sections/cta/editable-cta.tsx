@@ -30,8 +30,13 @@ const EDIT_CLASS =
 const EDITING_CLASS =
   "outline-2 outline-solid outline-primary outline-offset-2";
 
+// Link style shared between view and edit mode
+const LINK_CLASS =
+  "inline-flex cursor-pointer items-center gap-2 rounded-md border border-white/20 bg-gradient-to-b from-white to-[#C0C7D0] px-5 py-2.5 text-sm font-medium text-[#0A0E1A] transition-all duration-200 hover:from-white hover:to-white hover:shadow-[0_0_16px_rgba(255,255,255,0.15)]";
+
 // Field toggle configuration for CTA
 const CTA_FIELD_TOGGLES: FieldToggleConfig[] = [
+  { key: "label", label: "Label" },
   { key: "image", label: "Image" },
   { key: "heading", label: "Heading" },
   { key: "description", label: "Description" },
@@ -109,6 +114,10 @@ export function EditableCTA({
     }
   };
 
+  const handleLabelUpdate = (content: LocalizedContent) => {
+    updateField("label", content, onUpdate);
+  };
+
   const handleHeadingUpdate = (content: LocalizedContent) => {
     updateField("heading", content, onUpdate);
   };
@@ -168,12 +177,17 @@ export function EditableCTA({
   if (!isEditMode) {
     return (
       <CTA
+        label={
+          isFieldEnabled(schema, "label", activeVariant)
+            ? getLocalizedValue(fields.label.value, locale)
+            : undefined
+        }
         image={
           isFieldEnabled(schema, "image", activeVariant) ? (
             <img
               src={fields.image.src}
               alt={getLocalizedValue(fields.image.alt, locale)}
-              className="w-full rounded"
+              className="w-full"
             />
           ) : undefined
         }
@@ -191,7 +205,7 @@ export function EditableCTA({
           isFieldEnabled(schema, "link", activeVariant) ? (
             <a
               href={getLocalizedValue(fields.linkUrl.value, locale)}
-              className="font-semibold text-blue-lighter"
+              className={LINK_CLASS}
             >
               {getLocalizedValue(fields.linkText.value, locale)}
             </a>
@@ -221,13 +235,23 @@ export function EditableCTA({
           onToggleField={handleToggleField}
         />
       }
+      label={
+        isFieldEnabled(schema, "label", activeVariant) ? (
+          <EditableText
+            content={fields.label.value}
+            onUpdate={handleLabelUpdate}
+            editClassName={EDIT_CLASS}
+            editingClassName={EDITING_CLASS}
+          />
+        ) : undefined
+      }
       image={
         isFieldEnabled(schema, "image", activeVariant) ? (
           <EditableImage
             src={fields.image.src}
             alt={fields.image.alt}
             onUpdate={handleImageUpdate}
-            className="w-full rounded"
+            className="w-full"
           />
         ) : undefined
       }
@@ -258,7 +282,7 @@ export function EditableCTA({
               <a
                 href={undefined}
                 onClick={link.handleClick}
-                className={cn("font-semibold text-blue-lighter", link.editModeClassName)}
+                className={cn(LINK_CLASS, link.editModeClassName)}
                 title="Click to edit link"
               >
                 {link.displayText}

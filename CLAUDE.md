@@ -221,6 +221,63 @@ For edit popovers with proper theming, use consumer-app's shadcn components (Pop
 - `?segment=finance` - View finance variant (English)
 - `?segment=finance&lang=es` - View finance variant in Spanish
 
+## Design System: Retro-Futuristic Minimalist Developer SaaS
+
+All consumer-app components should follow this design direction. The aesthetic is **Swiss Modernism meets developer tooling with subtle sci-fi hints** — think Linear, Vercel, or Raycast with a touch of space-age precision.
+
+### Core Principles
+- **Spacious layout** — generous whitespace, centered content, max-w-2xl for text
+- **High-contrast Swiss typography** — large sans headings (`tracking-tight`, `text-balance`), clear hierarchy
+- **Restrained accent** — single blue `#3B82F6` used sparingly (labels, accent lines, hover states)
+- **Product-first** — content is the star, not decoration
+- **Subtle sci-fi hints** — faint dot grid, mono-spaced labels, gradient accent lines (never heavy neon/glow)
+- **Precision** — clean borders, mathematical spacing, no visual noise
+
+### Color Palette
+| Token | Value | Usage |
+|-------|-------|-------|
+| Background | `#0A0E1A` | Section backgrounds (deep navy-black) |
+| Heading text | `#F1F5F9` | Primary headings |
+| Body text | `#94A3B8` | Descriptions, secondary text |
+| Accent | `#3B82F6` | Labels, accent lines, hover states |
+| Border | `#1E293B` | Subtle separators, card borders |
+
+### Typography
+| Element | Style |
+|---------|-------|
+| Labels/tags | `font-mono text-xs font-medium uppercase tracking-widest text-[#3B82F6]` |
+| Headings | `font-sans text-3xl font-medium tracking-tight text-[#F1F5F9] text-balance sm:text-4xl lg:text-5xl` |
+| Body | `font-sans text-base leading-relaxed text-[#94A3B8] text-pretty` |
+
+### Recurring Design Elements
+- **Dot grid background** — `radial-gradient(circle, rgba(148,163,184,0.8) 1px, transparent 1px)` at `opacity-[0.035]`, 24px spacing
+- **Gradient accent line** — `h-px w-16 bg-gradient-to-r from-[#3B82F6] to-transparent` between content sections
+- **Top border separator** — `border-t border-[#1E293B]` on dark sections
+- **Mono label** — small `font-mono` uppercase tag above headings for retro-futuristic feel
+
+### Button/Link Style
+```
+White-to-silver gradient, dark text, subtle hover glow:
+inline-flex items-center rounded-md border border-white/20
+bg-gradient-to-b from-white to-[#C0C7D0]
+px-5 py-2.5 text-sm font-medium text-[#0A0E1A]
+transition-all duration-200
+hover:from-white hover:to-white hover:shadow-[0_0_16px_rgba(255,255,255,0.15)]
+```
+
+### What to Avoid
+- Neon colors, heavy glow effects, text-shadow glow
+- Scanning animations, corner brackets, HUD-style chrome
+- Uppercase headings (reserve uppercase for small labels only)
+- `font-mono` for body text (only for labels/tags)
+- Decorative elements that don't serve content hierarchy
+- Animations longer than 200ms for UI transitions
+
+### Reference Implementation
+The CTA component (`consumer-app/components/sections/cta/`) is the canonical example of this design system applied to a component.
+
+---
+
 ## Making a Component Editable (Complete Pattern)
 
 We use a **two-file separation pattern** to keep display logic separate from edit logic. See [ADR 001](docs/adr/001-component-separation-pattern.md) for rationale.

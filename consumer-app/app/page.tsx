@@ -17,6 +17,7 @@ interface Section {
 
 import { EditableCardGrid } from "../components/sections/card-grid/editable-card-grid";
 import { EditableCTA } from "../components/sections/cta/editable-cta";
+import { Hero } from "../components/sections/hero/hero";
 import { EditModeIndicator } from "../components/ui/edit-mode-indicator";
 import { LayoutLines } from "../components/ui/layout-lines";
 import {
@@ -189,6 +190,37 @@ export default function Home() {
         addSectionOptions={addSectionOptions}
         onAddSection={handleAddSection}
       />
+
+      {/* Static hero — not wired to schema data yet */}
+      <Hero
+        label="Introducing Catalyst"
+        heading="Ship personalized pages without the chaos"
+        subtitle="Catalyst gives your marketing team a visual editor on top of your existing codebase. No CMS migration, no iframe hacks — just clean React components with built-in personalization."
+        primaryCta={
+          <a
+            href="#"
+            className="inline-flex items-center gap-2 rounded-md border border-white/20 bg-gradient-to-b from-white to-[#C0C7D0] px-5 py-2.5 text-sm font-medium text-[#0A0E1A] transition-all duration-200 hover:from-white hover:to-white hover:shadow-[0_0_16px_rgba(255,255,255,0.15)]"
+          >
+            Get started for free
+          </a>
+        }
+        secondaryCta={
+          <a
+            href="#"
+            className="inline-flex items-center gap-2 rounded-md border border-[#1E293B] px-5 py-2.5 text-sm font-medium text-[#F1F5F9] transition-all duration-200 hover:border-[#334155] hover:bg-white/5"
+          >
+            Request a demo
+          </a>
+        }
+        productImage={
+          <img
+            src="https://placehold.co/1200x720/0F172A/1E293B?text=Product+Screenshot"
+            alt="Product screenshot"
+            className="w-full"
+          />
+        }
+      />
+
       {sections.map((section, index) => {
         const sectionControls: SectionControls = {
           canMoveUp: index > 0,

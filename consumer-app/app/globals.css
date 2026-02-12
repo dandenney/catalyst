@@ -110,6 +110,15 @@
       transform: scale(1);
     }
   }
+
+  @keyframes hud-scan {
+    0% {
+      transform: translateY(-100%);
+    }
+    100% {
+      transform: translateY(100%);
+    }
+  }
 }
 
 :root {
