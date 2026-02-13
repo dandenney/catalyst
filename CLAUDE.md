@@ -205,6 +205,27 @@ const EDITING_CLASS = "outline-2 outline-solid outline-primary outline-offset-2"
 <EditableText editClassName={EDIT_CLASS} editingClassName={EDITING_CLASS} ... />
 ```
 
+### Edit Trigger Buttons (Floating Icon Buttons)
+When a component needs a small floating button to open an editor (e.g., per-cell edit in a grid, per-item settings), use a **blue circle with white icon** to match the section edit bar pattern:
+
+```typescript
+<button
+  className="flex size-7 items-center justify-center rounded-full bg-blue-600 text-white shadow-lg transition-all hover:bg-blue-500"
+>
+  <Pencil className="size-3.5" />
+</button>
+```
+
+Key rules:
+- **Circle, not squircle** — always `rounded-full`, never `rounded-md`
+- **Blue background** — `bg-blue-600` with `hover:bg-blue-500` (matches section edit bar)
+- **White icon** — `text-white`, never muted/gray
+- **Shadow** — `shadow-lg` for depth against dark content
+- **Show on hover** — typically `opacity-0 group-hover:opacity-100` with a `group` parent
+- **Never** use dark/muted backgrounds (`bg-[#0A0E1A]`, `bg-gray-*`) for edit triggers
+
+Reference: Section edit bar icon badge in `consumer-app/components/ui/section-edit-bar.tsx`
+
 ### Popover UIs
 For edit popovers with proper theming, use consumer-app's shadcn components (Popover, Input, Label, Button) rather than catalyst's CSS-variable-based ones.
 

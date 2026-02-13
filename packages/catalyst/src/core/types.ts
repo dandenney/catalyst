@@ -120,7 +120,49 @@ export interface CardItemField {
   openInNewWindow?: boolean;
 }
 
-export type Field = TextField | RichTextField | ImageField | ListField | BadgeField | ButtonField | MockupField | LogoItemField | IconField | ItemField | StatItemField | FAQItemField | PricingPlanField | CardItemField;
+// Bento cell types (discriminated union on cellType)
+export interface BentoCellBase {
+  type: 'bentoCell';
+  size: 'regular' | 'wide' | 'tall' | 'large';
+}
+
+export interface BentoFeaturedCell extends BentoCellBase {
+  cellType: 'featured';
+  label: LocalizedContent;
+  title: LocalizedContent;
+  description: LocalizedContent;
+  image?: ImageField;
+}
+
+export interface BentoStatCell extends BentoCellBase {
+  cellType: 'stat';
+  label: LocalizedContent;
+  value: LocalizedContent;
+  suffix: LocalizedContent;
+}
+
+export interface BentoFeatureCell extends BentoCellBase {
+  cellType: 'feature';
+  icon: string;
+  title: LocalizedContent;
+  description: LocalizedContent;
+}
+
+export interface BentoFeatureListCell extends BentoCellBase {
+  cellType: 'featureList';
+  title: LocalizedContent;
+  items: LocalizedContent[];
+}
+
+export interface BentoQuoteCell extends BentoCellBase {
+  cellType: 'quote';
+  quote: LocalizedContent;
+  attribution: LocalizedContent;
+}
+
+export type BentoCellField = BentoFeaturedCell | BentoStatCell | BentoFeatureCell | BentoFeatureListCell | BentoQuoteCell;
+
+export type Field = TextField | RichTextField | ImageField | ListField | BadgeField | ButtonField | MockupField | LogoItemField | IconField | ItemField | StatItemField | FAQItemField | PricingPlanField | CardItemField | BentoCellField;
 
 // Component schema base
 export interface ComponentSchema {
@@ -262,6 +304,16 @@ export interface CardGridSectionSchema extends ComponentSchema {
     imageMode: 'natural' | 'squared';
     ctaStyle: 'link' | 'button';
     theme: 'light' | 'dark';
+  };
+}
+
+export interface BentosSectionSchema extends ComponentSchema {
+  type: 'BentosSection';
+  fields: {
+    label: TextField;
+    heading: TextField;
+    description: TextField;
+    cells: ListField<BentoCellField>;
   };
 }
 

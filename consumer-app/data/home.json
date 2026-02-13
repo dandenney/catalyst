@@ -245,6 +245,115 @@
           }
         }
       }
+    },
+    {
+      "id": "bentos-1771014122357",
+      "type": "BentosSection",
+      "fields": {
+        "label": {
+          "type": "text",
+          "value": {
+            "en": "Platform"
+          }
+        },
+        "heading": {
+          "type": "text",
+          "value": {
+            "en": "Everything you need to ship"
+          }
+        },
+        "description": {
+          "type": "text",
+          "value": {
+            "en": "A complete developer platform with the tools and infrastructure to build, deploy, and scale."
+          }
+        },
+        "cells": {
+          "type": "list",
+          "value": [
+            {
+              "type": "bentoCell",
+              "size": "large",
+              "cellType": "featured",
+              "label": {
+                "en": "Featured"
+              },
+              "title": {
+                "en": "Ship faster with intelligent infrastructure"
+              },
+              "description": {
+                "en": "Deploy globally in seconds. Scale automatically. Zero config required."
+              },
+              "image": {
+                "type": "image",
+                "src": "https://assets.codepen.io/140/digital-beginning.webp",
+                "alt": {
+                  "en": "Background image"
+                }
+              }
+            },
+            {
+              "type": "bentoCell",
+              "size": "wide",
+              "cellType": "stat",
+              "label": {
+                "en": "Uptime"
+              },
+              "value": {
+                "en": "99.99%"
+              },
+              "suffix": {
+                "en": "guaranteed SLA"
+              }
+            },
+            {
+              "type": "bentoCell",
+              "size": "regular",
+              "cellType": "feature",
+              "icon": "⚡",
+              "title": {
+                "en": "Edge functions"
+              },
+              "description": {
+                "en": "Run code at the edge, closest to your users."
+              }
+            },
+            {
+              "type": "bentoCell",
+              "size": "tall",
+              "cellType": "featureList",
+              "title": {
+                "en": "Built for developers"
+              },
+              "items": [
+                {
+                  "en": "Git-based deployments"
+                },
+                {
+                  "en": "Preview environments"
+                },
+                {
+                  "en": "Instant rollbacks"
+                },
+                {
+                  "en": "Real-time logs"
+                }
+              ]
+            },
+            {
+              "type": "bentoCell",
+              "size": "wide",
+              "cellType": "quote",
+              "quote": {
+                "en": "We cut our deploy times by 10x and haven't looked back."
+              },
+              "attribution": {
+                "en": "Engineering Lead, Acme Corp"
+              }
+            }
+          ]
+        }
+      }
     }
   ]
 }

@@ -3,7 +3,7 @@
  * Central registry of all available components for the page builder
  */
 
-import { ComponentSchema, HeroBannerSchema, FeatureListSchema, CTASectionSchema, HeroSectionSchema, LogosSectionSchema, ItemsSectionSchema, StatsSectionSchema, FAQSectionSchema, FooterSectionSchema, PricingSectionSchema, CardGridSectionSchema } from './types';
+import { ComponentSchema, HeroBannerSchema, FeatureListSchema, CTASectionSchema, HeroSectionSchema, LogosSectionSchema, ItemsSectionSchema, StatsSectionSchema, FAQSectionSchema, FooterSectionSchema, PricingSectionSchema, CardGridSectionSchema, BentosSectionSchema } from './types';
 
 export interface ComponentMetadata {
   type: string;
@@ -576,6 +576,83 @@ function createDefaultCardGrid(): CardGridSectionSchema {
 }
 
 /**
+ * Creates a default BentosSection component
+ */
+function createDefaultBentos(): BentosSectionSchema {
+  return {
+    id: `bentos-${Date.now()}`,
+    type: 'BentosSection',
+    fields: {
+      label: {
+        type: 'text',
+        value: { en: 'Platform' },
+      },
+      heading: {
+        type: 'text',
+        value: { en: 'Everything you need to ship' },
+      },
+      description: {
+        type: 'text',
+        value: { en: 'A complete developer platform with the tools and infrastructure to build, deploy, and scale.' },
+      },
+      cells: {
+        type: 'list',
+        value: [
+          {
+            type: 'bentoCell',
+            size: 'large',
+            cellType: 'featured',
+            label: { en: 'Featured' },
+            title: { en: 'Ship faster with intelligent infrastructure' },
+            description: { en: 'Deploy globally in seconds. Scale automatically. Zero config required.' },
+            image: {
+              type: 'image',
+              src: 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=800&h=600&fit=crop',
+              alt: { en: 'Server infrastructure' },
+            },
+          },
+          {
+            type: 'bentoCell',
+            size: 'wide',
+            cellType: 'stat',
+            label: { en: 'Uptime' },
+            value: { en: '99.99%' },
+            suffix: { en: 'guaranteed SLA' },
+          },
+          {
+            type: 'bentoCell',
+            size: 'regular',
+            cellType: 'feature',
+            icon: '⚡',
+            title: { en: 'Edge functions' },
+            description: { en: 'Run code at the edge, closest to your users.' },
+          },
+          {
+            type: 'bentoCell',
+            size: 'tall',
+            cellType: 'featureList',
+            title: { en: 'Built for developers' },
+            items: [
+              { en: 'Git-based deployments' },
+              { en: 'Preview environments' },
+              { en: 'Instant rollbacks' },
+              { en: 'Real-time logs' },
+            ],
+          },
+          {
+            type: 'bentoCell',
+            size: 'wide',
+            cellType: 'quote',
+            quote: { en: 'We cut our deploy times by 10x and haven\'t looked back.' },
+            attribution: { en: 'Engineering Lead, Acme Corp' },
+          },
+        ],
+      },
+    },
+  };
+}
+
+/**
  * Registry of all available components
  */
 export const COMPONENT_REGISTRY: Record<string, ComponentMetadata> = {
@@ -677,6 +754,14 @@ export const COMPONENT_REGISTRY: Record<string, ComponentMetadata> = {
     icon: '🃏',
     thumbnail: '/component-previews/CardGridSection.png',
     createDefault: createDefaultCardGrid,
+  },
+  BentosSection: {
+    type: 'BentosSection',
+    label: 'Bento Grid',
+    description: 'Asymmetric grid with mixed content: features, stats, quotes, and more',
+    category: 'content',
+    icon: '🍱',
+    createDefault: createDefaultBentos,
   },
 };
 

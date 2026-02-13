@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  type BentosSectionSchema,
   type CardGridSectionSchema,
   createComponent,
   type CTASectionSchema,
@@ -9,13 +10,14 @@ import {
 } from "catalyst";
 import { useCallback, useEffect, useRef,useState } from "react";
 
-type SectionSchema = HeroSectionSchema | CTASectionSchema | CardGridSectionSchema;
+type SectionSchema = HeroSectionSchema | CTASectionSchema | CardGridSectionSchema | BentosSectionSchema;
 
 interface Section {
   type: string;
   schema: SectionSchema;
 }
 
+import { EditableBentos } from "../components/sections/bentos/editable-bentos";
 import { EditableCardGrid } from "../components/sections/card-grid/editable-card-grid";
 import { EditableCTA } from "../components/sections/cta/editable-cta";
 import { EditableHero } from "../components/sections/hero/editable-hero";
@@ -167,6 +169,7 @@ export default function Home() {
     { type: "HeroSection", label: "Hero" },
     { type: "CTASection", label: "CTA section" },
     { type: "CardGridSection", label: "Card Grid" },
+    { type: "BentosSection", label: "Bento Grid" },
   ];
 
   const handleAddSection = (type: SectionType) => {
@@ -226,6 +229,15 @@ export default function Home() {
               <EditableCardGrid
                 key={section.schema.id}
                 schema={section.schema as CardGridSectionSchema}
+                onUpdate={(schema) => updateSectionSchema(index, schema)}
+                sectionControls={sectionControls}
+              />
+            );
+          case "BentosSection":
+            return (
+              <EditableBentos
+                key={section.schema.id}
+                schema={section.schema as BentosSectionSchema}
                 onUpdate={(schema) => updateSectionSchema(index, schema)}
                 sectionControls={sectionControls}
               />
