@@ -111,7 +111,7 @@ export function EditableImage({
           style={customStyle}
         />
       </PopoverTrigger>
-      <PopoverContent onKeyDown={handleKeyDown}>
+      <PopoverContent className="w-80" onKeyDown={handleKeyDown}>
         <div className="space-y-3">
           <div>
             <Label htmlFor="image-url">Image URL</Label>
@@ -145,7 +145,7 @@ export function EditableImage({
             </Button>
           </div>
 
-          <p className="text-xs text-[var(--catalyst-muted-foreground)]">
+          <p className="text-xs text-muted-foreground">
             Cmd+Enter to save, Esc to cancel
           </p>
         </div>
