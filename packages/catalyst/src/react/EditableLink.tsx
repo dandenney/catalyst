@@ -57,7 +57,7 @@ export function EditableLink({
           {children}
         </a>
       </PopoverTrigger>
-      <PopoverContent onKeyDown={link.handleKeyDown}>
+      <PopoverContent className="w-80" onKeyDown={link.handleKeyDown}>
         <div className="space-y-3">
           <div>
             <Label htmlFor="link-text">Link Text ({link.locale.toUpperCase()})</Label>
@@ -91,7 +91,7 @@ export function EditableLink({
             </Button>
           </div>
 
-          <p className="text-xs text-[var(--catalyst-muted-foreground)]">
+          <p className="text-xs text-muted-foreground">
             Cmd+Enter to save, Esc to cancel
           </p>
         </div>
