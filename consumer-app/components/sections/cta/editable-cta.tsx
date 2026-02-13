@@ -183,7 +183,7 @@ export function EditableCTA({
             : undefined
         }
         image={
-          isFieldEnabled(schema, "image", activeVariant) ? (
+          isFieldEnabled(schema, "image", activeVariant) && fields.image.src ? (
             <img
               src={fields.image.src}
               alt={getLocalizedValue(fields.image.alt, locale)}
@@ -246,7 +246,7 @@ export function EditableCTA({
         ) : undefined
       }
       image={
-        isFieldEnabled(schema, "image", activeVariant) ? (
+        isFieldEnabled(schema, "image", activeVariant) && fields.image.src ? (
           <EditableImage
             src={fields.image.src}
             alt={fields.image.alt}

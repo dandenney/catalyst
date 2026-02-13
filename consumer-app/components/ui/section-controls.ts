@@ -15,4 +15,5 @@ export type SectionType =
   | "PricingSection"
   | "CTASection"
   | "CardGridSection"
+  | "BentosSection"
   | "FooterSection";
