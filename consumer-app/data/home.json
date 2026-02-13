@@ -13,84 +13,56 @@
   },
   "components": [
     {
-      "id": "cta-section-1",
-      "type": "CTASection",
+      "id": "hero-section-1",
+      "type": "HeroSection",
       "fields": {
         "label": {
           "type": "text",
           "value": {
-            "en": "Get Started",
-            "es": "Comenzar"
+            "en": "Introducing Catalyst"
           }
         },
         "heading": {
           "type": "text",
           "value": {
-            "en": "What if I go really long with this? How long can I go? ",
-            "es": "¿Listo para comenzar?"
+            "en": "Ship personalized pages without the chaos"
           }
         },
-        "description": {
+        "subtitle": {
           "type": "text",
           "value": {
-            "en": "Go beyond off-the-shelf courses. With DataCamp, you can create private learning tracks, projects, and assessments tailored to your products, data, and workflows.",
-            "es": "Únete a miles de desarrolladores construyendo con nuestra plataforma."
+            "en": "Catalyst gives your marketing team a visual editor on top of your existing codebase. No CMS migration, no iframe hacks — just clean React components with built-in personalization."
           }
         },
-        "linkText": {
+        "primaryCtaText": {
           "type": "text",
           "value": {
-            "en": "Get Started",
-            "es": "Comenzar"
+            "en": "Get started for free"
           }
         },
-        "linkUrl": {
+        "primaryCtaUrl": {
           "type": "text",
           "value": {
-            "en": "/signup",
-            "es": "/registro"
+            "en": "#"
+          }
+        },
+        "secondaryCtaText": {
+          "type": "text",
+          "value": {
+            "en": "Request a demo"
+          }
+        },
+        "secondaryCtaUrl": {
+          "type": "text",
+          "value": {
+            "en": "#"
           }
         },
         "image": {
           "type": "image",
-          "src": "",
+          "src": "https://assets.codepen.io/140/digital-beginning.webp",
           "alt": {
-            "en": "",
-            "es": ""
-          }
-        }
-      },
-      "variants": {
-        "finance": {
-          "heading": {
-            "type": "text",
-            "value": {
-              "en": "Ready to transform your financial infrastructures?",
-              "es": "¿Listo para transformar tu infraestructura financiera?"
-            }
-          },
-          "description": {
-            "type": "text",
-            "value": {
-              "en": "Join hundreds of financial institutions already using our platform.",
-              "es": "Únete a cientos de instituciones financieras que ya usan nuestra plataforma."
-            }
-          }
-        },
-        "startup": {
-          "heading": {
-            "type": "text",
-            "value": {
-              "en": "Ready to ship your next big thing?",
-              "es": "¿Listo para lanzar tu próximo gran proyecto?"
-            }
-          },
-          "description": {
-            "type": "text",
-            "value": {
-              "en": "Join thousands of startups building faster with our tools.",
-              "es": "Únete a miles de startups construyendo más rápido con nuestras herramientas."
-            }
+            "en": "Product screenshot"
           }
         }
       }
@@ -189,6 +161,89 @@
         "imageMode": "natural",
         "ctaStyle": "link",
         "theme": "dark"
+      }
+    },
+    {
+      "id": "cta-section-1",
+      "type": "CTASection",
+      "fields": {
+        "label": {
+          "type": "text",
+          "value": {
+            "en": "Get Started",
+            "es": "Comenzar"
+          }
+        },
+        "heading": {
+          "type": "text",
+          "value": {
+            "en": "What if I go really long with this? How long can I go? ",
+            "es": "¿Listo para comenzar?"
+          }
+        },
+        "description": {
+          "type": "text",
+          "value": {
+            "en": "Go beyond off-the-shelf courses. With DataCamp, you can create private learning tracks, projects, and assessments tailored to your products, data, and workflows.",
+            "es": "Únete a miles de desarrolladores construyendo con nuestra plataforma."
+          }
+        },
+        "linkText": {
+          "type": "text",
+          "value": {
+            "en": "Get Started",
+            "es": "Comenzar"
+          }
+        },
+        "linkUrl": {
+          "type": "text",
+          "value": {
+            "en": "/signup",
+            "es": "/registro"
+          }
+        },
+        "image": {
+          "type": "image",
+          "src": "",
+          "alt": {
+            "en": "",
+            "es": ""
+          }
+        }
+      },
+      "variants": {
+        "finance": {
+          "heading": {
+            "type": "text",
+            "value": {
+              "en": "Ready to transform your financial infrastructures?",
+              "es": "¿Listo para transformar tu infraestructura financiera?"
+            }
+          },
+          "description": {
+            "type": "text",
+            "value": {
+              "en": "Join hundreds of financial institutions already using our platform.",
+              "es": "Únete a cientos de instituciones financieras que ya usan nuestra plataforma."
+            }
+          }
+        },
+        "startup": {
+          "heading": {
+            "type": "text",
+            "value": {
+              "en": "Ready to ship your next big thing?",
+              "es": "¿Listo para lanzar tu próximo gran proyecto?"
+            }
+          },
+          "description": {
+            "type": "text",
+            "value": {
+              "en": "Join thousands of startups building faster with our tools.",
+              "es": "Únete a miles de startups construyendo más rápido con nuestras herramientas."
+            }
+          }
+        }
       }
     }
   ]

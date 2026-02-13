@@ -118,60 +118,40 @@ function createDefaultHeroSection(): HeroSectionSchema {
     id: `hero-section-${Date.now()}`,
     type: 'HeroSection',
     fields: {
-      title: {
+      label: {
+        type: 'text',
+        value: { en: 'Introducing Catalyst' },
+      },
+      heading: {
+        type: 'text',
+        value: { en: 'Ship personalized pages without the chaos' },
+      },
+      subtitle: {
         type: 'text',
         value: {
-          en: 'Give your big idea the design it deserves',
-          es: 'Dale a tu gran idea el diseño que merece',
+          en: 'Catalyst gives your marketing team a visual editor on top of your existing codebase. No CMS migration, no iframe hacks — just clean React components with built-in personalization.',
         },
       },
-      description: {
+      primaryCtaText: {
         type: 'text',
-        value: {
-          en: 'Professionally designed blocks and templates built with React, Shadcn/ui and Tailwind that will help your product stand out.',
-          es: 'Bloques y plantillas diseñados profesionalmente con React, Shadcn/ui y Tailwind que ayudarán a destacar tu producto.',
-        },
+        value: { en: 'Get started for free' },
       },
-      badge: {
-        type: 'badge',
-        label: {
-          en: 'New version of Launch UI is out!',
-          es: '¡Nueva versión de Launch UI disponible!',
-        },
-        link: {
-          href: { en: '/docs/getting-started' },
-          text: { en: 'Get started', es: 'Comenzar' },
-        },
+      primaryCtaUrl: {
+        type: 'text',
+        value: { en: '#' },
       },
-      buttons: {
-        type: 'list',
-        value: [
-          {
-            type: 'button',
-            href: { en: '/docs/getting-started' },
-            text: { en: 'Get Started', es: 'Comenzar' },
-            variant: 'default',
-          },
-          {
-            type: 'button',
-            href: { en: 'https://github.com/launch-ui/launch-ui' },
-            text: { en: 'Github' },
-            variant: 'glow',
-            icon: 'github',
-            iconPosition: 'left',
-          },
-        ],
+      secondaryCtaText: {
+        type: 'text',
+        value: { en: 'Request a demo' },
       },
-      mockup: {
-        type: 'mockup',
-        srcLight: '/dashboard-light.png',
-        srcDark: '/dashboard-dark.png',
-        alt: {
-          en: 'Launch UI app screenshot',
-          es: 'Captura de pantalla de Launch UI',
-        },
-        width: 1248,
-        height: 765,
+      secondaryCtaUrl: {
+        type: 'text',
+        value: { en: '#' },
+      },
+      image: {
+        type: 'image',
+        src: 'https://placehold.co/1200x720/0F172A/1E293B?text=Product+Screenshot',
+        alt: { en: 'Product screenshot' },
       },
     },
   };

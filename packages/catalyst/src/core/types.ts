@@ -176,11 +176,14 @@ export interface CTASectionSchema extends ComponentSchema {
 export interface HeroSectionSchema extends ComponentSchema {
   type: 'HeroSection';
   fields: {
-    title: TextField;
-    description: TextField;
-    badge: BadgeField;
-    buttons: ListField<ButtonField>;
-    mockup: MockupField;
+    label: TextField;
+    heading: TextField;
+    subtitle: TextField;
+    primaryCtaText: TextField;
+    primaryCtaUrl: TextField;
+    secondaryCtaText: TextField;
+    secondaryCtaUrl: TextField;
+    image: ImageField;
   };
 }
 
