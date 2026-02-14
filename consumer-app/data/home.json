@@ -354,6 +354,99 @@
           ]
         }
       }
+    },
+    {
+      "id": "tabbed-content-1771037959431",
+      "type": "TabbedContentSection",
+      "fields": {
+        "label": {
+          "type": "text",
+          "value": {
+            "en": "How it works"
+          }
+        },
+        "heading": {
+          "type": "text",
+          "value": {
+            "en": "Built for modern workflows"
+          }
+        },
+        "description": {
+          "type": "text",
+          "value": {
+            "en": "Everything you need to ship faster, from local development to production deployment."
+          }
+        },
+        "tabs": {
+          "type": "list",
+          "value": [
+            {
+              "type": "tabItem",
+              "title": {
+                "en": "Zero-config deployments"
+              },
+              "description": {
+                "en": "Push to your main branch and watch your changes go live in seconds. Automatic preview deployments for every PR, instant rollbacks, and edge distribution in 40+ regions."
+              },
+              "image": {
+                "type": "image",
+                "src": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=600&h=400&fit=crop",
+                "alt": {
+                  "en": "Deployment infrastructure"
+                }
+              }
+            },
+            {
+              "type": "tabItem",
+              "title": {
+                "en": "Real-time observability"
+              },
+              "description": {
+                "en": "Understand exactly what's happening in production. Traces, logs, and metrics unified in a single dashboard with zero instrumentation overhead."
+              },
+              "image": {
+                "type": "image",
+                "src": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600&h=400&fit=crop",
+                "alt": {
+                  "en": "Monitoring dashboard"
+                }
+              }
+            },
+            {
+              "type": "tabItem",
+              "title": {
+                "en": "Team-first collaboration"
+              },
+              "description": {
+                "en": "Every change is visible to your entire team. Branch previews, inline comments, and approval workflows keep everyone aligned without slowing anyone down."
+              },
+              "image": {
+                "type": "image",
+                "src": "https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=600&h=400&fit=crop",
+                "alt": {
+                  "en": "Team collaboration"
+                }
+              }
+            },
+            {
+              "type": "tabItem",
+              "title": {
+                "en": "New tab"
+              },
+              "description": {
+                "en": "Add a description for this tab."
+              },
+              "image": {
+                "type": "image",
+                "src": "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=600&h=400&fit=crop",
+                "alt": {
+                  "en": "New tab image"
+                }
+              }
+            }
+          ]
+        }
+      }
     }
   ]
 }
