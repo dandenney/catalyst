@@ -7,10 +7,11 @@ import {
   type CTASectionSchema,
   type HeroSectionSchema,
   type PageSchema,
+  type TabbedContentSectionSchema,
 } from "catalyst";
 import { useCallback, useEffect, useRef,useState } from "react";
 
-type SectionSchema = HeroSectionSchema | CTASectionSchema | CardGridSectionSchema | BentosSectionSchema;
+type SectionSchema = HeroSectionSchema | CTASectionSchema | CardGridSectionSchema | BentosSectionSchema | TabbedContentSectionSchema;
 
 interface Section {
   type: string;
@@ -21,6 +22,7 @@ import { EditableBentos } from "../components/sections/bentos/editable-bentos";
 import { EditableCardGrid } from "../components/sections/card-grid/editable-card-grid";
 import { EditableCTA } from "../components/sections/cta/editable-cta";
 import { EditableHero } from "../components/sections/hero/editable-hero";
+import { EditableTabbedContent } from "../components/sections/tabbed-content/editable-tabbed-content";
 import { EditModeIndicator } from "../components/ui/edit-mode-indicator";
 import { LayoutLines } from "../components/ui/layout-lines";
 import {
@@ -170,6 +172,7 @@ export default function Home() {
     { type: "CTASection", label: "CTA section" },
     { type: "CardGridSection", label: "Card Grid" },
     { type: "BentosSection", label: "Bento Grid" },
+    { type: "TabbedContentSection", label: "Tabbed Content" },
   ];
 
   const handleAddSection = (type: SectionType) => {
@@ -238,6 +241,15 @@ export default function Home() {
               <EditableBentos
                 key={section.schema.id}
                 schema={section.schema as BentosSectionSchema}
+                onUpdate={(schema) => updateSectionSchema(index, schema)}
+                sectionControls={sectionControls}
+              />
+            );
+          case "TabbedContentSection":
+            return (
+              <EditableTabbedContent
+                key={section.schema.id}
+                schema={section.schema as TabbedContentSectionSchema}
                 onUpdate={(schema) => updateSectionSchema(index, schema)}
                 sectionControls={sectionControls}
               />

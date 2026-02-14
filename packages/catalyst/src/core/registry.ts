@@ -3,7 +3,7 @@
  * Central registry of all available components for the page builder
  */
 
-import { ComponentSchema, HeroBannerSchema, FeatureListSchema, CTASectionSchema, HeroSectionSchema, LogosSectionSchema, ItemsSectionSchema, StatsSectionSchema, FAQSectionSchema, FooterSectionSchema, PricingSectionSchema, CardGridSectionSchema, BentosSectionSchema } from './types';
+import { ComponentSchema, HeroBannerSchema, FeatureListSchema, CTASectionSchema, HeroSectionSchema, LogosSectionSchema, ItemsSectionSchema, StatsSectionSchema, FAQSectionSchema, FooterSectionSchema, PricingSectionSchema, CardGridSectionSchema, BentosSectionSchema, TabbedContentSectionSchema } from './types';
 
 export interface ComponentMetadata {
   type: string;
@@ -653,6 +653,75 @@ function createDefaultBentos(): BentosSectionSchema {
 }
 
 /**
+ * Creates a default TabbedContent component
+ */
+function createDefaultTabbedContent(): TabbedContentSectionSchema {
+  return {
+    id: `tabbed-content-${Date.now()}`,
+    type: 'TabbedContentSection',
+    fields: {
+      label: {
+        type: 'text',
+        value: { en: 'How it works' },
+      },
+      heading: {
+        type: 'text',
+        value: { en: 'Built for modern workflows' },
+      },
+      description: {
+        type: 'text',
+        value: { en: 'Everything you need to ship faster, from local development to production deployment.' },
+      },
+      tabs: {
+        type: 'list',
+        value: [
+          {
+            type: 'tabItem',
+            title: { en: 'Zero-config deployments' },
+            description: { en: 'Push to your main branch and watch your changes go live in seconds. Automatic preview deployments for every PR, instant rollbacks, and edge distribution in 40+ regions.' },
+            image: {
+              type: 'image',
+              src: 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=600&h=400&fit=crop',
+              alt: { en: 'Deployment infrastructure' },
+            },
+          },
+          {
+            type: 'tabItem',
+            title: { en: 'Real-time observability' },
+            description: { en: 'Understand exactly what\'s happening in production. Traces, logs, and metrics unified in a single dashboard with zero instrumentation overhead.' },
+            image: {
+              type: 'image',
+              src: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600&h=400&fit=crop',
+              alt: { en: 'Monitoring dashboard' },
+            },
+          },
+          {
+            type: 'tabItem',
+            title: { en: 'Team-first collaboration' },
+            description: { en: 'Every change is visible to your entire team. Branch previews, inline comments, and approval workflows keep everyone aligned without slowing anyone down.' },
+            image: {
+              type: 'image',
+              src: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=600&h=400&fit=crop',
+              alt: { en: 'Team collaboration' },
+            },
+          },
+          {
+            type: 'tabItem',
+            title: { en: 'Built-in CI/CD pipelines' },
+            description: { en: 'Define your build and test workflows alongside your code. Parallel execution, smart caching, and automatic artifact management out of the box.' },
+          },
+          {
+            type: 'tabItem',
+            title: { en: 'Enterprise-grade security' },
+            description: { en: 'SOC 2 compliant infrastructure with SSO, audit logging, and fine-grained access controls. Your data never leaves your chosen region.' },
+          },
+        ],
+      },
+    },
+  };
+}
+
+/**
  * Registry of all available components
  */
 export const COMPONENT_REGISTRY: Record<string, ComponentMetadata> = {
@@ -762,6 +831,14 @@ export const COMPONENT_REGISTRY: Record<string, ComponentMetadata> = {
     category: 'content',
     icon: '🍱',
     createDefault: createDefaultBentos,
+  },
+  TabbedContentSection: {
+    type: 'TabbedContentSection',
+    label: 'Tabbed Content',
+    description: 'Vertical feature list with expandable descriptions and side images',
+    category: 'content',
+    icon: '📑',
+    createDefault: createDefaultTabbedContent,
   },
 };
 

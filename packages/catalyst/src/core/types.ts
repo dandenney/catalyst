@@ -162,7 +162,14 @@ export interface BentoQuoteCell extends BentoCellBase {
 
 export type BentoCellField = BentoFeaturedCell | BentoStatCell | BentoFeatureCell | BentoFeatureListCell | BentoQuoteCell;
 
-export type Field = TextField | RichTextField | ImageField | ListField | BadgeField | ButtonField | MockupField | LogoItemField | IconField | ItemField | StatItemField | FAQItemField | PricingPlanField | CardItemField | BentoCellField;
+export interface TabItemField {
+  type: 'tabItem';
+  title: LocalizedContent;
+  description: LocalizedContent;
+  image?: ImageField;
+}
+
+export type Field = TextField | RichTextField | ImageField | ListField | BadgeField | ButtonField | MockupField | LogoItemField | IconField | ItemField | StatItemField | FAQItemField | PricingPlanField | CardItemField | BentoCellField | TabItemField;
 
 // Component schema base
 export interface ComponentSchema {
@@ -314,6 +321,16 @@ export interface BentosSectionSchema extends ComponentSchema {
     heading: TextField;
     description: TextField;
     cells: ListField<BentoCellField>;
+  };
+}
+
+export interface TabbedContentSectionSchema extends ComponentSchema {
+  type: 'TabbedContentSection';
+  fields: {
+    label: TextField;
+    heading: TextField;
+    description: TextField;
+    tabs: ListField<TabItemField>;
   };
 }
 
