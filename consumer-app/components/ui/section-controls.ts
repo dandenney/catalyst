@@ -17,4 +17,5 @@ export type SectionType =
   | "CardGridSection"
   | "BentosSection"
   | "TabbedContentSection"
+  | "ContentCardsSection"
   | "FooterSection";
