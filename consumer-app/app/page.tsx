@@ -3,6 +3,7 @@
 import {
   type BentosSectionSchema,
   type CardGridSectionSchema,
+  type ContentCardsSectionSchema,
   createComponent,
   type CTASectionSchema,
   type HeroSectionSchema,
@@ -11,7 +12,7 @@ import {
 } from "catalyst";
 import { useCallback, useEffect, useRef,useState } from "react";
 
-type SectionSchema = HeroSectionSchema | CTASectionSchema | CardGridSectionSchema | BentosSectionSchema | TabbedContentSectionSchema;
+type SectionSchema = HeroSectionSchema | CTASectionSchema | CardGridSectionSchema | BentosSectionSchema | TabbedContentSectionSchema | ContentCardsSectionSchema;
 
 interface Section {
   type: string;
@@ -22,6 +23,7 @@ import { EditableBentos } from "../components/sections/bentos/editable-bentos";
 import { EditableCardGrid } from "../components/sections/card-grid/editable-card-grid";
 import { EditableCTA } from "../components/sections/cta/editable-cta";
 import { EditableHero } from "../components/sections/hero/editable-hero";
+import { EditableContentCards } from "../components/sections/content-cards/editable-content-cards";
 import { EditableTabbedContent } from "../components/sections/tabbed-content/editable-tabbed-content";
 import { EditModeIndicator } from "../components/ui/edit-mode-indicator";
 import { LayoutLines } from "../components/ui/layout-lines";
@@ -173,6 +175,7 @@ export default function Home() {
     { type: "CardGridSection", label: "Card Grid" },
     { type: "BentosSection", label: "Bento Grid" },
     { type: "TabbedContentSection", label: "Tabbed Content" },
+    { type: "ContentCardsSection", label: "Content Cards" },
   ];
 
   const handleAddSection = (type: SectionType) => {
@@ -250,6 +253,15 @@ export default function Home() {
               <EditableTabbedContent
                 key={section.schema.id}
                 schema={section.schema as TabbedContentSectionSchema}
+                onUpdate={(schema) => updateSectionSchema(index, schema)}
+                sectionControls={sectionControls}
+              />
+            );
+          case "ContentCardsSection":
+            return (
+              <EditableContentCards
+                key={section.schema.id}
+                schema={section.schema as ContentCardsSectionSchema}
                 onUpdate={(schema) => updateSectionSchema(index, schema)}
                 sectionControls={sectionControls}
               />

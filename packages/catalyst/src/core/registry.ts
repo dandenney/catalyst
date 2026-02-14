@@ -3,7 +3,7 @@
  * Central registry of all available components for the page builder
  */
 
-import { ComponentSchema, HeroBannerSchema, FeatureListSchema, CTASectionSchema, HeroSectionSchema, LogosSectionSchema, ItemsSectionSchema, StatsSectionSchema, FAQSectionSchema, FooterSectionSchema, PricingSectionSchema, CardGridSectionSchema, BentosSectionSchema, TabbedContentSectionSchema } from './types';
+import { ComponentSchema, HeroBannerSchema, FeatureListSchema, CTASectionSchema, HeroSectionSchema, LogosSectionSchema, ItemsSectionSchema, StatsSectionSchema, FAQSectionSchema, FooterSectionSchema, PricingSectionSchema, CardGridSectionSchema, BentosSectionSchema, TabbedContentSectionSchema, ContentCardsSectionSchema } from './types';
 
 export interface ComponentMetadata {
   type: string;
@@ -722,6 +722,180 @@ function createDefaultTabbedContent(): TabbedContentSectionSchema {
 }
 
 /**
+ * Creates a default ContentCards component
+ */
+function createDefaultContentCards(): ContentCardsSectionSchema {
+  return {
+    id: `content-cards-${Date.now()}`,
+    type: 'ContentCardsSection',
+    fields: {
+      label: {
+        type: 'text',
+        value: { en: 'Curriculum' },
+      },
+      heading: {
+        type: 'text',
+        value: { en: 'Master AI from fundamentals to production' },
+      },
+      description: {
+        type: 'text',
+        value: { en: 'Structured learning paths designed by practitioners. Go from zero to deploying AI systems in production.' },
+      },
+      tabs: {
+        type: 'list',
+        value: [
+          {
+            type: 'contentTab',
+            title: { en: 'Fundamentals' },
+            cards: [
+              {
+                type: 'contentCardItem',
+                title: { en: 'Introduction to Machine Learning' },
+                description: { en: 'Build intuition for core ML concepts — supervised learning, loss functions, and gradient descent — through hands-on exercises with real datasets.' },
+                tag: { en: 'Beginner · 6 hours' },
+                image: {
+                  type: 'image',
+                  src: 'https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=600&h=400&fit=crop',
+                  alt: { en: 'Machine learning visualization' },
+                },
+              },
+              {
+                type: 'contentCardItem',
+                title: { en: 'Neural Networks from Scratch' },
+                description: { en: 'Implement a neural network in pure Python. Understand backpropagation, activation functions, and weight initialization at the mathematical level.' },
+                tag: { en: 'Intermediate · 8 hours' },
+                image: {
+                  type: 'image',
+                  src: 'https://images.unsplash.com/photo-1677442136019-21780ecad995?w=600&h=400&fit=crop',
+                  alt: { en: 'Neural network diagram' },
+                },
+              },
+              {
+                type: 'contentCardItem',
+                title: { en: 'Transformers & Attention Mechanisms' },
+                description: { en: 'Deep dive into the architecture behind modern LLMs. Self-attention, positional encoding, and the path from GPT to today\'s frontier models.' },
+                tag: { en: 'Advanced · 10 hours' },
+                image: {
+                  type: 'image',
+                  src: 'https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=600&h=400&fit=crop',
+                  alt: { en: 'Transformer architecture' },
+                },
+              },
+            ],
+          },
+          {
+            type: 'contentTab',
+            title: { en: 'Prompt Engineering' },
+            cards: [
+              {
+                type: 'contentCardItem',
+                title: { en: 'Prompt Design Patterns' },
+                description: { en: 'Master the craft of communicating with LLMs. Chain-of-thought, few-shot learning, and systematic approaches to reliable outputs.' },
+                tag: { en: 'Beginner · 4 hours' },
+                image: {
+                  type: 'image',
+                  src: 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=600&h=400&fit=crop',
+                  alt: { en: 'Prompt engineering' },
+                },
+              },
+              {
+                type: 'contentCardItem',
+                title: { en: 'RAG Systems Architecture' },
+                description: { en: 'Build retrieval-augmented generation pipelines. Vector databases, chunking strategies, and hybrid search for production-grade knowledge systems.' },
+                tag: { en: 'Intermediate · 8 hours' },
+                image: {
+                  type: 'image',
+                  src: 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=600&h=400&fit=crop',
+                  alt: { en: 'RAG architecture' },
+                },
+              },
+              {
+                type: 'contentCardItem',
+                title: { en: 'Evaluation & Testing for LLMs' },
+                description: { en: 'Move beyond vibes-based testing. Build structured evaluation frameworks, regression suites, and automated quality gates for LLM outputs.' },
+                tag: { en: 'Intermediate · 6 hours' },
+                image: {
+                  type: 'image',
+                  src: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600&h=400&fit=crop',
+                  alt: { en: 'Testing dashboard' },
+                },
+              },
+            ],
+          },
+          {
+            type: 'contentTab',
+            title: { en: 'AI Agents' },
+            cards: [
+              {
+                type: 'contentCardItem',
+                title: { en: 'Building Your First Agent' },
+                description: { en: 'From chat completions to autonomous agents. Tool use, memory management, and the ReAct pattern for structured reasoning and action.' },
+                tag: { en: 'Intermediate · 6 hours' },
+                image: {
+                  type: 'image',
+                  src: 'https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=600&h=400&fit=crop',
+                  alt: { en: 'AI agent' },
+                },
+              },
+              {
+                type: 'contentCardItem',
+                title: { en: 'Multi-Agent Orchestration' },
+                description: { en: 'Design systems where specialized agents collaborate. Routing, handoffs, shared memory, and fault tolerance for complex workflows.' },
+                tag: { en: 'Advanced · 10 hours' },
+                image: {
+                  type: 'image',
+                  src: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=600&h=400&fit=crop',
+                  alt: { en: 'Multi-agent systems' },
+                },
+              },
+              {
+                type: 'contentCardItem',
+                title: { en: 'Production Agent Infrastructure' },
+                description: { en: 'Ship agents that work at scale. Observability, guardrails, cost management, and the operational patterns behind reliable AI systems.' },
+                tag: { en: 'Advanced · 8 hours' },
+                image: {
+                  type: 'image',
+                  src: 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=600&h=400&fit=crop',
+                  alt: { en: 'Production infrastructure' },
+                },
+              },
+            ],
+          },
+          {
+            type: 'contentTab',
+            title: { en: 'Fine-tuning' },
+            cards: [
+              {
+                type: 'contentCardItem',
+                title: { en: 'LoRA & Parameter-Efficient Methods' },
+                description: { en: 'Customize foundation models without breaking the bank. Low-rank adaptation, QLoRA, and practical fine-tuning workflows on consumer hardware.' },
+                tag: { en: 'Intermediate · 8 hours' },
+                image: {
+                  type: 'image',
+                  src: 'https://images.unsplash.com/photo-1504868584819-f8e8b4b6d7e3?w=600&h=400&fit=crop',
+                  alt: { en: 'Model fine-tuning' },
+                },
+              },
+              {
+                type: 'contentCardItem',
+                title: { en: 'RLHF & Alignment Techniques' },
+                description: { en: 'Align models to human preferences. Reward modeling, PPO, DPO, and the emerging landscape of model alignment techniques.' },
+                tag: { en: 'Advanced · 10 hours' },
+                image: {
+                  type: 'image',
+                  src: 'https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=600&h=400&fit=crop',
+                  alt: { en: 'RLHF training' },
+                },
+              },
+            ],
+          },
+        ],
+      },
+    },
+  };
+}
+
+/**
  * Registry of all available components
  */
 export const COMPONENT_REGISTRY: Record<string, ComponentMetadata> = {
@@ -839,6 +1013,14 @@ export const COMPONENT_REGISTRY: Record<string, ComponentMetadata> = {
     category: 'content',
     icon: '📑',
     createDefault: createDefaultTabbedContent,
+  },
+  ContentCardsSection: {
+    type: 'ContentCardsSection',
+    label: 'Content Cards',
+    description: 'Tabbed categories with card grids — great for courses, resources, or product catalogs',
+    category: 'content',
+    icon: '🎓',
+    createDefault: createDefaultContentCards,
   },
 };
 

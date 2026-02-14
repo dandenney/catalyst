@@ -169,7 +169,21 @@ export interface TabItemField {
   image?: ImageField;
 }
 
-export type Field = TextField | RichTextField | ImageField | ListField | BadgeField | ButtonField | MockupField | LogoItemField | IconField | ItemField | StatItemField | FAQItemField | PricingPlanField | CardItemField | BentoCellField | TabItemField;
+export interface ContentCardItemField {
+  type: 'contentCardItem';
+  title: LocalizedContent;
+  description: LocalizedContent;
+  tag: LocalizedContent;
+  image?: ImageField;
+}
+
+export interface ContentTabField {
+  type: 'contentTab';
+  title: LocalizedContent;
+  cards: ContentCardItemField[];
+}
+
+export type Field = TextField | RichTextField | ImageField | ListField | BadgeField | ButtonField | MockupField | LogoItemField | IconField | ItemField | StatItemField | FAQItemField | PricingPlanField | CardItemField | BentoCellField | TabItemField | ContentCardItemField | ContentTabField;
 
 // Component schema base
 export interface ComponentSchema {
@@ -331,6 +345,16 @@ export interface TabbedContentSectionSchema extends ComponentSchema {
     heading: TextField;
     description: TextField;
     tabs: ListField<TabItemField>;
+  };
+}
+
+export interface ContentCardsSectionSchema extends ComponentSchema {
+  type: 'ContentCardsSection';
+  fields: {
+    label: TextField;
+    heading: TextField;
+    description: TextField;
+    tabs: ListField<ContentTabField>;
   };
 }
 
