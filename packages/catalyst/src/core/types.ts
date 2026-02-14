@@ -169,21 +169,14 @@ export interface TabItemField {
   image?: ImageField;
 }
 
-export interface ContentCardItemField {
-  type: 'contentCardItem';
-  title: LocalizedContent;
-  description: LocalizedContent;
-  tag: LocalizedContent;
-  image?: ImageField;
-}
-
 export interface ContentTabField {
   type: 'contentTab';
   title: LocalizedContent;
-  cards: ContentCardItemField[];
+  contentType: string;
+  selectedIds: string[];
 }
 
-export type Field = TextField | RichTextField | ImageField | ListField | BadgeField | ButtonField | MockupField | LogoItemField | IconField | ItemField | StatItemField | FAQItemField | PricingPlanField | CardItemField | BentoCellField | TabItemField | ContentCardItemField | ContentTabField;
+export type Field = TextField | RichTextField | ImageField | ListField | BadgeField | ButtonField | MockupField | LogoItemField | IconField | ItemField | StatItemField | FAQItemField | PricingPlanField | CardItemField | BentoCellField | TabItemField | ContentTabField;
 
 // Component schema base
 export interface ComponentSchema {

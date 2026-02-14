@@ -6,22 +6,11 @@ import { cn } from "@/lib/utils";
 
 import { Section } from "../../ui/section";
 
-export interface ContentCard {
-  /** Card title */
-  title: ReactNode;
-  /** Card description */
-  description: ReactNode;
-  /** Tag line (e.g., "Beginner · 6 hours") */
-  tag?: ReactNode;
-  /** Card image */
-  image?: ReactNode;
-}
-
 export interface ContentTab {
   /** Tab label displayed in the horizontal tab bar */
   title: ReactNode;
-  /** Cards shown when this tab is active */
-  cards: ContentCard[];
+  /** Pre-rendered card components for this tab */
+  cards: ReactNode[];
   /** Remove handler (edit mode only) */
   onRemove?: () => void;
 }
@@ -49,7 +38,7 @@ interface ContentCardsProps {
 /**
  * Content cards section — pure display.
  * Horizontal tabs filter a grid of cards below.
- * Retro-futuristic minimalist developer SaaS style.
+ * Cards are pre-rendered by type-specific card components.
  */
 export function ContentCards({
   label,
@@ -142,38 +131,20 @@ export function ContentCards({
         </div>
 
         {/* Card grid */}
-        {activeTab && (
+        {activeTab && activeTab.cards.length > 0 && (
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {activeTab.cards.map((card, cardIndex) => (
-              <div
-                key={cardIndex}
-                className="group/card flex flex-col overflow-hidden rounded-lg border border-[#1E293B] bg-[#0F1629] transition-all duration-200 hover:border-[#3B82F6]/30"
-              >
-                {/* Card image */}
-                {card.image && (
-                  <div className="aspect-[3/2] overflow-hidden border-b border-[#1E293B]">
-                    {card.image}
-                  </div>
-                )}
-
-                {/* Card content */}
-                <div className="flex flex-1 flex-col gap-3 p-5">
-                  {card.tag && (
-                    <span className="font-mono text-xs font-medium uppercase tracking-widest text-[#3B82F6]">
-                      {card.tag}
-                    </span>
-                  )}
-
-                  <h3 className="text-base font-medium tracking-tight text-[#F1F5F9]">
-                    {card.title}
-                  </h3>
-
-                  <p className="text-sm leading-relaxed text-[#94A3B8] text-pretty">
-                    {card.description}
-                  </p>
-                </div>
-              </div>
+              <div key={cardIndex}>{card}</div>
             ))}
+          </div>
+        )}
+
+        {/* Empty state */}
+        {activeTab && activeTab.cards.length === 0 && (
+          <div className="flex items-center justify-center rounded-lg border border-dashed border-[#1E293B] py-16">
+            <p className="text-sm text-[#94A3B8]">
+              No items selected. Use the picker to add content.
+            </p>
           </div>
         )}
       </div>

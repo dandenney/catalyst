@@ -1,25 +1,31 @@
 "use client";
 
 import {
-  EditableImage,
   EditableText,
   type FieldToggleConfig,
   getDisabledFields,
   getLocalizedValue,
   isFieldEnabled,
   type LocalizedContent,
-  type ContentCardItemField,
   type ContentTabField,
   type ContentCardsSectionSchema,
   useCatalyst,
   useVariantHandling,
 } from "catalyst";
 import { Plus, X } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
+
+import { useContentDataMap } from "@/hooks/use-content-data";
+import {
+  type ContentType,
+  CONTENT_TYPE_LABELS,
+} from "@/types/content";
 
 import { type SectionControls } from "../../ui/section-controls";
 import SectionEditBar from "../../ui/section-edit-bar";
+import { renderContentCard } from "./cards/render-card";
 import { ContentCards } from "./content-cards";
+import { ContentPicker } from "./content-picker";
 
 // Edit mode styling
 const EDIT_CLASS =
@@ -34,27 +40,13 @@ const CONTENT_CARDS_FIELD_TOGGLES: FieldToggleConfig[] = [
   { key: "description", label: "Description" },
 ];
 
-// Default card for adding new cards
-function createDefaultCard(): ContentCardItemField {
-  return {
-    type: "contentCardItem",
-    title: { en: "New course" },
-    description: { en: "Add a description for this course." },
-    tag: { en: "Beginner · 4 hours" },
-    image: {
-      type: "image",
-      src: "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=600&h=400&fit=crop",
-      alt: { en: "Course image" },
-    },
-  };
-}
-
 // Default tab for adding new tabs
 function createDefaultTab(): ContentTabField {
   return {
     type: "contentTab",
-    title: { en: "New category" },
-    cards: [createDefaultCard()],
+    title: { en: "Courses" },
+    contentType: "courses",
+    selectedIds: [],
   };
 }
 
@@ -77,6 +69,52 @@ export function EditableContentCards({
 
   const { fields } = displaySchema;
   const [activeIndex, setActiveIndex] = useState(0);
+
+  // ─────────────────────────────────────────────────────────────────────────
+  // Migration: detect old schema shape and convert
+  // ─────────────────────────────────────────────────────────────────────────
+
+  const hasMigrated = useRef(false);
+  useEffect(() => {
+    if (hasMigrated.current || !onUpdate) return;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const rawTabs = fields.tabs.value as any[];
+    const needsMigration = rawTabs.some((tab) => "cards" in tab && !("contentType" in tab));
+    if (needsMigration) {
+      hasMigrated.current = true;
+      const migratedTabs: ContentTabField[] = rawTabs.map((tab) => {
+        if ("cards" in tab && !("contentType" in tab)) {
+          return {
+            type: "contentTab" as const,
+            title: tab.title,
+            contentType: "courses",
+            selectedIds: [] as string[],
+          };
+        }
+        return tab as ContentTabField;
+      });
+      onUpdate({
+        ...schema,
+        fields: {
+          ...schema.fields,
+          tabs: { ...schema.fields.tabs, value: migratedTabs },
+        },
+      });
+    }
+  }, [fields.tabs.value, onUpdate, schema]);
+
+  // ─────────────────────────────────────────────────────────────────────────
+  // Data fetching
+  // ─────────────────────────────────────────────────────────────────────────
+
+  const tabs = fields.tabs.value as ContentTabField[];
+
+  // In edit mode fetch all types (for the picker); in view mode only used types
+  const allTypes: ContentType[] = ["courses", "projects", "assessments", "learning_paths"];
+  const usedTypes = [...new Set(tabs.map((t) => t.contentType as ContentType))];
+  const typesToFetch = isEditMode ? allTypes : usedTypes;
+
+  const { dataMap, loading } = useContentDataMap(typesToFetch);
 
   // ─────────────────────────────────────────────────────────────────────────
   // Handlers
@@ -139,95 +177,51 @@ export function EditableContentCards({
     tabIndex: number,
     content: LocalizedContent,
   ) => {
-    const tabs = [...fields.tabs.value] as ContentTabField[];
-    tabs[tabIndex] = { ...tabs[tabIndex], title: content };
-    updateField("tabs", tabs, onUpdate);
+    const updatedTabs = [...tabs];
+    updatedTabs[tabIndex] = { ...updatedTabs[tabIndex], title: content };
+    updateField("tabs", updatedTabs, onUpdate);
   };
 
-  const handleCardTitleUpdate = (
-    tabIndex: number,
-    cardIndex: number,
-    content: LocalizedContent,
-  ) => {
-    const tabs = [...fields.tabs.value] as ContentTabField[];
-    const cards = [...tabs[tabIndex].cards];
-    cards[cardIndex] = { ...cards[cardIndex], title: content };
-    tabs[tabIndex] = { ...tabs[tabIndex], cards };
-    updateField("tabs", tabs, onUpdate);
-  };
-
-  const handleCardDescriptionUpdate = (
-    tabIndex: number,
-    cardIndex: number,
-    content: LocalizedContent,
-  ) => {
-    const tabs = [...fields.tabs.value] as ContentTabField[];
-    const cards = [...tabs[tabIndex].cards];
-    cards[cardIndex] = { ...cards[cardIndex], description: content };
-    tabs[tabIndex] = { ...tabs[tabIndex], cards };
-    updateField("tabs", tabs, onUpdate);
-  };
-
-  const handleCardTagUpdate = (
-    tabIndex: number,
-    cardIndex: number,
-    content: LocalizedContent,
-  ) => {
-    const tabs = [...fields.tabs.value] as ContentTabField[];
-    const cards = [...tabs[tabIndex].cards];
-    cards[cardIndex] = { ...cards[cardIndex], tag: content };
-    tabs[tabIndex] = { ...tabs[tabIndex], cards };
-    updateField("tabs", tabs, onUpdate);
-  };
-
-  const handleCardImageUpdate = (
-    tabIndex: number,
-    cardIndex: number,
-    data: { src: string; alt: LocalizedContent },
-  ) => {
-    const tabs = [...fields.tabs.value] as ContentTabField[];
-    const cards = [...tabs[tabIndex].cards];
-    cards[cardIndex] = {
-      ...cards[cardIndex],
-      image: { type: "image", src: data.src, alt: data.alt },
+  const handleContentTypeChange = (tabIndex: number, newType: ContentType) => {
+    const updatedTabs = [...tabs];
+    updatedTabs[tabIndex] = {
+      ...updatedTabs[tabIndex],
+      contentType: newType,
+      selectedIds: [],
+      title: { ...updatedTabs[tabIndex].title, en: CONTENT_TYPE_LABELS[newType] },
     };
-    tabs[tabIndex] = { ...tabs[tabIndex], cards };
-    updateField("tabs", tabs, onUpdate);
+    updateField("tabs", updatedTabs, onUpdate);
+  };
+
+  const handleSelectionChange = (tabIndex: number, ids: string[]) => {
+    const updatedTabs = [...tabs];
+    updatedTabs[tabIndex] = { ...updatedTabs[tabIndex], selectedIds: ids };
+    updateField("tabs", updatedTabs, onUpdate);
   };
 
   const handleAddTab = () => {
-    const tabs = [
-      ...(fields.tabs.value as ContentTabField[]),
-      createDefaultTab(),
-    ];
-    updateField("tabs", tabs, onUpdate);
-    setActiveIndex(tabs.length - 1);
+    const updatedTabs = [...tabs, createDefaultTab()];
+    updateField("tabs", updatedTabs, onUpdate);
+    setActiveIndex(updatedTabs.length - 1);
   };
 
   const handleRemoveTab = (index: number) => {
-    const tabs = (fields.tabs.value as ContentTabField[]).filter(
-      (_, i) => i !== index,
-    );
-    updateField("tabs", tabs, onUpdate);
-    if (activeIndex >= tabs.length) {
-      setActiveIndex(Math.max(0, tabs.length - 1));
+    const updatedTabs = tabs.filter((_, i) => i !== index);
+    updateField("tabs", updatedTabs, onUpdate);
+    if (activeIndex >= updatedTabs.length) {
+      setActiveIndex(Math.max(0, updatedTabs.length - 1));
     }
   };
 
-  const handleAddCard = (tabIndex: number) => {
-    const tabs = [...fields.tabs.value] as ContentTabField[];
-    tabs[tabIndex] = {
-      ...tabs[tabIndex],
-      cards: [...tabs[tabIndex].cards, createDefaultCard()],
-    };
-    updateField("tabs", tabs, onUpdate);
-  };
+  // ─────────────────────────────────────────────────────────────────────────
+  // Resolve cards from API data
+  // ─────────────────────────────────────────────────────────────────────────
 
-  const handleRemoveCard = (tabIndex: number, cardIndex: number) => {
-    const tabs = [...fields.tabs.value] as ContentTabField[];
-    const cards = tabs[tabIndex].cards.filter((_, i) => i !== cardIndex);
-    tabs[tabIndex] = { ...tabs[tabIndex], cards };
-    updateField("tabs", tabs, onUpdate);
+  const resolveCards = (tab: ContentTabField) => {
+    const ct = tab.contentType as ContentType;
+    const items = dataMap[ct] ?? [];
+    const selected = items.filter((item) => tab.selectedIds.includes(item.id));
+    return selected.map((item) => renderContentCard(ct, item));
   };
 
   // ─────────────────────────────────────────────────────────────────────────
@@ -237,20 +231,11 @@ export function EditableContentCards({
   const activeVariant = isEditMode ? editingVariant : personalization.segment;
 
   if (!isEditMode) {
-    const viewTabs = (fields.tabs.value as ContentTabField[]).map((tab) => ({
+    if (loading) return null;
+
+    const viewTabs = tabs.map((tab) => ({
       title: getLocalizedValue(tab.title, locale),
-      cards: tab.cards.map((card) => ({
-        title: getLocalizedValue(card.title, locale),
-        description: getLocalizedValue(card.description, locale),
-        tag: getLocalizedValue(card.tag, locale),
-        image: card.image?.src ? (
-          <img
-            src={card.image.src}
-            alt={getLocalizedValue(card.image.alt, locale)}
-            className="h-full w-full object-cover"
-          />
-        ) : undefined,
-      })),
+      cards: resolveCards(tab),
     }));
 
     return (
@@ -280,77 +265,60 @@ export function EditableContentCards({
   // Edit Mode
   // ─────────────────────────────────────────────────────────────────────────
 
-  const editTabs = (fields.tabs.value as ContentTabField[]).map(
-    (tab, tabIndex) => ({
+  const editTabs = tabs.map((tab, tabIndex) => {
+    const ct = tab.contentType as ContentType;
+    const allItems = dataMap[ct] ?? [];
+    const cards = resolveCards(tab);
+
+    return {
       title: (
-        <EditableText
-          content={tab.title}
-          onUpdate={(content) => handleTabTitleUpdate(tabIndex, content)}
-          editClassName={EDIT_CLASS}
-          editingClassName={EDITING_CLASS}
-        />
+        <div className="flex items-center gap-2">
+          <EditableText
+            content={tab.title}
+            onUpdate={(content) => handleTabTitleUpdate(tabIndex, content)}
+            editClassName={EDIT_CLASS}
+            editingClassName={EDITING_CLASS}
+          />
+          {tabs.length > 1 && (
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                handleRemoveTab(tabIndex);
+              }}
+              className="flex size-4 items-center justify-center rounded-full text-red-400 opacity-0 transition hover:text-red-300 group-hover:opacity-100"
+              aria-label="Remove tab"
+            >
+              <X className="size-3" />
+            </button>
+          )}
+        </div>
       ),
-      cards: tab.cards.map((card, cardIndex) => ({
-        title: (
-          <EditableText
-            content={card.title}
-            onUpdate={(content) =>
-              handleCardTitleUpdate(tabIndex, cardIndex, content)
+      cards: [
+        ...cards,
+        // Picker trigger card
+        <div
+          key="picker"
+          className="flex flex-col items-center justify-center gap-3 rounded-lg border border-dashed border-[#1E293B] bg-[#0F1629]/50 p-5 transition-colors hover:border-[#3B82F6]/30"
+        >
+          <p className="text-xs text-[#94A3B8]">
+            {tab.selectedIds.length} of {allItems.length} selected
+          </p>
+          <ContentPicker
+            contentType={ct}
+            selectedIds={tab.selectedIds}
+            availableItems={allItems}
+            onContentTypeChange={(type) =>
+              handleContentTypeChange(tabIndex, type)
             }
-            editClassName={EDIT_CLASS}
-            editingClassName={EDITING_CLASS}
-          />
-        ),
-        description: (
-          <EditableText
-            content={card.description}
-            onUpdate={(content) =>
-              handleCardDescriptionUpdate(tabIndex, cardIndex, content)
+            onSelectionChange={(ids) =>
+              handleSelectionChange(tabIndex, ids)
             }
-            editClassName={EDIT_CLASS}
-            editingClassName={EDITING_CLASS}
           />
-        ),
-        tag: (
-          <EditableText
-            content={card.tag}
-            onUpdate={(content) =>
-              handleCardTagUpdate(tabIndex, cardIndex, content)
-            }
-            editClassName={EDIT_CLASS}
-            editingClassName={EDITING_CLASS}
-          />
-        ),
-        image: card.image?.src ? (
-          <div className="group/cardimg relative h-full w-full">
-            <EditableImage
-              src={card.image.src}
-              alt={card.image.alt}
-              onUpdate={(data) =>
-                handleCardImageUpdate(tabIndex, cardIndex, data)
-              }
-              className="h-full w-full object-cover"
-            />
-            {tab.cards.length > 1 && (
-              <button
-                type="button"
-                onClick={() => handleRemoveCard(tabIndex, cardIndex)}
-                className="absolute right-2 top-2 flex size-6 items-center justify-center rounded-full bg-red-600 text-white opacity-0 shadow-lg transition hover:bg-red-500 group-hover/cardimg:opacity-100"
-                aria-label="Remove card"
-                title="Remove card"
-              >
-                <X className="size-3" />
-              </button>
-            )}
-          </div>
-        ) : undefined,
-      })),
-      onRemove:
-        (fields.tabs.value as ContentTabField[]).length > 1
-          ? () => handleRemoveTab(tabIndex)
-          : undefined,
-    }),
-  );
+        </div>,
+      ],
+    };
+  });
 
   return (
     <ContentCards
