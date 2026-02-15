@@ -80,6 +80,9 @@ export interface ItemField {
   title: LocalizedContent;
   description: LocalizedContent;
   icon: IconField;
+  iconColor?: string;
+  linkText?: LocalizedContent;
+  linkUrl?: LocalizedContent;
 }
 
 export interface StatItemField {
@@ -255,7 +258,9 @@ export interface LogosSectionSchema extends ComponentSchema {
 export interface ItemsSectionSchema extends ComponentSchema {
   type: 'ItemsSection';
   fields: {
+    label: TextField;
     title: TextField;
+    description: TextField;
     items: ListField<ItemField>;
   };
 }

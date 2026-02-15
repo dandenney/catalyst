@@ -7,12 +7,13 @@ import {
   createComponent,
   type CTASectionSchema,
   type HeroSectionSchema,
+  type ItemsSectionSchema,
   type PageSchema,
   type TabbedContentSectionSchema,
 } from "catalyst";
 import { useCallback, useEffect, useRef,useState } from "react";
 
-type SectionSchema = HeroSectionSchema | CTASectionSchema | CardGridSectionSchema | BentosSectionSchema | TabbedContentSectionSchema | ContentCardsSectionSchema;
+type SectionSchema = HeroSectionSchema | CTASectionSchema | CardGridSectionSchema | BentosSectionSchema | TabbedContentSectionSchema | ContentCardsSectionSchema | ItemsSectionSchema;
 
 interface Section {
   type: string;
@@ -24,6 +25,7 @@ import { EditableCardGrid } from "../components/sections/card-grid/editable-card
 import { EditableCTA } from "../components/sections/cta/editable-cta";
 import { EditableHero } from "../components/sections/hero/editable-hero";
 import { EditableContentCards } from "../components/sections/content-cards/editable-content-cards";
+import { EditableItems } from "../components/sections/items/editable-items";
 import { EditableTabbedContent } from "../components/sections/tabbed-content/editable-tabbed-content";
 import { EditModeIndicator } from "../components/ui/edit-mode-indicator";
 import { LayoutLines } from "../components/ui/layout-lines";
@@ -176,6 +178,7 @@ export default function Home() {
     { type: "BentosSection", label: "Bento Grid" },
     { type: "TabbedContentSection", label: "Tabbed Content" },
     { type: "ContentCardsSection", label: "Content Cards" },
+    { type: "ItemsSection", label: "Items / Features" },
   ];
 
   const handleAddSection = (type: SectionType) => {
@@ -262,6 +265,15 @@ export default function Home() {
               <EditableContentCards
                 key={section.schema.id}
                 schema={section.schema as ContentCardsSectionSchema}
+                onUpdate={(schema) => updateSectionSchema(index, schema)}
+                sectionControls={sectionControls}
+              />
+            );
+          case "ItemsSection":
+            return (
+              <EditableItems
+                key={section.schema.id}
+                schema={section.schema as ItemsSectionSchema}
                 onUpdate={(schema) => updateSectionSchema(index, schema)}
                 sectionControls={sectionControls}
               />

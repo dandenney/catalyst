@@ -112,18 +112,26 @@ export function ContentCards({
               const isActive = index === activeIndex;
 
               return (
-                <button
+                <div
                   key={index}
+                  role="button"
+                  tabIndex={0}
                   onClick={() => setActiveIndex(index)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
+                      setActiveIndex(index);
+                    }
+                  }}
                   className={cn(
-                    "relative rounded-md px-4 py-2 text-sm font-medium transition-all duration-200",
+                    "relative cursor-pointer rounded-md px-4 py-2 text-sm font-medium transition-all duration-200",
                     isActive
                       ? "bg-[#1E293B] text-[#F1F5F9]"
                       : "text-[#94A3B8] hover:text-[#F1F5F9]",
                   )}
                 >
                   {tab.title}
-                </button>
+                </div>
               );
             })}
             {addTabButton}
