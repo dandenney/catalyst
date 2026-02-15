@@ -530,6 +530,115 @@
           ]
         }
       }
+    },
+    {
+      "id": "items-1771177832474",
+      "type": "ItemsSection",
+      "fields": {
+        "label": {
+          "type": "text",
+          "value": {
+            "en": "Features"
+          }
+        },
+        "title": {
+          "type": "text",
+          "value": {
+            "en": "Everything you need. Nothing you don't."
+          }
+        },
+        "description": {
+          "type": "text",
+          "value": {
+            "en": "Built for teams that care about performance, accessibility, and developer experience."
+          }
+        },
+        "items": {
+          "type": "list",
+          "value": [
+            {
+              "type": "item",
+              "title": {
+                "en": "Accessibility first"
+              },
+              "description": {
+                "en": "Fully WCAG 2.0 compliant, built with best accessibility practices from day one."
+              },
+              "icon": {
+                "type": "icon",
+                "iconKey": "scan-face"
+              },
+              "linkText": {
+                "en": "Learn more"
+              },
+              "linkUrl": {
+                "en": "#"
+              },
+              "iconColor": "#10B981"
+            },
+            {
+              "type": "item",
+              "title": {
+                "en": "Responsive design"
+              },
+              "description": {
+                "en": "Looks and works great on any device and screen size, from mobile to ultrawide."
+              },
+              "icon": {
+                "type": "icon",
+                "iconKey": "monitor-smartphone"
+              },
+              "linkText": {
+                "en": "Learn more"
+              },
+              "linkUrl": {
+                "en": "#"
+              },
+              "iconColor": "#10B981"
+            },
+            {
+              "type": "item",
+              "title": {
+                "en": "Light and dark mode"
+              },
+              "description": {
+                "en": "Seamless switching between color schemes with six built-in themes included."
+              },
+              "icon": {
+                "type": "icon",
+                "iconKey": "eclipse"
+              },
+              "linkText": {
+                "en": "Learn more"
+              },
+              "linkUrl": {
+                "en": "#"
+              },
+              "iconColor": "#10B981"
+            },
+            {
+              "type": "item",
+              "title": {
+                "en": "Top-level performance"
+              },
+              "description": {
+                "en": "Optimized for lightning-fast load times and silky-smooth interactions."
+              },
+              "icon": {
+                "type": "icon",
+                "iconKey": "zap"
+              },
+              "linkText": {
+                "en": "Learn more"
+              },
+              "linkUrl": {
+                "en": "#"
+              },
+              "iconColor": "#10B981"
+            }
+          ]
+        }
+      }
     }
   ]
 }
