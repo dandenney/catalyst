@@ -179,7 +179,31 @@ export interface ContentTabField {
   selectedIds: string[];
 }
 
-export type Field = TextField | RichTextField | ImageField | ListField | BadgeField | ButtonField | MockupField | LogoItemField | IconField | ItemField | StatItemField | FAQItemField | PricingPlanField | CardItemField | BentoCellField | TabItemField | ContentTabField;
+// Carousel slide types (discriminated union on slideType)
+export interface CarouselSlideBase {
+  type: 'carouselSlide';
+}
+
+export interface CarouselQuoteSlide extends CarouselSlideBase {
+  slideType: 'quote';
+  quote: LocalizedContent;
+  authorName: LocalizedContent;
+  authorTitle: LocalizedContent;
+  authorAvatar?: ImageField;
+}
+
+export interface CarouselMediaSlide extends CarouselSlideBase {
+  slideType: 'media';
+  image: ImageField;
+  title: LocalizedContent;
+  description: LocalizedContent;
+  ctaText: LocalizedContent;
+  ctaUrl: LocalizedContent;
+}
+
+export type CarouselSlideField = CarouselQuoteSlide | CarouselMediaSlide;
+
+export type Field = TextField | RichTextField | ImageField | ListField | BadgeField | ButtonField | MockupField | LogoItemField | IconField | ItemField | StatItemField | FAQItemField | PricingPlanField | CardItemField | BentoCellField | TabItemField | ContentTabField | CarouselSlideField;
 
 // Component schema base
 export interface ComponentSchema {
@@ -353,6 +377,22 @@ export interface ContentCardsSectionSchema extends ComponentSchema {
     heading: TextField;
     description: TextField;
     tabs: ListField<ContentTabField>;
+  };
+}
+
+export interface CarouselSectionSchema extends ComponentSchema {
+  type: 'CarouselSection';
+  fields: {
+    label: TextField;
+    heading: TextField;
+    description: TextField;
+    slides: ListField<CarouselSlideField>;
+  };
+  settings: {
+    autoPlay: boolean;
+    autoPlayInterval: number;
+    showDots: boolean;
+    showArrows: boolean;
   };
 }
 
