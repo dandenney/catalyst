@@ -3,7 +3,7 @@
  * Central registry of all available components for the page builder
  */
 
-import { ComponentSchema, HeroBannerSchema, FeatureListSchema, CTASectionSchema, HeroSectionSchema, LogosSectionSchema, ItemsSectionSchema, StatsSectionSchema, FAQSectionSchema, FooterSectionSchema, PricingSectionSchema, CardGridSectionSchema, BentosSectionSchema, TabbedContentSectionSchema, ContentCardsSectionSchema } from './types';
+import { ComponentSchema, HeroBannerSchema, FeatureListSchema, CTASectionSchema, HeroSectionSchema, LogosSectionSchema, ItemsSectionSchema, StatsSectionSchema, FAQSectionSchema, FooterSectionSchema, PricingSectionSchema, CardGridSectionSchema, BentosSectionSchema, TabbedContentSectionSchema, ContentCardsSectionSchema, CarouselSectionSchema } from './types';
 
 export interface ComponentMetadata {
   type: string;
@@ -749,6 +749,68 @@ function createDefaultContentCards(): ContentCardsSectionSchema {
 }
 
 /**
+ * Creates a default CarouselSection component
+ */
+function createDefaultCarouselSection(): CarouselSectionSchema {
+  return {
+    id: `carousel-${Date.now()}`,
+    type: 'CarouselSection',
+    fields: {
+      label: {
+        type: 'text',
+        value: { en: 'Testimonials' },
+      },
+      heading: {
+        type: 'text',
+        value: { en: 'What our customers say' },
+      },
+      description: {
+        type: 'text',
+        value: { en: 'Hear from the teams building with our platform.' },
+      },
+      slides: {
+        type: 'list',
+        value: [
+          {
+            type: 'carouselSlide',
+            slideType: 'quote',
+            quote: { en: 'Catalyst completely transformed how we ship landing pages. Our marketing team can now make changes without waiting on engineering.' },
+            authorName: { en: 'Sarah Chen' },
+            authorTitle: { en: 'VP of Marketing, Acme Corp' },
+          },
+          {
+            type: 'carouselSlide',
+            slideType: 'media',
+            image: {
+              type: 'image',
+              src: 'https://images.unsplash.com/photo-1551434678-e076c223a692?w=600&h=400&fit=crop',
+              alt: { en: 'Team collaboration' },
+            },
+            title: { en: 'Built for modern teams' },
+            description: { en: 'From design to deployment, Catalyst streamlines your entire content workflow with real-time collaboration and instant previews.' },
+            ctaText: { en: 'See how it works' },
+            ctaUrl: { en: '#' },
+          },
+          {
+            type: 'carouselSlide',
+            slideType: 'quote',
+            quote: { en: 'We cut our page build time by 80% and our conversion rates have never been higher. The personalization features are a game-changer.' },
+            authorName: { en: 'Marcus Rodriguez' },
+            authorTitle: { en: 'Head of Growth, TechStart' },
+          },
+        ],
+      },
+    },
+    settings: {
+      autoPlay: true,
+      autoPlayInterval: 5000,
+      showDots: true,
+      showArrows: true,
+    },
+  };
+}
+
+/**
  * Registry of all available components
  */
 export const COMPONENT_REGISTRY: Record<string, ComponentMetadata> = {
@@ -874,6 +936,14 @@ export const COMPONENT_REGISTRY: Record<string, ComponentMetadata> = {
     category: 'content',
     icon: '🎓',
     createDefault: createDefaultContentCards,
+  },
+  CarouselSection: {
+    type: 'CarouselSection',
+    label: 'Carousel',
+    description: 'Sliding carousel with quotes and media layouts for promoting content',
+    category: 'content',
+    icon: '🎠',
+    createDefault: createDefaultCarouselSection,
   },
 };
 

@@ -3,6 +3,7 @@
 import {
   type BentosSectionSchema,
   type CardGridSectionSchema,
+  type CarouselSectionSchema,
   type ContentCardsSectionSchema,
   createComponent,
   type CTASectionSchema,
@@ -13,7 +14,7 @@ import {
 } from "catalyst";
 import { useCallback, useEffect, useRef,useState } from "react";
 
-type SectionSchema = HeroSectionSchema | CTASectionSchema | CardGridSectionSchema | BentosSectionSchema | TabbedContentSectionSchema | ContentCardsSectionSchema | ItemsSectionSchema;
+type SectionSchema = HeroSectionSchema | CTASectionSchema | CardGridSectionSchema | BentosSectionSchema | TabbedContentSectionSchema | ContentCardsSectionSchema | ItemsSectionSchema | CarouselSectionSchema;
 
 interface Section {
   type: string;
@@ -21,6 +22,7 @@ interface Section {
 }
 
 import { EditableBentos } from "../components/sections/bentos/editable-bentos";
+import { EditableCarousel } from "../components/sections/carousel/editable-carousel";
 import { EditableCardGrid } from "../components/sections/card-grid/editable-card-grid";
 import { EditableCTA } from "../components/sections/cta/editable-cta";
 import { EditableHero } from "../components/sections/hero/editable-hero";
@@ -179,6 +181,7 @@ export default function Home() {
     { type: "TabbedContentSection", label: "Tabbed Content" },
     { type: "ContentCardsSection", label: "Content Cards" },
     { type: "ItemsSection", label: "Items / Features" },
+    { type: "CarouselSection", label: "Carousel" },
   ];
 
   const handleAddSection = (type: SectionType) => {
@@ -274,6 +277,15 @@ export default function Home() {
               <EditableItems
                 key={section.schema.id}
                 schema={section.schema as ItemsSectionSchema}
+                onUpdate={(schema) => updateSectionSchema(index, schema)}
+                sectionControls={sectionControls}
+              />
+            );
+          case "CarouselSection":
+            return (
+              <EditableCarousel
+                key={section.schema.id}
+                schema={section.schema as CarouselSectionSchema}
                 onUpdate={(schema) => updateSectionSchema(index, schema)}
                 sectionControls={sectionControls}
               />

@@ -18,4 +18,5 @@ export type SectionType =
   | "BentosSection"
   | "TabbedContentSection"
   | "ContentCardsSection"
+  | "CarouselSection"
   | "FooterSection";
