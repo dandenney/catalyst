@@ -209,6 +209,9 @@ function createDefaultLogosSection(): LogosSectionSchema {
         ],
       },
     },
+    settings: {
+      scrollEnabled: false,
+    },
   };
 }
 

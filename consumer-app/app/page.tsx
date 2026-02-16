@@ -10,12 +10,13 @@ import {
   type FeaturesSectionSchema,
   type HeroSectionSchema,
   type ItemsSectionSchema,
+  type LogosSectionSchema,
   type PageSchema,
   type TabbedContentSectionSchema,
 } from "catalyst";
 import { useCallback, useEffect, useRef,useState } from "react";
 
-type SectionSchema = HeroSectionSchema | CTASectionSchema | CardGridSectionSchema | BentosSectionSchema | TabbedContentSectionSchema | ContentCardsSectionSchema | ItemsSectionSchema | CarouselSectionSchema | FeaturesSectionSchema;
+type SectionSchema = HeroSectionSchema | CTASectionSchema | CardGridSectionSchema | BentosSectionSchema | TabbedContentSectionSchema | ContentCardsSectionSchema | ItemsSectionSchema | CarouselSectionSchema | FeaturesSectionSchema | LogosSectionSchema;
 
 interface Section {
   type: string;
@@ -30,6 +31,7 @@ import { EditableHero } from "../components/sections/hero/editable-hero";
 import { EditableContentCards } from "../components/sections/content-cards/editable-content-cards";
 import { EditableFeatures } from "../components/sections/features/editable-features";
 import { EditableItems } from "../components/sections/items/editable-items";
+import { EditableLogos } from "../components/sections/logos/editable-logos";
 import { EditableTabbedContent } from "../components/sections/tabbed-content/editable-tabbed-content";
 import { EditModeIndicator } from "../components/ui/edit-mode-indicator";
 import { LayoutLines } from "../components/ui/layout-lines";
@@ -185,6 +187,7 @@ export default function Home() {
     { type: "ItemsSection", label: "Items / Features", thumbnail: "/component-previews/ItemsSection.png" },
     { type: "CarouselSection", label: "Carousel", thumbnail: "/component-previews/CarouselSection.png" },
     { type: "FeaturesSection", label: "Features (Zig-zag)", thumbnail: "/component-previews/FeaturesSection.png" },
+    { type: "LogosSection", label: "Logo Scroller", thumbnail: "/component-previews/LogosSection.png" },
   ];
 
   const handleAddSection = (type: SectionType) => {
@@ -298,6 +301,15 @@ export default function Home() {
               <EditableFeatures
                 key={section.schema.id}
                 schema={section.schema as FeaturesSectionSchema}
+                onUpdate={(schema) => updateSectionSchema(index, schema)}
+                sectionControls={sectionControls}
+              />
+            );
+          case "LogosSection":
+            return (
+              <EditableLogos
+                key={section.schema.id}
+                schema={section.schema as LogosSectionSchema}
                 onUpdate={(schema) => updateSectionSchema(index, schema)}
                 sectionControls={sectionControls}
               />

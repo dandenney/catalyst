@@ -293,6 +293,9 @@ export interface LogosSectionSchema extends ComponentSchema {
     badgeText: TextField;
     logos: ListField<LogoItemField>;
   };
+  settings: {
+    scrollEnabled: boolean;
+  };
 }
 
 export interface ItemsSectionSchema extends ComponentSchema {
