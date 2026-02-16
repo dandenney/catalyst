@@ -175,16 +175,16 @@ export default function Home() {
     debouncedSave(newSections);
   };
 
-  const addSectionOptions: Array<{ type: SectionType; label: string }> = [
-    { type: "HeroSection", label: "Hero" },
-    { type: "CTASection", label: "CTA section" },
-    { type: "CardGridSection", label: "Card Grid" },
-    { type: "BentosSection", label: "Bento Grid" },
-    { type: "TabbedContentSection", label: "Tabbed Content" },
-    { type: "ContentCardsSection", label: "Content Cards" },
-    { type: "ItemsSection", label: "Items / Features" },
-    { type: "CarouselSection", label: "Carousel" },
-    { type: "FeaturesSection", label: "Features (Zig-zag)" },
+  const addSectionOptions: Array<{ type: SectionType; label: string; thumbnail?: string }> = [
+    { type: "HeroSection", label: "Hero", thumbnail: "/component-previews/HeroSection.png" },
+    { type: "CTASection", label: "CTA section", thumbnail: "/component-previews/CTASection.png" },
+    { type: "CardGridSection", label: "Card Grid", thumbnail: "/component-previews/CardGridSection.png" },
+    { type: "BentosSection", label: "Bento Grid", thumbnail: "/component-previews/BentosSection.png" },
+    { type: "TabbedContentSection", label: "Tabbed Content", thumbnail: "/component-previews/TabbedContentSection.png" },
+    { type: "ContentCardsSection", label: "Content Cards", thumbnail: "/component-previews/ContentCardsSection.png" },
+    { type: "ItemsSection", label: "Items / Features", thumbnail: "/component-previews/ItemsSection.png" },
+    { type: "CarouselSection", label: "Carousel", thumbnail: "/component-previews/CarouselSection.png" },
+    { type: "FeaturesSection", label: "Features (Zig-zag)", thumbnail: "/component-previews/FeaturesSection.png" },
   ];
 
   const handleAddSection = (type: SectionType) => {
