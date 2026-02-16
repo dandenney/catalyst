@@ -19,6 +19,7 @@ import {
 interface AddSectionOption {
   type: SectionType;
   label: string;
+  thumbnail?: string;
 }
 
 interface EditModeIndicatorProps {
@@ -75,25 +76,46 @@ export function EditModeIndicator({
                 <Plus className="size-4" />
               </Button>
             </SheetTrigger>
-            <SheetContent side="right" className="overflow-y-auto">
+            <SheetContent
+              side="right"
+              className="overflow-y-auto !w-full !max-w-3xl"
+            >
               <SheetHeader>
                 <SheetTitle>Add section</SheetTitle>
-                <SheetDescription>Select a section to add</SheetDescription>
+                <SheetDescription>
+                  Choose a section to add to your page
+                </SheetDescription>
               </SheetHeader>
-              <div className="space-y-3 py-6">
+              <div className="grid grid-cols-2 gap-4 py-6">
                 {addSectionOptions?.map((option) => (
-                  <Button
+                  <button
                     key={option.type}
                     type="button"
-                    variant="outline"
                     onClick={() => {
                       onAddSection?.(option.type);
                       setIsAddOpen(false);
                     }}
-                    className="w-full justify-start"
+                    className="group relative flex flex-col overflow-hidden rounded-lg border border-[#1E293B] bg-[#0A0E1A] text-left transition-all hover:border-blue-500/50 hover:ring-1 hover:ring-blue-500/25"
                   >
-                    {option.label}
-                  </Button>
+                    {option.thumbnail ? (
+                      <div className="relative aspect-[16/10] w-full overflow-hidden">
+                        <img
+                          src={option.thumbnail}
+                          alt={`${option.label} preview`}
+                          className="absolute inset-0 h-full w-full object-cover object-top transition-transform duration-200 group-hover:scale-[1.02]"
+                        />
+                      </div>
+                    ) : (
+                      <div className="flex aspect-[16/10] w-full items-center justify-center bg-[#0F1629] text-[#94A3B8]">
+                        <Plus className="size-8 opacity-40" />
+                      </div>
+                    )}
+                    <div className="flex items-center gap-2 border-t border-[#1E293B] px-3 py-2.5">
+                      <span className="text-sm font-medium text-[#F1F5F9]">
+                        {option.label}
+                      </span>
+                    </div>
+                  </button>
                 ))}
               </div>
             </SheetContent>
