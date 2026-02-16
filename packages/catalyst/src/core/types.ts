@@ -99,6 +99,22 @@ export interface FAQItemField {
   answer: LocalizedContent;
 }
 
+export interface FeatureBulletField {
+  type: 'featureBullet';
+  icon: IconField;
+  text: LocalizedContent;
+}
+
+export interface FeatureSetField {
+  type: 'featureSet';
+  title: LocalizedContent;
+  description: LocalizedContent;
+  bullets: FeatureBulletField[];
+  ctaText?: LocalizedContent;
+  ctaUrl?: LocalizedContent;
+  image: ImageField;
+}
+
 export interface PricingPlanField {
   type: 'pricingPlan';
   name: LocalizedContent;
@@ -203,7 +219,7 @@ export interface CarouselMediaSlide extends CarouselSlideBase {
 
 export type CarouselSlideField = CarouselQuoteSlide | CarouselMediaSlide;
 
-export type Field = TextField | RichTextField | ImageField | ListField | BadgeField | ButtonField | MockupField | LogoItemField | IconField | ItemField | StatItemField | FAQItemField | PricingPlanField | CardItemField | BentoCellField | TabItemField | ContentTabField | CarouselSlideField;
+export type Field = TextField | RichTextField | ImageField | ListField | BadgeField | ButtonField | MockupField | LogoItemField | IconField | ItemField | StatItemField | FAQItemField | FeatureBulletField | FeatureSetField | PricingPlanField | CardItemField | BentoCellField | TabItemField | ContentTabField | CarouselSlideField;
 
 // Component schema base
 export interface ComponentSchema {
@@ -393,6 +409,16 @@ export interface CarouselSectionSchema extends ComponentSchema {
     autoPlayInterval: number;
     showDots: boolean;
     showArrows: boolean;
+  };
+}
+
+export interface FeaturesSectionSchema extends ComponentSchema {
+  type: 'FeaturesSection';
+  fields: {
+    label: TextField;
+    title: TextField;
+    description: TextField;
+    sets: ListField<FeatureSetField>;
   };
 }
 
