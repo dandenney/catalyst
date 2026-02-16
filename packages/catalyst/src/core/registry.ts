@@ -3,7 +3,7 @@
  * Central registry of all available components for the page builder
  */
 
-import { ComponentSchema, HeroBannerSchema, FeatureListSchema, CTASectionSchema, HeroSectionSchema, LogosSectionSchema, ItemsSectionSchema, StatsSectionSchema, FAQSectionSchema, FooterSectionSchema, PricingSectionSchema, CardGridSectionSchema, BentosSectionSchema, TabbedContentSectionSchema, ContentCardsSectionSchema, CarouselSectionSchema } from './types';
+import { ComponentSchema, HeroBannerSchema, FeatureListSchema, CTASectionSchema, HeroSectionSchema, LogosSectionSchema, ItemsSectionSchema, StatsSectionSchema, FAQSectionSchema, FooterSectionSchema, PricingSectionSchema, CardGridSectionSchema, BentosSectionSchema, TabbedContentSectionSchema, ContentCardsSectionSchema, CarouselSectionSchema, FeaturesSectionSchema } from './types';
 
 export interface ComponentMetadata {
   type: string;
@@ -811,6 +811,93 @@ function createDefaultCarouselSection(): CarouselSectionSchema {
 }
 
 /**
+ * Creates a default FeaturesSection component
+ */
+function createDefaultFeaturesSection(): FeaturesSectionSchema {
+  return {
+    id: `features-section-${Date.now()}`,
+    type: 'FeaturesSection',
+    fields: {
+      label: {
+        type: 'text',
+        value: { en: 'Why choose us' },
+      },
+      title: {
+        type: 'text',
+        value: { en: 'Built for teams that ship' },
+      },
+      description: {
+        type: 'text',
+        value: { en: 'Everything you need to go from idea to production, without the complexity.' },
+      },
+      sets: {
+        type: 'list',
+        value: [
+          {
+            type: 'featureSet',
+            title: { en: 'Lightning-fast deployments' },
+            description: { en: 'Push to main and your changes go live in seconds. No build queues, no waiting.' },
+            bullets: [
+              {
+                type: 'featureBullet',
+                icon: { type: 'icon', iconKey: 'zap' },
+                text: { en: 'Sub-second cold starts worldwide' },
+              },
+              {
+                type: 'featureBullet',
+                icon: { type: 'icon', iconKey: 'globe' },
+                text: { en: 'Edge deployment in 40+ regions' },
+              },
+              {
+                type: 'featureBullet',
+                icon: { type: 'icon', iconKey: 'rocket' },
+                text: { en: 'Automatic preview deployments for every PR' },
+              },
+            ],
+            ctaText: { en: 'Explore deployments' },
+            ctaUrl: { en: '#' },
+            image: {
+              type: 'image',
+              src: 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=600&h=400&fit=crop',
+              alt: { en: 'Deployment infrastructure' },
+            },
+          },
+          {
+            type: 'featureSet',
+            title: { en: 'Real-time observability' },
+            description: { en: 'Understand exactly what is happening in production with zero instrumentation overhead.' },
+            bullets: [
+              {
+                type: 'featureBullet',
+                icon: { type: 'icon', iconKey: 'eye' },
+                text: { en: 'Unified traces, logs, and metrics' },
+              },
+              {
+                type: 'featureBullet',
+                icon: { type: 'icon', iconKey: 'target' },
+                text: { en: 'Custom dashboards and alerts' },
+              },
+              {
+                type: 'featureBullet',
+                icon: { type: 'icon', iconKey: 'shield' },
+                text: { en: 'Anomaly detection powered by AI' },
+              },
+            ],
+            ctaText: { en: 'See observability' },
+            ctaUrl: { en: '#' },
+            image: {
+              type: 'image',
+              src: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600&h=400&fit=crop',
+              alt: { en: 'Monitoring dashboard' },
+            },
+          },
+        ],
+      },
+    },
+  };
+}
+
+/**
  * Registry of all available components
  */
 export const COMPONENT_REGISTRY: Record<string, ComponentMetadata> = {
@@ -944,6 +1031,14 @@ export const COMPONENT_REGISTRY: Record<string, ComponentMetadata> = {
     category: 'content',
     icon: '🎠',
     createDefault: createDefaultCarouselSection,
+  },
+  FeaturesSection: {
+    type: 'FeaturesSection',
+    label: 'Features (Zig-zag)',
+    description: 'Alternating text and image feature sets with bulleted lists',
+    category: 'content',
+    icon: '🔀',
+    createDefault: createDefaultFeaturesSection,
   },
 };
 

@@ -19,4 +19,5 @@ export type SectionType =
   | "TabbedContentSection"
   | "ContentCardsSection"
   | "CarouselSection"
+  | "FeaturesSection"
   | "FooterSection";
